@@ -1,11 +1,14 @@
 
 import React from 'react';
 import {MyNavbar} from './components/MyNavbar/MyNavbar';
+import RouteConfig from './Route';
+
 
 function App() {
   return (
     <div className="App">
       <Nav/>
+      <RouteConfig />
     </div>
   );
 }
@@ -14,8 +17,7 @@ function Nav() {
   return (
     <div>
       <MyNavbar/>
-      <h1>Test</h1>
-      <p>test123</p>
+    
     </div>
   );
 }
