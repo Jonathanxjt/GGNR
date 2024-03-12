@@ -1,22 +1,9 @@
 import React from "react";
-import { Navbar, Nav, Form, FormControl} from "react-bootstrap";
+import { Navbar, Nav, Form} from "react-bootstrap";
 import { BsPerson } from "react-icons/bs";
-import { BiSearch } from "react-icons/bi";
+
 
 export const MyNavbar = () => {
-  const searchContainerStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    background: 'light', // This should match the bg-light color
-    border: '1px solid #ddd', // Adjust as needed
-    padding: '5px 10px',
-    borderRadius: '30px', // Makes it pill-shaped
-  };
-
-  const searchIconStyle = {
-    marginRight: '10px',
-    color: '#495057', // Adjust as needed
-  };
 
   const profileIconStyle = {
     fontSize: '20px', // Adjust size as needed
@@ -37,15 +24,6 @@ export const MyNavbar = () => {
           <Nav.Link href="#about-us">About Us</Nav.Link>
         </Nav>
         <Form inline className="d-flex align-items-center">
-          <div style={searchContainerStyle}>
-            <BiSearch style={searchIconStyle} />
-            <FormControl
-              type="text"
-              placeholder="Search anything..."
-              className="border-0"
-              style={{ outline: 'none', boxShadow: 'none' }} // Removes the default focus styles
-            />
-          </div>
           <BsPerson style={profileIconStyle} />
         </Form>
       </Navbar.Collapse>
