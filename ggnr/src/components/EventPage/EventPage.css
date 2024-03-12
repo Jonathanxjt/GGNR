@@ -1,0 +1,8 @@
+.card {
+    margin-right: 10px; /* Adjust the margin as needed */
+  }
+  
+  /* Optional: Add margin to the last card in each row to prevent it from sticking to the edge */
+  .card:last-child {
+    margin-right: 0;
+  }
