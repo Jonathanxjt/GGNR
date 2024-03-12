@@ -17,7 +17,6 @@ function Nav() {
   return (
     <div>
       <MyNavbar/>
-    
     </div>
   );
 }
