@@ -3,6 +3,7 @@ import { Navbar, Nav, Form} from "react-bootstrap";
 import { BsPerson } from "react-icons/bs";
 
 
+
 export const MyNavbar = () => {
 
   const profileIconStyle = {
@@ -13,7 +14,7 @@ export const MyNavbar = () => {
   };
   
   return (
-    <Navbar bg="light" expand="lg" className="px-4">
+    <Navbar bg="light" expand="lg" className="px-4 sticky-top">
       <Navbar.Brand href="/">GGNR.</Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
