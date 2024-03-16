@@ -4,6 +4,7 @@ import HomePage from './components/HomePage';
 import EventPage from './components/EventPage/EventPage';
 import CreateEvent from './components/CreateEvent/CreateEvent';
 import NotFoundPage from './components/NotFoundPage';
+import Registration from './components/Registration/Registration';
 
 const RouteConfig = () => {
   return (
@@ -12,6 +13,8 @@ const RouteConfig = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/event" element = {<EventPage/>}/>
         <Route path="/create_event" element = {<CreateEvent/>}/>
+        <Route path="/event/:id" element={<EventPage />} />
+        <Route path="/registration" element={<Registration/>} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
