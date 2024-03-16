@@ -23,11 +23,11 @@ def fetch_cover_urls(game_data):
     }
     for game in game_data:
         game_id = game.get('id')
-        cover_body = f"fields *; where id = {game_id};"
+        cover_body = f"fields *; where game = {game_id};"
         cover_response = requests.post(cover_url, headers=access_headers, data=cover_body)
         cover_data = cover_response.json()
         if cover_data:
-            cover_urls.append(cover_data[0]["url"])
+            cover_urls.append("//images.igdb.com/igdb/image/upload/t_cover_big/" + cover_data[0]["image_id"] + ".png")
         else:
             cover_urls.append(None)
 
@@ -61,6 +61,7 @@ def search_games():
     for game, cover_url in zip(game_data, cover_urls):
         game_info = {
             'name': game.get('name'),
+            'id' : game.get('id'),
             'cover_url': cover_url
         }
         results.append(game_info)
