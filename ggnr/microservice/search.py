@@ -1,54 +1,71 @@
-# from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify
 import requests
+from flask_cors import CORS
 
-# app = Flask(__name__)
+app = Flask(__name__)
+CORS(app)
 
-access_url = "https://id.twitch.tv/oauth2/token"
-access_params = {
-    "client_id": "429jpzpf7x2073d3kwsscsrpnftx04",
-    "client_secret": "qh3rx6nnlruawu3il3hqbk0ase4yfa",
-    "grant_type": "client_credentials"
-}
+def fetch_cover_urls(game_data):
+    access_url = "https://id.twitch.tv/oauth2/token"
+    access_params = {
+        "client_id": "429jpzpf7x2073d3kwsscsrpnftx04",
+        "client_secret": "qh3rx6nnlruawu3il3hqbk0ase4yfa",
+        "grant_type": "client_credentials"
+    }
+    access_response = requests.post(access_url, params=access_params)
+    access_token = access_response.json()["access_token"]
 
-access_response = requests.post(access_url, params=access_params)
+    cover_urls = []
+    cover_url = "https://api.igdb.com/v4/covers"
+    access_headers = {
+        "Client-ID": "429jpzpf7x2073d3kwsscsrpnftx04",
+        "Authorization": f"Bearer {access_token}"
+    }
+    for game in game_data:
+        game_id = game.get('id')
+        cover_body = f"fields *; where id = {game_id};"
+        cover_response = requests.post(cover_url, headers=access_headers, data=cover_body)
+        cover_data = cover_response.json()
+        if cover_data:
+            cover_urls.append(cover_data[0]["url"])
+        else:
+            cover_urls.append(None)
 
-access_token = access_response.json()["access_token"]
+    return cover_urls
 
-print(access_token)
+@app.route('/search', methods=['POST'])
+def search_games():
+    game_name = request.json['game_name']
 
-game_url = "https://api.igdb.com/v4/games"
+    access_url = "https://id.twitch.tv/oauth2/token"
+    access_params = {
+        "client_id": "429jpzpf7x2073d3kwsscsrpnftx04",
+        "client_secret": "qh3rx6nnlruawu3il3hqbk0ase4yfa",
+        "grant_type": "client_credentials"
+    }
+    access_response = requests.post(access_url, params=access_params)
+    access_token = access_response.json()["access_token"]
 
-access_headers = {
-    "Client-ID": "429jpzpf7x2073d3kwsscsrpnftx04",
-    "Authorization": f"Bearer {access_token}"
-}
-#TODO:
-# 1. Get the game name from frontend
-game_name = "mario"
-game_body = "fields *; search" + '\"' + game_name + '\"' + ";" + "limit 5;"
+    game_url = "https://api.igdb.com/v4/games"
+    access_headers = {
+        "Client-ID": "429jpzpf7x2073d3kwsscsrpnftx04",
+        "Authorization": f"Bearer {access_token}"
+    }
+    game_body = f"fields *; search \"{game_name}\"; limit 5;"
+    game_response = requests.post(game_url, headers=access_headers, data=game_body)
+    game_data = game_response.json()
 
-game_response = requests.post(game_url, headers=access_headers, data=game_body)
+    cover_urls = fetch_cover_urls(game_data)
 
-game_data = game_response.json()
-game_name_array = []
-game_id_array = []
-for game in game_data:
-    game_name_array.append(game["name"])   
-    game_id_array.append(game["id"]) 
+    results = []
+    for game, cover_url in zip(game_data, cover_urls):
+        game_info = {
+            'name': game.get('name'),
+            'cover_url': cover_url
+        }
+        results.append(game_info)
 
-print(game_name_array)
-print(game_id_array)
-cover_url = "https://api.igdb.com/v4/covers"
+    return jsonify(results)
 
-cover_urls = []
-
-for game_id in game_id_array:
-    cover_body = "fields *; where id = " + str(game_id) + ";"
-    cover_response = requests.post(cover_url, headers=access_headers, data=cover_body)
-    cover_data = cover_response.json()
-    if cover_data:
-        cover_urls.append(cover_data[0]["url"])
-    else:
-        cover_urls.append(None)
-
-print(cover_urls)
+if __name__ == '__main__':
+    app.run(debug=True)
