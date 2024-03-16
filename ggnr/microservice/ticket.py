@@ -48,108 +48,169 @@ class Ticket(db.Model):
             'Price': self.Price
         }
     
-
 @app.route("/ticket")
 def get_all():
-
-    
-    eid = request.args.get("EID")
-    uid = request.args.get("UID")
-
-    # get ticket by eid and uid
-    if eid != None and uid != None:
-        ticket = db.session.scalars(db.select(Ticket).filter_by(EID=eid).filter_by(UID=uid).limit(1)).first()
-
-        if ticket:
-            return jsonify(
-                {
-                    "code": 200,
-                    "data": ticket.json()
-                }
-            )
-        
-        else:
-            return jsonify(
-                {
-                    "code": 404,
-                    "message": "Ticket not found."
-                }
-            ), 404
-        
-    if eid != None:
-        ticket_list_by_eid = db.session.scalars(db.select(Ticket).filter_by(EID=eid)).all()
-        
-        if len(ticket_list_by_eid):
-            return jsonify(
-                {
-                    "code": 200,
-                    "data": {
-                        "tickets": [individual_ticket.json() for individual_ticket in ticket_list_by_eid]
-                    }
-                }
-            )
-        else:
-            return jsonify(
-                {
-                    "code": 404,
-                    "message": "There are no tickets."
-                }
-            ), 404
-    
-    if uid != None:
-        ticket_list_by_uid = db.session.scalars(db.select(Ticket).filter_by(UID=uid)).all()
-
-        if len(ticket_list_by_uid):
-            return jsonify(
-                {
-                    "code": 200,
-                    "data": {
-                        "tickets": [individual_ticket.json() for individual_ticket in ticket_list_by_uid]
-                    }
-                }
-            )
-        else:
-            return jsonify(
-                {
-                    "code": 404,
-                    "message": "There are no tickets."
-                }
-            ), 404
-
     ticket_list = db.session.scalars(db.select(Ticket)).all()
+
     if len(ticket_list):
         return jsonify(
             {
+                "code": 201,
+                "data": [individual_ticket.json() for individual_ticket in ticket_list]
+            }
+        )
+    return jsonify({"code": 404, "message": "There are no tickets."}), 404
+
+@app.route("/ticket/EID/<string:EID>")
+def get_tickets_by_eid(EID):
+    ticket_list = db.session.scalars(db.select(Ticket).filter_by(EID)).all()
+    if len(ticket_list):
+        return jsonify(
+            {
+                "code": 201,
+                "data": [individual_ticket.json() for individual_ticket in ticket_list]
+            }
+        )
+    return jsonify({"code": 404, "message": "There are no tickets for this event."}), 404
+
+
+@app.route("/ticket/UID/<string:UID>")
+def get_tickets_by_uid(UID):
+    ticket_list = db.session.scalars(db.select(Ticket).filter_by(UID)).all()
+    if len(ticket_list):
+        return jsonify(
+            {
+                "code": 201,
+                "data": [individual_ticket.json() for individual_ticket in ticket_list]
+            }
+        )
+    return jsonify({"code": 404, "message": "There are no tickets for this user."}), 404
+
+# combine - UID,EID
+@app.route("/ticket/EID/UID/<string:combine>")  
+def get_ticket_by_uid_eid(combine):
+    split = combine.split(",")
+    uid = split[0]
+    eid = split[1]
+
+    ticket = db.session.scalars(db.select(Ticket).filter_by(uid).filter_by(eid).limit(1)).first()
+
+    if ticket:
+        return jsonify(
+            {
                 "code": 200,
-                "data": {
-                    "tickets": [ticket.json() for ticket in ticket_list]
-                }
+                "data": ticket.json()
             }
         )
     
     return jsonify(
         {
             "code": 404,
-            "message": "There are no tickets."
+            "message": "Ticket not found."
         }
     ), 404
+
+# @app.route("/ticket")
+# def get_all():
+
+    
+#     eid = request.get_json().get("EID")
+#     uid = request.args.get("UID")
+
+#     # get ticket by eid and uid
+#     if eid != None and uid != None:
+#         ticket = db.session.scalars(db.select(Ticket).filter_by(EID=eid).filter_by(UID=uid).limit(1)).first()
+
+#         if ticket:
+#             return jsonify(
+#                 {
+#                     "code": 200,
+#                     "data": ticket.json()
+#                 }
+#             )
+        
+#         else:
+#             return jsonify(
+#                 {
+#                     "code": 404,
+#                     "message": "Ticket not found."
+#                 }
+#             ), 404
+        
+#     if eid != None:
+#         ticket_list_by_eid = db.session.scalars(db.select(Ticket).filter_by(EID=eid)).all()
+        
+#         if len(ticket_list_by_eid):
+#             return jsonify(
+#                 {
+#                     "code": 200,
+#                     "data": {
+#                         "tickets": [individual_ticket.json() for individual_ticket in ticket_list_by_eid]
+#                     }
+#                 }
+#             )
+#         else:
+#             return jsonify(
+#                 {
+#                     "code": 404,
+#                     "message": "There are no tickets."
+#                 }
+#             ), 404
+    
+#     if uid != None:
+#         ticket_list_by_uid = db.session.scalars(db.select(Ticket).filter_by(UID=uid)).all()
+
+#         if len(ticket_list_by_uid):
+#             return jsonify(
+#                 {
+#                     "code": 200,
+#                     "data": {
+#                         "tickets": [individual_ticket.json() for individual_ticket in ticket_list_by_uid]
+#                     }
+#                 }
+#             )
+#         else:
+#             return jsonify(
+#                 {
+#                     "code": 404,
+#                     "message": "There are no tickets."
+#                 }
+#             ), 404
+
+#     ticket_list = db.session.scalars(db.select(Ticket)).all()
+#     if len(ticket_list):
+#         return jsonify(
+#             {
+#                 "code": 200,
+#                 "data": {
+#                     "tickets": [ticket.json() for ticket in ticket_list]
+#                 }
+#             }
+#         )
+    
+#     return jsonify(
+#         {
+#             "code": 404,
+#             "message": "There are no tickets."
+#         }
+#     ), 404
 
 
 # POST - create ticket
 @app.route("/ticket/<string:TicketID>", methods=["POST"])
 def create_ticket(TicketID):
 
-    eid = request.args.get("EID")
-    uid = request.args.get("UID")
-    tier = request.args.get("Tier")
-    price = request.args.get("Price")
+    eid = request.get_json().get("EID")
+    uid = request.get_json().get("UID")
+    tier = request.get_json().get("Tier")
+    price = request.get_json().get("Price")
 
     ticket = Ticket(
-        TicketID = TicketID,
-        EID = eid,
-        UID = uid,
-        Tier = tier,
-        Price = price
+        TicketID,
+        eid,
+        uid,
+        tier,
+        price
     )
 
     try:
@@ -177,7 +238,6 @@ def create_ticket(TicketID):
         ), 500
     
     print(json.dumps(ticket.json()), default=str)
-    print()
 
     return jsonify(
         {
