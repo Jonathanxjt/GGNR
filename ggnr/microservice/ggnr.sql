@@ -1,11 +1,15 @@
+DROP DATABASE IF EXISTS ggnr_database;
 CREATE DATABASE ggnr_database;
 USE ggnr_database;
 
 CREATE TABLE events (
     EID INT,
     TierID SMALLINT,
+    Title VARCHAR(255),
+    Description TEXT,
+    EventLogo TEXT,
     GameName VARCHAR(255),
-    GameLogo VARCHAR(255),
+    GameLogo TEXT,
     Location VARCHAR(255),
     Time DATETIME,
     GameCompany VARCHAR(255),
@@ -39,5 +43,8 @@ CREATE TABLE tickets (
     FOREIGN KEY (UID) REFERENCES users(UID)
 );
 
-INSERT INTO events (EID, TierID, GameName, GameLogo, Location, Time, GameCompany, Capacity, Price) VALUES
-(1, 1, 'Super Fun Game', 'logo.png', 'Convention Center', '2024-01-01 10:00:00', 'Gaming Co', 100, 49.99);
+INSERT INTO events (EID, TierID, Title, Description, EventLogo, GameName, GameLogo, Location, Time, GameCompany, Capacity, Price)
+VALUES
+(1, 1, 'Event 1', 'Description for Event 1', 'event1.jpg', 'Game 1', 'game1.jpg', 'Location 1', '2024-03-17 10:00:00', 'Company 1', 100, 10.99),
+(2, 1, 'Event 2', 'Description for Event 2', 'event2.jpg', 'Game 2', 'game2.jpg', 'Location 2', '2024-03-18 11:00:00', 'Company 2', 150, 15.99),
+(3, 2, 'Event 3', 'Description for Event 3', 'event3.jpg', 'Game 3', 'game3.jpg', 'Location 3', '2024-03-19 12:00:00', 'Company 3', 200, 20.99);
