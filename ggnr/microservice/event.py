@@ -103,7 +103,7 @@ class Event(db.Model):
         self.TierID = TierID
         self.Title = Title
         self.Description = Description
-        self.EventLog = EventLogo
+        self.EventLogo = EventLogo
         self.GameName = GameName
         self.GameLogo = GameLogo
         self.Location = Location
@@ -197,7 +197,7 @@ def create_event():
     EID = request.json.get("EID")
     TierID = request.json.get("TierID")
     Title = request.json.get("Title")
-    Desciption = request.json.get("Description")
+    Description = request.json.get("Description")
     EventLogo = request.json.get("EventLogo")
     GameName = request.json.get("GameName")
     GameLogo = request.json.get("GameLogo") 
@@ -212,7 +212,7 @@ def create_event():
         EID = EID,
         TierID = TierID,
         Title = Title,
-        Desciption = Desciption,
+        Description = Description,
         EventLogo = EventLogo,
         GameName = GameName,
         GameLogo = GameLogo,
@@ -248,7 +248,6 @@ def create_event():
         ), 500
     
     print(json.dumps(event.json()), default=str)
-    print()
 
     return jsonify(
         {
@@ -274,9 +273,14 @@ def update_event(EID):
             ), 404
 
         # update Time or Price or Location
-        data = request.get_json()
-        if data['Time']:
-            event.Time = data['Time']
+        # data = request.get_json()
+        time = request.get_json().get("Time")
+        px = request.get_json().get("Price")
+        location = request.get_json().get("Location")
+        capacity = request.get_json().get("Capacity")
+
+        if time != None:
+            event.Time = time
             db.session.commit()
             return jsonify(
                 {
@@ -285,8 +289,8 @@ def update_event(EID):
                 }
             ), 200
         
-        elif data['Price']:
-            event.Price = data['Price']
+        elif px != None:
+            event.Price = px
             db.session.commit()
             return jsonify(
                 {
@@ -295,8 +299,8 @@ def update_event(EID):
                 }
             ), 200
         
-        elif data['Location']:
-            event.Location = data['Location']
+        elif location != None:
+            event.Location = location
             db.session.commit()
             return jsonify(
                 {
@@ -305,8 +309,8 @@ def update_event(EID):
                 }
             ), 200
         
-        elif data['Capacity']:
-            event.Capacity -= int(data['Capacity'])
+        elif capacity != None:
+            event.Capacity -= int(capacity)
             db.session.commit()
             return jsonify(
                 {
