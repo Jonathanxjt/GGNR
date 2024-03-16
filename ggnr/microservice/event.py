@@ -11,10 +11,9 @@ import sys
 
 import json
 
-
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = (
-    environ.get("dbURL") or "mysql+mysqlconnector://root:root@localhost:3306/ggnr_database"
+    environ.get("dbURL") or "mysql+mysqlconnector://root@localhost:3306/ggnr_database"
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
