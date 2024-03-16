@@ -5,7 +5,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 
 from os import environ
-# from flask_cors import CORS
+from flask_cors import CORS
 import os
 import sys
 
@@ -17,7 +17,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db =SQLAlchemy(app)
 
-# CORS(app)
+CORS(app)
 
 class User(db.Model):
     __tablename__ = 'users'
