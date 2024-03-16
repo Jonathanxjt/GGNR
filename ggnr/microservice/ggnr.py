@@ -64,7 +64,7 @@ class User(db.Model):
         self.UID = UID
         self.preferences = preferences
     
-    def to_json(self):
+    def json(self):
         return {
             'UID': self.UID,
             'preferences': self.preferences
@@ -88,7 +88,7 @@ class Attendee(db.Model):
         self.ticketID = ticketID
         self.transactionID = transactionID
     
-    def to_json(self):
+    def json(self):
         return {
             'AID': self.AID,
             'EID': self.EID,
@@ -115,7 +115,7 @@ class Ticket(db.Model):
         self.Tier = Tier
         self.Price = Price
     
-    def to_json(self):
+    def json(self):
         return {
             'TicketID': self.TicketID,
             'EID': self.EID,

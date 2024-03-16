@@ -41,7 +41,7 @@ class Attendee(db.Model):
         self.ticketID = ticketID
         self.transactionID = transactionID
     
-    def to_json(self):
+    def json(self):
         return {
             'AID': self.AID,
             'EID': self.EID,
@@ -63,13 +63,14 @@ class Ticket(db.Model):
     # Relationships
     event = relationship('Event', back_populates='tickets')
     user = relationship('User', back_populates='tickets')
-    def __init__(self, EID, UID, Tier, Price):
+    def __init__(self, TicketID, EID, UID, Tier, Price):
+        self.TicketID = TicketID
         self.EID = EID
         self.UID = UID
         self.Tier = Tier
         self.Price = Price
     
-    def to_json(self):
+    def json(self):
         return {
             'TicketID': self.TicketID,
             'EID': self.EID,
@@ -142,7 +143,7 @@ class User(db.Model):
         self.UID = UID
         self.preferences = preferences
     
-    def to_json(self):
+    def json(self):
         return {
             'UID': self.UID,
             'preferences': self.preferences
