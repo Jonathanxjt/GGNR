@@ -15,17 +15,21 @@ const CreateEvent = () => {
   const [previewImage, setPreviewImage] = useState(null);
   const [gameName, setGameName] = useState("");
   const [gameResults, setGameResults] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      const response = await axios.post("http://localhost:5000/search", {
-        game_name: "Counter Strike",
-      });
-      setGameResults(response.data);
-      console.log(response.data);
-    } catch (error) {
-      console.error("Error fetching game data:", error);
+  const handleKeyDown = async (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      try {
+        const response = await axios.post("http://localhost:5000/search", {
+          game_name: gameName,
+        });
+        setGameResults(response.data);
+        console.log(response.data);
+        setShowDropdown(true);
+      } catch (error) {
+        console.error("Error fetching game data:", error);
+      }
     }
   };
 
@@ -41,13 +45,11 @@ const CreateEvent = () => {
     }
   };
 
-
-
   return (
     <div>
       <MyNavbar />
       <div className="container">
-        <Form onSubmit={handleSubmit}>
+        <Form>
           <Form.Group controlId="title">
             <Form.Label>Title</Form.Label>
             <Form.Control
@@ -127,6 +129,31 @@ const CreateEvent = () => {
               value={capacity}
               onChange={(e) => setCapacity(parseInt(e.target.value))}
             />
+          </Form.Group>
+
+          <Form.Group controlId="gameName">
+            <Form.Label>Game Name</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter game name"
+              value={gameName}
+              onChange={(e) => setGameName(e.target.value)}
+              onKeyDown={handleKeyDown}
+            />
+            {showDropdown && gameResults.length > 0 && (
+              <ul
+                style={{ listStyleType: "none", padding: "10px 0", margin: 0 }}
+              >
+                {gameResults.map((game) => (
+                  <li
+                    key={game.id}
+                    style={{ cursor: "pointer", padding: "5px" }}
+                  >
+                    {game.name}
+                  </li>
+                ))}
+              </ul>
+            )}
           </Form.Group>
 
           <Button variant="primary" type="submit">
