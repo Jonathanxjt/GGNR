@@ -14,7 +14,7 @@ import json
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = (
-    environ.get("dbURL") or "mysql+mysqlconnector://root@localhost:3306/ggnr"
+    environ.get("dbURL") or "mysql+mysqlconnector://root@localhost:3306/ggnr_database"
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
@@ -29,8 +29,11 @@ class Event(db.Model):
     
     EID = db.Column(db.Integer, primary_key=True)
     TierID = db.Column(db.SmallInteger, primary_key=True)
+    Title = db.Column(db.String(255))
+    Description = db.Column(db.Text)
+    EventLogo = db.Column(db.Text)
     GameName = db.Column(db.String(255))
-    GameLogo = db.Column(db.String(255))
+    GameLogo = db.Column(db.Text)
     Location = db.Column(db.String(255))
     Time = db.Column(db.DateTime)
     GameCompany = db.Column(db.String(255))
@@ -38,12 +41,15 @@ class Event(db.Model):
     Price = db.Column(db.Float(precision=2))
     
     # Relationships
-    attendees = relationship('Attendee', back_populates='event')
-    tickets = relationship('Ticket', back_populates='event')
+    # attendees = relationship('Attendee', back_populates='event')
+    # tickets = relationship('Ticket', back_populates='event')
 
-    def __init__(self, EID, TierID, GameName, GameLogo, Location, Time, GameCompany, Capacity, Price):
+    def __init__(self, EID, TierID, Title, Description, EventLogo, GameName, GameLogo, Location, Time, GameCompany, Capacity, Price):
         self.EID = EID
         self.TierID = TierID
+        self.Title = Title
+        self.Description = Description
+        self.EventLog = EventLogo
         self.GameName = GameName
         self.GameLogo = GameLogo
         self.Location = Location
@@ -56,6 +62,9 @@ class Event(db.Model):
         return {
             "EID": self.EID,
             "TierID": self.TierID,
+            "Title": self.Title,
+            "Description": self.Description,
+            "EventLogo": self.EventLogo,
             "GameName": self.GameName,
             "GameLogo": self.GameLogo,
             "Location": self.Location,
@@ -114,6 +123,9 @@ def find_by_event_id(EID):
 def create_event():
     EID = request.json.get("EID")
     TierID = request.json.get("TierID")
+    Title = request.json.get("Title")
+    Desciption = request.json.get("Description")
+    EventLogo = request.json.get("EventLogo")
     GameName = request.json.get("GameName")
     GameLogo = request.json.get("GameLogo") 
     Location = request.json.get("Location")
@@ -126,6 +138,9 @@ def create_event():
     event = Event(
         EID = EID,
         TierID = TierID,
+        Title = Title,
+        Desciption = Desciption,
+        EventLogo = EventLogo,
         GameName = GameName,
         GameLogo = GameLogo,
         Location = Location,
