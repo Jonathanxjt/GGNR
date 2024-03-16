@@ -11,19 +11,73 @@ import sys
 
 import json
 
-
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = (
     environ.get("dbURL") or "mysql+mysqlconnector://root@localhost:3306/ggnr_database"
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-db =SQLAlchemy(app)
+db = SQLAlchemy(app)
 
 CORS(app)
 
 # explain why need tierID in events
 # shouldnt tierid be foreign key
+class Attendee(db.Model):
+    __tablename__ = 'attendees'
+    
+    AID = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    EID = db.Column(db.Integer, ForeignKey('events.EID'))
+    UID = db.Column(db.Integer, ForeignKey('users.UID'))
+    ticketID = db.Column(db.Integer)
+    transactionID = db.Column(db.Integer)
+    
+    # Relationships
+    event = relationship('Event', back_populates='attendees')
+    user = relationship('User', back_populates='attendees')
+    def __init__(self, EID, UID, ticketID, transactionID):
+        self.EID = EID
+        self.UID = UID
+        self.ticketID = ticketID
+        self.transactionID = transactionID
+    
+    def to_json(self):
+        return {
+            'AID': self.AID,
+            'EID': self.EID,
+            'UID': self.UID,
+            'ticketID': self.ticketID,
+            'transactionID': self.transactionID
+        }
+    
+
+class Ticket(db.Model):
+    __tablename__ = 'tickets'
+    
+    TicketID = db.Column(db.Integer, primary_key=True)
+    EID = db.Column(db.Integer, ForeignKey('events.EID'))
+    UID = db.Column(db.Integer, ForeignKey('users.UID'))
+    Tier = db.Column(db.SmallInteger)
+    Price = db.Column(db.Float)
+    
+    # Relationships
+    event = relationship('Event', back_populates='tickets')
+    user = relationship('User', back_populates='tickets')
+    def __init__(self, EID, UID, Tier, Price):
+        self.EID = EID
+        self.UID = UID
+        self.Tier = Tier
+        self.Price = Price
+    
+    def to_json(self):
+        return {
+            'TicketID': self.TicketID,
+            'EID': self.EID,
+            'UID': self.UID,
+            'Tier': self.Tier,
+            'Price': self.Price
+        }
+
 class Event(db.Model):
     __tablename__ = 'events'
     
@@ -41,8 +95,8 @@ class Event(db.Model):
     Price = db.Column(db.Float(precision=2))
     
     # Relationships
-    # attendees = relationship('Attendee', back_populates='event')
-    # tickets = relationship('Ticket', back_populates='event')
+    attendees = relationship('Attendee', back_populates='event')
+    tickets = relationship('Ticket', back_populates='event')
 
     def __init__(self, EID, TierID, Title, Description, EventLogo, GameName, GameLogo, Location, Time, GameCompany, Capacity, Price):
         self.EID = EID
@@ -74,7 +128,26 @@ class Event(db.Model):
             "Price": self.Price
         }
 
+class User(db.Model):
+    __tablename__ = 'users'
+    
+    UID = db.Column(db.Integer, primary_key=True)
+    preferences = db.Column(db.Text)
+    
+    # Relationships
+    attendees = relationship('Attendee', back_populates='user')
+    tickets = relationship('Ticket', back_populates='user')
 
+    def __init__(self, UID, preferences):
+        self.UID = UID
+        self.preferences = preferences
+    
+    def to_json(self):
+        return {
+            'UID': self.UID,
+            'preferences': self.preferences
+        }
+        
 # GET ALL
 @app.route("/event")
 def get_all():
