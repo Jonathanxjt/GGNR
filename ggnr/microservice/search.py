@@ -27,7 +27,7 @@ def fetch_cover_urls(game_data):
         cover_response = requests.post(cover_url, headers=access_headers, data=cover_body)
         cover_data = cover_response.json()
         if cover_data:
-            cover_urls.append("//images.igdb.com/igdb/image/upload/t_cover_big/" + cover_data[0]["image_id"] + ".png")
+            cover_urls.append("https://images.igdb.com/igdb/image/upload/t_cover_big/" + cover_data[0]["image_id"] + ".png")
         else:
             cover_urls.append(None)
 

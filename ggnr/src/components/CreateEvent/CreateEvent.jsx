@@ -16,10 +16,12 @@ const CreateEvent = () => {
   const [gameName, setGameName] = useState("");
   const [gameResults, setGameResults] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // New state for loading status
 
   const handleKeyDown = async (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
+      setIsLoading(true); // Set loading to true
       try {
         const response = await axios.post("http://localhost:5000/search", {
           game_name: gameName,
@@ -30,6 +32,7 @@ const CreateEvent = () => {
       } catch (error) {
         console.error("Error fetching game data:", error);
       }
+      setIsLoading(false); // Set loading to false
     }
   };
 
@@ -140,6 +143,7 @@ const CreateEvent = () => {
               onChange={(e) => setGameName(e.target.value)}
               onKeyDown={handleKeyDown}
             />
+            {isLoading && <div className="custom-loader"></div>}
             {showDropdown && gameResults.length > 0 && (
               <ul
                 style={{ listStyleType: "none", padding: "10px 0", margin: 0 }}
@@ -148,7 +152,20 @@ const CreateEvent = () => {
                   <li
                     key={game.id}
                     style={{ cursor: "pointer", padding: "5px" }}
+                    onClick={() => {
+                      setGameName(game.name); // Update gameName with the selected game
+                      setShowDropdown(false); // Hide the dropdown
+                    }}
                   >
+                    <img
+                      src={game.cover_url} // Use the .cover_url property for the image source
+                      alt={game.name}
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        marginRight: "10px",
+                      }} // Set the size of the thumbnail
+                    />
                     {game.name}
                   </li>
                 ))}
