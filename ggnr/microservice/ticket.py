@@ -169,7 +169,7 @@ def get_all():
 
 @app.route("/ticket/EID/<string:EID>")
 def get_tickets_by_eid(EID):
-    ticket_list = db.session.scalars(db.select(Ticket).filter_by(EID)).all()
+    ticket_list = db.session.scalars(db.select(Ticket).filter_by(EID=EID)).all()
     if len(ticket_list):
         return jsonify(
             {
@@ -182,7 +182,7 @@ def get_tickets_by_eid(EID):
 
 @app.route("/ticket/UID/<string:UID>")
 def get_tickets_by_uid(UID):
-    ticket_list = db.session.scalars(db.select(Ticket).filter_by(UID)).all()
+    ticket_list = db.session.scalars(db.select(Ticket).filter_by(UID=UID)).all()
     if len(ticket_list):
         return jsonify(
             {
@@ -193,13 +193,9 @@ def get_tickets_by_uid(UID):
     return jsonify({"code": 404, "message": "There are no tickets for this user."}), 404
 
 # combine - UID,EID
-@app.route("/ticket/EID/UID/<string:combine>")  
-def get_ticket_by_uid_eid(combine):
-    split = combine.split(",")
-    uid = split[0]
-    eid = split[1]
-
-    ticket = db.session.scalars(db.select(Ticket).filter_by(uid).filter_by(eid).limit(1)).first()
+@app.route("/ticket/EID/<int:eid>/UID/<int:uid>")  
+def get_ticket_by_uid_eid(uid, eid):
+    ticket = Ticket.query.filter_by(UID=uid, EID=eid).first()
 
     if ticket:
         return jsonify(
@@ -215,6 +211,7 @@ def get_ticket_by_uid_eid(combine):
             "message": "Ticket not found."
         }
     ), 404
+
 
 
 # POST - create ticket
@@ -258,7 +255,8 @@ def create_ticket(TicketID):
             }
         ), 500
     
-    print(json.dumps(ticket.json()), default=str)
+    print(json.dumps(ticket.json(), default=str))
+
 
     return jsonify(
         {
