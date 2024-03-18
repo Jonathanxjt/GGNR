@@ -11,7 +11,7 @@ const RouteConfig = () => {
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/event" element = {<EventPage/>}/>
+        <Route path="/events" element = {<EventPage/>}/>
         <Route path="/create_event" element = {<CreateEvent/>}/>
         <Route path="/event/:id" element={<EventPage />} />
         <Route path="/registration" element={<Registration/>} />

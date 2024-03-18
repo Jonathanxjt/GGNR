@@ -1,6 +1,7 @@
 import React from "react";
 import { MyNavbar } from "./MyNavbar/MyNavbar";
 import background from "../assets/background.mp4";
+import MyFooter from "./MyFooter/MyFooter";
 import "./Home.css";
 
 const HomePage = () => {
@@ -13,6 +14,7 @@ const HomePage = () => {
         <h1>Welcome to Our Website</h1>
         <p>Home of gamers</p>
       </div>
+      <MyFooter />
     </div>
   );
 };
