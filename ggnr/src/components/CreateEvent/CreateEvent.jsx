@@ -32,7 +32,7 @@ const CreateEvent = () => {
       } catch (error) {
         console.error("Error fetching game data:", error);
       }
-      setIsLoading(false); // Set loading to false
+      setIsLoading(); // Set loading to false
     }
   };
 
