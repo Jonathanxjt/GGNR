@@ -161,8 +161,8 @@ const CreateEvent = () => {
                       src={game.cover_url} // Use the .cover_url property for the image source
                       alt={game.name}
                       style={{
-                        width: "30px",
-                        height: "30px",
+                        width: "150px",
+                        height: "150px",
                         marginRight: "10px",
                       }} // Set the size of the thumbnail
                     />
