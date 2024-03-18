@@ -192,6 +192,26 @@ def find_by_event_id(EID):
         }
     ), 404
 
+# GET - games name
+@app.route("/event/gamename/<string:gamename>")
+def find_by_gamename(gamename):
+    event_list = db.session.scalars(db.select(Event).filter_by(GameName=gamename)).all()
+    if len(event_list):
+        return jsonify(
+            {
+                "code": 200,
+                "data": {
+                    "events": [event.json() for event in event_list]
+                }
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "There are no events."
+        }
+    ), 404
+
 # POST - create event
 @app.route("/event", methods=["POST"])
 def create_event():
