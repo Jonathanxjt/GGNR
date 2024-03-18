@@ -21,8 +21,6 @@ db = SQLAlchemy(app)
 
 CORS(app)
 
-# explain why need tierID in events
-# shouldnt tierid be foreign key
 class Attendee(db.Model):
     __tablename__ = 'attendees'
     
@@ -302,43 +300,51 @@ def update_event(EID):
 
         if time != None:
             event.Time = time
-            db.session.commit()
-            return jsonify(
-                {
-                    "code": 200,
-                    "data": event.json()
-                }
-            ), 200
+            # db.session.commit()
+            # return jsonify(
+            #     {
+            #         "code": 200,
+            #         "data": event.json()
+            #     }
+            # ), 200
         
-        elif px != None:
+        if px != None:
             event.Price = px
-            db.session.commit()
-            return jsonify(
-                {
-                    "code": 200,
-                    "data": event.json()
-                }
-            ), 200
+            # db.session.commit()
+            # return jsonify(
+            #     {
+            #         "code": 200,
+            #         "data": event.json()
+            #     }
+            # ), 200
         
-        elif location != None:
+        if location != None:
             event.Location = location
-            db.session.commit()
-            return jsonify(
-                {
-                    "code": 200,
-                    "data": event.json()
-                }
-            ), 200
+            # db.session.commit()
+            # return jsonify(
+            #     {
+            #         "code": 200,
+            #         "data": event.json()
+            #     }
+            # ), 200
         
-        elif capacity != None:
+        if capacity != None:
             event.Capacity -= int(capacity)
-            db.session.commit()
-            return jsonify(
-                {
-                    "code": 200,
-                    "data": event.json()
-                }
-            ), 200
+            # db.session.commit()
+            # return jsonify(
+            #     {
+            #         "code": 200,
+            #         "data": event.json()
+            #     }
+            # ), 200
+        
+        db.session.commit()
+        return jsonify(
+            {
+                "code": 200,
+                "data": event.json()
+            }
+        ), 200
     except Exception as e:
         return jsonify(
             {
