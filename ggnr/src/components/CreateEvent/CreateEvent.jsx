@@ -23,7 +23,7 @@ const CreateEvent = () => {
       event.preventDefault();
       setIsLoading(true); // Set loading to true
       try {
-        const response = await axios.post("http://localhost:5000/search", {
+        const response = await axios.post("http://localhost:5009/search", {
           game_name: gameName,
         });
         setGameResults(response.data);
