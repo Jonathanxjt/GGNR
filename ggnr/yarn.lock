@@ -1646,6 +1646,18 @@
   resolved "https://registry.npmjs.org/@sinclair/typebox/-/typebox-0.27.8.tgz"
   integrity sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==
 
+"@stripe/react-stripe-js@^2.6.2":
+  version "2.6.2"
+  resolved "https://registry.npmjs.org/@stripe/react-stripe-js/-/react-stripe-js-2.6.2.tgz"
+  integrity sha512-FSjNg4v7BiCfojvx25PQ8DugOa09cGk1t816R/DLI/lT+1bgRAYpMvoPirLT4ZQ3ev/0VDtPdWNaabPsLDTOMA==
+  dependencies:
+    prop-types "^15.7.2"
+
+"@stripe/stripe-js@^1.44.1 || ^2.0.0 || ^3.0.0":
+  version "3.0.10"
+  resolved "https://registry.npmjs.org/@stripe/stripe-js/-/stripe-js-3.0.10.tgz"
+  integrity sha512-CFRNha+aPXR8GrqJss2TbK1j4aSGZXQY8gx0hvaYiSp+dU7EK/Zs5uwFTSAgV+t8H4+jcZ/iBGajAvoMYOwy+A==
+
 "@svgr/babel-plugin-add-jsx-attribute@^4.2.0":
   version "4.2.0"
   resolved "https://registry.npmjs.org/@svgr/babel-plugin-add-jsx-attribute/-/babel-plugin-add-jsx-attribute-4.2.0.tgz"
@@ -2783,6 +2795,13 @@ binary-extensions@^2.0.0:
   version "2.2.0"
   resolved "https://registry.npmjs.org/binary-extensions/-/binary-extensions-2.2.0.tgz"
   integrity sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==
+
+bindings@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.npmjs.org/bindings/-/bindings-1.5.0.tgz"
+  integrity sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ==
+  dependencies:
+    file-uri-to-path "1.0.0"
 
 bluebird@^3.5.5:
   version "3.7.2"
@@ -5265,6 +5284,24 @@ fs.realpath@^1.0.0:
   resolved "https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz"
   integrity sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==
 
+fsevents@^1.2.7:
+  version "1.2.13"
+  resolved "https://registry.npmjs.org/fsevents/-/fsevents-1.2.13.tgz"
+  integrity sha512-oWb1Z6mkHIskLzEJ/XWX0srkpkTQ7vaopMQkyaEIoq0fmtFVxOthb8cCxeT+p3ynTdkk/RZwbgG4brR5BeWECw==
+  dependencies:
+    bindings "^1.5.0"
+    nan "^2.12.1"
+
+fsevents@~2.3.2:
+  version "2.3.3"
+  resolved "https://registry.npmjs.org/fsevents/-/fsevents-2.3.3.tgz"
+  integrity sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==
+
+fsevents@2.0.6:
+  version "2.0.6"
+  resolved "https://registry.npmjs.org/fsevents/-/fsevents-2.0.6.tgz"
+  integrity sha512-vfmKZp3XPM36DNF0qhW+Cdxk7xm7gTEHY1clv1Xq1arwRQuKZgAhw+NZNWbJBtuaNxzNXwhfdPYRrvIbjfS33A==
+
 function-bind@^1.1.2:
   version "1.1.2"
   resolved "https://registry.npmjs.org/function-bind/-/function-bind-1.1.2.tgz"
@@ -7625,6 +7662,11 @@ mute-stream@0.0.7:
   resolved "https://registry.npmjs.org/mute-stream/-/mute-stream-0.0.7.tgz"
   integrity sha512-r65nCZhrbXXb6dXOACihYApHw2Q6pV0M3V0PSxd74N0+D8nzAdEAITq2oAjA1jVnKI+tGvEBUpqiMh0+rW6zDQ==
 
+nan@^2.12.1:
+  version "2.18.0"
+  resolved "https://registry.npmjs.org/nan/-/nan-2.18.0.tgz"
+  integrity sha512-W7tfG7vMOGtD30sHoZSSc/JVYiyDPEyQVso/Zz+/uQd0B0L46gtC+pHha5FFMRpil6fm/AoEcRWyOVi4+E/f8w==
+
 nanomatch@^1.2.9:
   version "1.2.13"
   resolved "https://registry.npmjs.org/nanomatch/-/nanomatch-1.2.13.tgz"
@@ -9135,7 +9177,7 @@ prop-types-extra@^1.1.0:
     react-is "^16.3.2"
     warning "^4.0.0"
 
-prop-types@^15.6.2, prop-types@^15.8.1:
+prop-types@^15.6.2, prop-types@^15.7.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.npmjs.org/prop-types/-/prop-types-15.8.1.tgz"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -9351,7 +9393,7 @@ react-dev-utils@^9.0.1:
     strip-ansi "5.2.0"
     text-table "0.2.0"
 
-react-dom@^18.0.0, react-dom@^18.2.0, react-dom@>=16.14.0, react-dom@>=16.6.0, react-dom@>=16.8:
+"react-dom@^16.6.0 || ^17.0.0 || ^18.0.0", "react-dom@^16.8.0 || ^17.0.0 || ^18.0.0", react-dom@^18.0.0, react-dom@^18.2.0, react-dom@>=16.14.0, react-dom@>=16.6.0, react-dom@>=16.8:
   version "18.2.0"
   resolved "https://registry.npmjs.org/react-dom/-/react-dom-18.2.0.tgz"
   integrity sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==
@@ -9363,6 +9405,20 @@ react-error-overlay@^6.0.3:
   version "6.0.11"
   resolved "https://registry.npmjs.org/react-error-overlay/-/react-error-overlay-6.0.11.tgz"
   integrity sha512-/6UZ2qgEyH2aqzYZgQPxEnz33NJ2gNsnHA2o5+o4wW9bLM/JYQitNP9xPhsXwC08hMMovfGe/8retsdDsczPRg==
+
+react-fast-compare@^3.2.2:
+  version "3.2.2"
+  resolved "https://registry.npmjs.org/react-fast-compare/-/react-fast-compare-3.2.2.tgz"
+  integrity sha512-nsO+KSNgo1SbJqJEYRE9ERzo7YtYbou/OqjSQKxV7jcKox7+usiUVZOAC+XnDOABXggQTno0Y1CpVnuWEc1boQ==
+
+react-helmet-async@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.npmjs.org/react-helmet-async/-/react-helmet-async-2.0.4.tgz"
+  integrity sha512-yxjQMWposw+akRfvpl5+8xejl4JtUlHnEBcji6u8/e6oc7ozT+P9PNTWMhCbz2y9tc5zPegw2BvKjQA+NwdEjQ==
+  dependencies:
+    invariant "^2.2.4"
+    react-fast-compare "^3.2.2"
+    shallowequal "^1.1.0"
 
 react-icons@^5.0.1:
   version "5.0.1"
@@ -9484,7 +9540,7 @@ react-transition-group@^4.4.5:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
-react@*, "react@^16.8.0 || ^17.0.0-rc.1 || ^18.0.0", react@^18.0.0, react@^18.2.0, react@>=0.14.0, react@>=15.0.0, react@>=16.14.0, react@>=16.6.0, react@>=16.8, react@>=16.8.0:
+react@*, "react@^16.6.0 || ^17.0.0 || ^18.0.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^16.8.0 || ^17.0.0-rc.1 || ^18.0.0", react@^18.0.0, react@^18.2.0, react@>=0.14.0, react@>=15.0.0, react@>=16.14.0, react@>=16.6.0, react@>=16.8, react@>=16.8.0:
   version "18.2.0"
   resolved "https://registry.npmjs.org/react/-/react-18.2.0.tgz"
   integrity sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==
@@ -10177,6 +10233,11 @@ shallow-clone@^1.0.0:
     is-extendable "^0.1.1"
     kind-of "^5.0.0"
     mixin-object "^2.0.1"
+
+shallowequal@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npmjs.org/shallowequal/-/shallowequal-1.1.0.tgz"
+  integrity sha512-y0m1JoUZSlPAjXVtPPW70aZWfIL/dSP7AFkRnniLCrK/8MDKog3TySTBmckD+RObVxH0v4Tox67+F14PdED2oQ==
 
 shebang-command@^1.2.0:
   version "1.2.0"

@@ -5,6 +5,8 @@ import EventPage from './components/EventPage/EventPage';
 import CreateEvent from './components/CreateEvent/CreateEvent';
 import NotFoundPage from './components/NotFoundPage';
 import Registration from './components/Registration/Registration';
+import CheckoutForm from './components/Checkout/checkout';
+import Return from './components/Return/Return';
 
 const RouteConfig = () => {
   return (
@@ -15,7 +17,10 @@ const RouteConfig = () => {
         <Route path="/create_event" element = {<CreateEvent/>}/>
         <Route path="/event/:id" element={<EventPage />} />
         <Route path="/registration" element={<Registration/>} />
+        <Route path="/checkout" element={<CheckoutForm />} />
+        <Route path="/return" element={<Return />} />
         <Route path="*" element={<NotFoundPage />} />
+
       </Routes>
     </Router>
   );
