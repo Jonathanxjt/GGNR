@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Row, Col } from "react-bootstrap";
 import Carousel from "react-bootstrap/Carousel";
 import PlaceHolderImage from "../PlaceHolderImage/PlaceHolderImage";
 import { MyNavbar } from "../MyNavbar/MyNavbar";
@@ -8,7 +9,6 @@ import image2 from "../../assets/image2.png";
 import image3 from "../../assets/image3.png";
 import "./EventPage.css";
 import axios from "axios";
-
 
 function EventPage() {
   const [eventData, setEventData] = useState([]);
@@ -27,20 +27,28 @@ function EventPage() {
   }, []);
 
   // Function to create cards for each event
-  const createCards = (events) => {
-    return events.map((event, index) => (
-      <Card key={index} className="card">
-        <Card.Img variant="top" src={event.EventLogo} />
-        <Card.Body>
-          <Card.Title>{event.Title}</Card.Title>
-          <Card.Text>{event.Description}</Card.Text>
-        </Card.Body>
-        <Card.Footer>
-          <small className="text-muted">Last updated mins ago</small>
-        </Card.Footer>
-      </Card>
-    ));
-  };
+const createCards = (events) => {
+  return events.map((event, index) => (
+    <Col key={index} lg={3} md={4} sm={6} xs={12} className="mb-3">
+    <Card key={index} className="card" onClick={() => {
+      // Store the event data in local storage
+      localStorage.setItem('selectedEvent', JSON.stringify(event));
+      // Redirect to the registration page
+      window.location.href = '/registration';
+    }}>
+      <Card.Img variant="top" src={event.EventLogo} />
+      <Card.Body>
+        <Card.Title>{event.Title}</Card.Title>
+        <Card.Text>{event.Description}</Card.Text>
+      </Card.Body>
+      <Card.Footer>
+        <small className="text-muted">Last updated mins ago</small>
+      </Card.Footer>
+    </Card>
+    </Col>
+  ));
+};
+
   // Function to create carousel items with cards
   const createCarouselItems = () => {
     const items = [];
@@ -61,36 +69,21 @@ function EventPage() {
       <MyNavbar />
       <Carousel>
         <Carousel.Item>
-          <img
-            src={image1}
-            alt="First slide"
-            width="100%"
-            height="400"
-          />
+          <img src={image1} alt="First slide" width="100%" height="400" />
           <Carousel.Caption>
             <h3>First slide label</h3>
             <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
           </Carousel.Caption>
         </Carousel.Item>
         <Carousel.Item>
-          <img
-            src={image2}
-            alt="Second slide"
-            width="100%"
-            height="400"
-          />
+          <img src={image2} alt="Second slide" width="100%" height="400" />
           <Carousel.Caption>
             <h3>Second slide label</h3>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
           </Carousel.Caption>
         </Carousel.Item>
         <Carousel.Item>
-          <img
-            src={image3}
-            alt="Third slide"
-            width="100%"
-            height="400"
-          />
+          <img src={image3} alt="Third slide" width="100%" height="400" />
           <Carousel.Caption>
             <h3>Third slide label</h3>
             <p>
@@ -101,9 +94,9 @@ function EventPage() {
       </Carousel>
       {/* Events carousel */}
       <div className="container">
-        <Carousel indicators={false} interval={null}>
-          {createCarouselItems()}
-        </Carousel>
+      <Row className="py-2">
+          {createCards(eventData)}
+        </Row>
       </div>
     </div>
     // Cards

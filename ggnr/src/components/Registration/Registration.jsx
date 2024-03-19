@@ -5,6 +5,10 @@ import axios from "axios";
 
 function Registration() {
   const [eventData, setEventData] = useState(null);
+  const selectedEvent = JSON.parse(localStorage.getItem('selectedEvent'));
+
+  console.log(selectedEvent); // Use these values as needed
+
 
   useEffect(() => {
     axios
@@ -41,9 +45,9 @@ function Registration() {
               backgroundColor: "#f0f0f0",
             }}
           >
-            {eventData && (
+            {selectedEvent && (
               <img
-                src={`path/to/your/images/${eventData.EventLogo}`}
+                src={`path/to/your/images/${selectedEvent.EventLogo}`}
                 alt="Event"
                 style={{ width: "100%", height: "100%" }}
               />
@@ -53,28 +57,28 @@ function Registration() {
         <Col md={6}>
 
         {/* Description */}
-          {eventData && (
-            <p>{eventData.Description}</p>
+          {selectedEvent && (
+            <p>{selectedEvent.Description}</p>
             
           )}
           {/* Location */}
-          {eventData && (
-            <p>{eventData.Location}</p>
+          {selectedEvent && (
+            <p>{selectedEvent.Location}</p>
             
           )}
         {/* Date/Time */}
-        {eventData && (
-            <p>{eventData.Time}</p>
+        {selectedEvent && (
+            <p>{selectedEvent.Time}</p>
             
           )}
         {/* Capacity */}
-        {eventData && (
-            <p>{eventData.Capacity}</p>
+        {selectedEvent && (
+            <p>{selectedEvent.Capacity}</p>
             
           )}
           {/* Price */}
-          {eventData && (
-            <p>{eventData.Price}</p>
+          {selectedEvent && (
+            <p>{selectedEvent.Price}</p>
             
           )}
 
