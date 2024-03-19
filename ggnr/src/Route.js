@@ -7,6 +7,7 @@ import NotFoundPage from './components/NotFoundPage';
 import Registration from './components/Registration/Registration';
 import CheckoutForm from './components/Checkout/checkout';
 import Return from './components/Return/Return';
+import Login from './components/Login';
 
 const RouteConfig = () => {
   return (
@@ -19,6 +20,7 @@ const RouteConfig = () => {
         <Route path="/registration" element={<Registration/>} />
         <Route path="/checkout" element={<CheckoutForm />} />
         <Route path="/return" element={<Return />} />
+        <Route path="/login" element={<Login />} />
         <Route path="*" element={<NotFoundPage />} />
 
       </Routes>

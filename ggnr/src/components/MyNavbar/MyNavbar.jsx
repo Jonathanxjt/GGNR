@@ -9,7 +9,7 @@ export const MyNavbar = () => {
 
   const profileIconStyle = {
     fontSize: '20px', // Adjust size as needed
-    color: '#495057', // Adjust color as needed
+    color: '#FFFFFF', // Adjust color as needed
     marginLeft: '15px', // Adjust spacing as needed
     cursor: 'pointer',
   };
@@ -23,7 +23,6 @@ export const MyNavbar = () => {
           <Nav.Link href="/">Home</Nav.Link>
           <Nav.Link href="/events">Events</Nav.Link>
           <Nav.Link href="#games">Games</Nav.Link>
-          <Nav.Link href="#about-us">About Us</Nav.Link>
         </Nav>
         <Form inline className="d-flex align-items-center">
           <BsPerson style={profileIconStyle} />
