@@ -1,12 +1,12 @@
 version: '3.8'
 
 services:
-  # attendee:
-  #   build:
-  #     context: .
-  #     dockerfile: dockerfile_attendee
-  #   environment:
-  #     dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/ggnr_database
+  attendee:
+    build:
+      context: .
+      dockerfile: dockerfile_attendee
+    environment:
+      dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/ggnr_database
 
   event:
     build:
@@ -14,36 +14,38 @@ services:
       dockerfile: dockerfile_event
     environment:
       dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/ggnr_database
+    ports:
+      - "5000:5000"
 
 
-  # payment:
-  #   build:
-  #     context: .
-  #     dockerfile: dockerfile_payment
+  payment:
+    build:
+      context: .
+      dockerfile: dockerfile_payment
 
-  # registration:
-  #   build:
-  #     context: .
-  #     dockerfile: dockerfile_registration
-  #   environment:
-  #     dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/ggnr_database
+  registration:
+    build:
+      context: .
+      dockerfile: dockerfile_registration
+    environment:
+      dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/ggnr_database
 
-  # search:
-  #   build:
-  #     context: .
-  #     dockerfile: dockerfile_search
+  search:
+    build:
+      context: .
+      dockerfile: dockerfile_search
 
-  # ticket:
-  #   build:
-  #     context: .
-  #     dockerfile: dockerfile_ticket
-  #   environment:
-  #     dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/ggnr_database
+  ticket:
+    build:
+      context: .
+      dockerfile: dockerfile_ticket
+    environment:
+      dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/ggnr_database
 
-  # user:
-  #   build:
-  #     context: .
-  #     dockerfile: dockerfile_user
-  #   environment:
-  #     dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/ggnr_database
+  user:
+    build:
+      context: .
+      dockerfile: dockerfile_user
+    environment:
+      dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/ggnr_database
 
