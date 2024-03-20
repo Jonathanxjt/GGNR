@@ -5,47 +5,64 @@ services:
     build:
       context: .
       dockerfile: dockerfile_attendee
+    restart: always
     environment:
       dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/ggnr_database
+    ports:
+      - "5003:5003"
 
   event:
     build:
       context: .
       dockerfile: dockerfile_event
+    restart: always
     environment:
       dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/ggnr_database
     ports:
       - "5000:5000"
 
-
   payment:
     build:
       context: .
       dockerfile: dockerfile_payment
+    restart: always
+    ports:
+      - "5011:5011"
 
   registration:
     build:
       context: .
       dockerfile: dockerfile_registration
+    restart: always
     environment:
       dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/ggnr_database
+    ports:
+      - "5006:5006"
 
   search:
     build:
       context: .
       dockerfile: dockerfile_search
+    restart: always
+    ports:
+      - "5009:5009"
 
   ticket:
     build:
       context: .
       dockerfile: dockerfile_ticket
+    restart: always
     environment:
       dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/ggnr_database
+    ports:
+      - "5008:5008"
 
   user:
     build:
       context: .
       dockerfile: dockerfile_user
+    restart: always
     environment:
       dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/ggnr_database
-
+    ports:
+      - "5005:5005"
