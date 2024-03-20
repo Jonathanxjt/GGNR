@@ -29,15 +29,6 @@ services:
     ports:
       - "5011:5011"
 
-  registration:
-    build:
-      context: .
-      dockerfile: dockerfile_registration
-    restart: always
-    env_file:
-      - ggnr.env
-    ports:
-      - "5006:5006"
 
   search:
     build:
@@ -66,3 +57,14 @@ services:
       - ggnr.env
     ports:
       - "5005:5005"
+
+  registration:
+    build:
+      context: .
+      dockerfile: dockerfile_registration
+    restart: always
+    env_file:
+      - ggnr.env
+    ports:
+      - "5006:5006"
+

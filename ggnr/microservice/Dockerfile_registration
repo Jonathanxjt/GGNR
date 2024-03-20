@@ -4,13 +4,14 @@ FROM python:3-slim
 # Set the working directory in the container
 WORKDIR /usr/src/app
 
-# Copy the current directory contents into the container at /usr/src/app
-COPY requirements.txt ./
+# Copy the requirements.txt file first to leverage Docker cache
+COPY requirements.txt .
 
 # Install any needed packages specified in requirements.txt
 RUN python -m pip install --no-cache-dir -r requirements.txt
 
-COPY ./registration.py .
+# Copy the current directory contents into the container at /usr/src/app
+COPY . .
 
-# Run app.py when the container launches
+# Run registration.py when the container launches
 CMD ["python", "./registration.py"]
