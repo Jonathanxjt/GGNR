@@ -6,3 +6,4 @@ jsonpointer==2.1
 requests-oauthlib==1.4.0
 mysql-connector-python==8.3.0
 stripe==8.7.0
+requests==2.31.0

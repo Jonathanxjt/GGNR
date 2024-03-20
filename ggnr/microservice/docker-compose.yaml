@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  # attendee:
+  #   build:
+  #     context: .
+  #     dockerfile: dockerfile_attendee
+  #   environment:
+  #     dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/ggnr_database
+
+  event:
+    build:
+      context: .
+      dockerfile: dockerfile_event
+    environment:
+      dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/ggnr_database
+
+
+  # payment:
+  #   build:
+  #     context: .
+  #     dockerfile: dockerfile_payment
+
+  # registration:
+  #   build:
+  #     context: .
+  #     dockerfile: dockerfile_registration
+  #   environment:
+  #     dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/ggnr_database
+
+  # search:
+  #   build:
+  #     context: .
+  #     dockerfile: dockerfile_search
+
+  # ticket:
+  #   build:
+  #     context: .
+  #     dockerfile: dockerfile_ticket
+  #   environment:
+  #     dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/ggnr_database
+
+  # user:
+  #   build:
+  #     context: .
+  #     dockerfile: dockerfile_user
+  #   environment:
+  #     dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/ggnr_database
+
