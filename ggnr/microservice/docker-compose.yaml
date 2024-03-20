@@ -6,8 +6,8 @@ services:
       context: .
       dockerfile: dockerfile_attendee
     restart: always
-    environment:
-      dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/ggnr_database
+    env_file:
+      - ggnr.env
     ports:
       - "5003:5003"
 
@@ -16,8 +16,8 @@ services:
       context: .
       dockerfile: dockerfile_event
     restart: always
-    environment:
-      dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/ggnr_database
+    env_file:
+      - ggnr.env
     ports:
       - "5000:5000"
 
@@ -34,8 +34,8 @@ services:
       context: .
       dockerfile: dockerfile_registration
     restart: always
-    environment:
-      dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/ggnr_database
+    env_file:
+      - ggnr.env
     ports:
       - "5006:5006"
 
@@ -52,8 +52,8 @@ services:
       context: .
       dockerfile: dockerfile_ticket
     restart: always
-    environment:
-      dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/ggnr_database
+    env_file:
+      - ggnr.env
     ports:
       - "5008:5008"
 
@@ -62,7 +62,7 @@ services:
       context: .
       dockerfile: dockerfile_user
     restart: always
-    environment:
-      dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/ggnr_database
+    env_file:
+      - ggnr.env
     ports:
       - "5005:5005"
