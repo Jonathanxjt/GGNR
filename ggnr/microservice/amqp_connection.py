@@ -4,12 +4,12 @@ import pika
 from os import environ
 
 # get from the environ
-hostname = environ.get("hostname")
-port = environ.get("port")
+# hostname = environ.get("hostname")
+# port = environ.get("port")
 
 # hardcoding values
-# hostname = "localhost"
-# port = 5672
+hostname = "localhost"
+port = 5672
 
 # function to create a connection to the broker
 def create_connection(max_retries=12, retry_interval=5):

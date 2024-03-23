@@ -10,7 +10,9 @@ import os
 import sys
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('dbURL')
+app.config["SQLALCHEMY_DATABASE_URI"] = (
+    environ.get("dbURL") or "mysql+mysqlconnector://root@localhost:3306/ggnr_database"
+)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db =SQLAlchemy(app)
@@ -295,6 +297,5 @@ def delete_attendee_list(EID):
         ), 400
 
 
-# change port?
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5003, debug=True)

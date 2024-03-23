@@ -3,17 +3,18 @@ import pika
 from os import environ
 
 # non-hardcoding the values
-hostname = environ.get("hostname")
-port = environ.get("port")
-exchangename = environ.get("exchangename")
-exchangetype = environ.get("exchangetype")
-notif_queue_name = environ.get("notif_queue_name") #Notification_Log
+# hostname = "localhost"
+# port = environ.get("port")
+# exchangename = environ.get("exchangename")
+# exchangetype = environ.get("exchangetype")
+# notif_queue_name = environ.get("Notification_log") #Notification_Log
+# error_queue_name = environ.get("Error") #Error
 
 # default (hardcoded)
-# hostname = "localhost"
-# port = 5672
-# exchangename = "order_topic"
-# exchangetype = "topic"
+hostname = "localhost"
+port = 5672
+exchangename = "notification_topic"
+exchangetype = "topic"
 
 
 def create_connection(max_retries=12, retry_interval=5):
@@ -62,13 +63,20 @@ def create_queues(channel):
     print("amqp_setup:create queues")
     # create_error_queue(channel)
     create_notif_log_queue(channel)
+    create_error_queue(channel)
 
 def create_notif_log_queue(channel):
     print("amqp_setup:create_notif_log_queue")
     a_queue_name = "Notification_Log"
     channel.queue_declare(queue=a_queue_name, durable=True)
-    channel.queue_bind(exchange=exchangename, queue=a_queue_name, routing_key="#")
+    channel.queue_bind(exchange=exchangename, queue=a_queue_name, routing_key="#.info")
     # routing_key = "#"
+
+def create_error_queue(channel):
+    print("amqp_setup:create error_queue")
+    error_queue_name = "Error"
+    channel.queue_declare(queue=error_queue_name, durable=True)
+    channel.queue_bind(exchange=exchangename, queue=error_queue_name, routing_key="#.error")
 
 if __name__ == "__main__":
     connection = create_connection()
