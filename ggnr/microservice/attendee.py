@@ -57,7 +57,7 @@ class Ticket(db.Model):
     # Relationships
     event = relationship('Event', back_populates='tickets')
     user_tickets = relationship('UserTicket', back_populates='tickets')
-    def __init__(self, TicketID, EID, UID, Tier, Price):
+    def __init__(self, TicketID, EID, UID, TierID, PriceID):
         self.TicketID = TicketID
         self.EID = EID
         self.UID = UID
@@ -68,8 +68,8 @@ class Ticket(db.Model):
         return {
             'TicketID': self.TicketID,
             'EID': self.EID,
-            'Tier': self.TierID,
-            'Price': self.PriceID
+            'TierID': self.TierID,
+            'PriceID': self.PriceID
         }
 
 class Event(db.Model):
@@ -92,7 +92,7 @@ class Event(db.Model):
     attendees = relationship('Attendee', back_populates='event')
     tickets = relationship('Ticket', back_populates='event')
 
-    def __init__(self, EID, TierID, Title, Description, EventLogo, GameName, GameLogo, Location, Time, GameCompany, Capacity, Price):
+    def __init__(self, EID, TierID, Title, Description, EventLogo, GameName, GameLogo, Location, Time, GameCompany, Capacity, PriceID):
         self.EID = EID
         self.TierID = TierID
         self.Title = Title
@@ -119,7 +119,7 @@ class Event(db.Model):
             "Time": self.Time.isoformat() if self.Time else None,  # ISO formatting for dateTime
             "GameCompany": self.GameCompany,
             "Capacity": self.Capacity,
-            "Price": self.PriceID
+            "PriceID": self.PriceID
         }
 
 class User(db.Model):

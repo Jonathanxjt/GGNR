@@ -61,7 +61,7 @@ class Ticket(db.Model):
     # Relationships
     event = relationship('Event', back_populates='tickets')
     user_tickets = relationship('UserTicket', back_populates='tickets')
-    def __init__(self, TicketID, EID, UID, Tier, PriceID):
+    def __init__(self, TicketID, EID, UID, TierID, PriceID):
         self.TicketID = TicketID
         self.EID = EID
         self.UID = UID
@@ -72,7 +72,7 @@ class Ticket(db.Model):
         return {
             'TicketID': self.TicketID,
             'EID': self.EID,
-            'Tier': self.TierID,
+            'TierID': self.TierID,
             'PriceID': self.PriceID
         }
 
