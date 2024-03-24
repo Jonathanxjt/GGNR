@@ -1,16 +1,18 @@
-# Use an official Python runtime as a parent image
-FROM python:3-slim
+# Use an official Ruby runtime as a parent image
+FROM ruby:2.7
 
 # Set the working directory in the container
 WORKDIR /usr/src/app
 
-# Copy the current directory contents into the container at /usr/src/app
-COPY requirements.txt ./
+# Copy the Gemfile and Gemfile.lock into the container
+COPY Gemfile Gemfile.lock ./
 
-# Install any needed packages specified in requirements.txt
-RUN python -m pip install --no-cache-dir -r requirements.txt
+# Install any needed packages specified in Gemfile
+RUN gem install bundler -v 1.17.2
+RUN bundle install
 
-COPY ./search.py .
+# Copy the rest of the application into the container
+COPY . .
 
-# Run app.py when the container launches
-CMD ["python", "./search.py"]
+# Run search.rb when the container launches
+CMD ["bundle", "exec", "ruby", "./search.rb"]
