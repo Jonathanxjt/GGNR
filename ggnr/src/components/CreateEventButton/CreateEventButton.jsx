@@ -14,7 +14,7 @@ const CircleButton = ({ url }) => {
   return (
     <div className="circleButton" onClick={redirectToURL}>
       {/* Plus symbol inside the circle */}
-      <span className="circleButtonContent">+</span>
+      <span className="circleButtonContent">&#43;</span>
     </div>
   );
 };
