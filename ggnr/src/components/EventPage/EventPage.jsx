@@ -18,8 +18,17 @@ function EventPage() {
       .get("http://localhost:5000/event")
       .then((response) => {
         // .data.data is because json data sends code and data due to the microservice json response
-        setEventData(response.data.data.events);
-        console.log(response.data.data.events);
+        // Remove duplicate events based on the Title property
+        const uniqueEvents = response.data.data.events.reduce((acc, current) => {
+          const isDuplicate = acc.find(event => event.EID === current.EID);
+          if (!isDuplicate) {
+            acc.push(current);
+          }
+          return acc;
+        }, []);
+
+        setEventData(uniqueEvents);
+        console.log(uniqueEvents);
       })
       .catch((error) => {
         console.error("There was an error!", error);

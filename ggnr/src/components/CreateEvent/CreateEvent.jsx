@@ -143,7 +143,9 @@ const CreateEvent = () => {
               onChange={(e) => setGameName(e.target.value)}
               onKeyDown={handleKeyDown}
             />
+            {isLoading && <div style={{ height: '50px', width: '100%' }}></div>}
             {isLoading && <div className="custom-loader"></div>}
+            {isLoading && <div style={{ height: '750px', width: '100%' }}></div>}
             {showDropdown && gameResults.length > 0 && (
               <ul
                 style={{ listStyleType: "none", padding: "10px 0", margin: 0 }}
