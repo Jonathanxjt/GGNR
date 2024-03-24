@@ -59,6 +59,17 @@ const Login = () => {
         } else {
           // Login failed
           console.log("Login failed:", response.data.message);
+          toast.error("Login failed: Incorrect email or password!", {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+            transition: Flip,
+            });
           // You can show an error message to the user
         }
       } catch (error) {
