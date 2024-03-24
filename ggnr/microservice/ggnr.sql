@@ -21,7 +21,7 @@ CREATE TABLE events (
 CREATE TABLE users (
     UID INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255) NOT NULL,
-    password_hash BINARY(60) NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
     preferences TEXT,
     email VARCHAR(255) NOT NULL,
     contact VARCHAR(20) NOT NULL,

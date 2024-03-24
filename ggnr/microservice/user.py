@@ -15,9 +15,7 @@ import bcrypt
 import json
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = (
-    environ.get("dbURL") or "mysql+mysqlconnector://root@localhost:3306/ggnr_database"
-)
+app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('dbURL')
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db =SQLAlchemy(app)
@@ -36,7 +34,6 @@ class Attendee(db.Model):
     # Relationships
     event = relationship('Event', back_populates='attendees')
     user = relationship('User', back_populates='attendees')
-
     def __init__(self, EID, UID, ticketID, transactionID):
         self.EID = EID
         self.UID = UID
@@ -58,27 +55,25 @@ class Ticket(db.Model):
     
     TicketID = db.Column(db.Integer, primary_key=True)
     EID = db.Column(db.Integer, ForeignKey('events.EID'))
-    UID = db.Column(db.Integer, ForeignKey('users.UID'))
-    Tier = db.Column(db.SmallInteger)
-    Price = db.Column(db.Float)
+    TierID = db.Column(db.SmallInteger)
+    PriceID = db.Column(db.String(255))
     
     # Relationships
     event = relationship('Event', back_populates='tickets')
-    user = relationship('User', back_populates='tickets')
-    def __init__(self, TicketID, EID, UID, Tier, Price):
+    user_tickets = relationship('UserTicket', back_populates='tickets')
+    def __init__(self, TicketID, EID, UID, Tier, PriceID):
         self.TicketID = TicketID
         self.EID = EID
         self.UID = UID
-        self.Tier = Tier
-        self.Price = Price
+        self.TierID = TierID
+        self.PriceID = PriceID
     
     def json(self):
         return {
             'TicketID': self.TicketID,
             'EID': self.EID,
-            'UID': self.UID,
-            'Tier': self.Tier,
-            'Price': self.Price
+            'Tier': self.TierID,
+            'PriceID': self.PriceID
         }
 
 class Event(db.Model):
@@ -95,13 +90,13 @@ class Event(db.Model):
     Time = db.Column(db.DateTime)
     GameCompany = db.Column(db.String(255))
     Capacity = db.Column(db.Integer)
-    Price = db.Column(db.Float(precision=2))
+    PriceID = db.Column(db.String(255))
     
     # Relationships
     attendees = relationship('Attendee', back_populates='event')
     tickets = relationship('Ticket', back_populates='event')
 
-    def __init__(self, EID, TierID, Title, Description, EventLogo, GameName, GameLogo, Location, Time, GameCompany, Capacity, Price):
+    def __init__(self, EID, TierID, Title, Description, EventLogo, GameName, GameLogo, Location, Time, GameCompany, Capacity, PriceID):
         self.EID = EID
         self.TierID = TierID
         self.Title = Title
@@ -113,7 +108,7 @@ class Event(db.Model):
         self.Time = Time
         self.GameCompany = GameCompany
         self.Capacity = Capacity
-        self.Price = Price
+        self.PriceID = PriceID
 
     def json(self):
         return {
@@ -128,31 +123,28 @@ class Event(db.Model):
             "Time": self.Time.isoformat() if self.Time else None,  # ISO formatting for dateTime
             "GameCompany": self.GameCompany,
             "Capacity": self.Capacity,
-            "Price": self.Price
+            "PriceID": self.PriceID
         }
 
 class User(db.Model):
     __tablename__ = 'users'
-    
-    UID = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    username = db.Column(db.Text)
-    password_hash = db.Column(db.Text)
+
+    UID = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(255), nullable=False)
+    password_hash = db.Column(db.String(255), nullable=False)
     preferences = db.Column(db.Text)
-    email = db.Column(db.Text)
-    contact = db.Column(db.Text)
-    organiser = db.Column(TINYINT)
-    organiser_company = db.Column(db.Text)
+    email = db.Column(db.String(255), nullable=False)
+    contact = db.Column(db.String(20), nullable=False)
+    organiser = db.Column(db.Boolean, nullable=False)
+    organiser_company = db.Column(db.String(255))
     
     # Relationships
     attendees = relationship('Attendee', back_populates='user')
-    tickets = relationship('Ticket', back_populates='user') 
+    user_tickets = relationship('UserTicket', back_populates='user')
 
-    def __init__(self, username, password, preferences, email, contact, organiser, organiser_company):
-        # hash the password
-        hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
-
+    def __init__(self, username, password_hash, preferences, email, contact, organiser, organiser_company):
         self.username = username
-        self.password_hash = hashed_password
+        self.password_hash = password_hash
         self.preferences = preferences
         self.email = email
         self.contact = contact
@@ -162,15 +154,33 @@ class User(db.Model):
     def json(self):
         return {
             'UID': self.UID,
-            "username": self.username,
-            "password": self.password_hash,
+            'username': self.username,
             'preferences': self.preferences,
-            "email": self.email,
-            "contact": self.contact,
-            "organiser": self.organiser,
-            "organiser_company": self.organiser_company       
-            }
-    
+            'email': self.email,
+            'contact': self.contact,
+            'organiser': self.organiser,
+            'organiser_company': self.organiser_company
+        }
+        
+class UserTicket(db.Model):
+    __tablename__ = 'user_tickets'
+
+    UID = db.Column(db.Integer, ForeignKey('users.UID'), primary_key=True)
+    TicketID = db.Column(db.Integer, ForeignKey('tickets.TicketID'), primary_key=True)
+
+    # Relationships
+    user = relationship('User', back_populates='user_tickets')
+    tickets = relationship('Ticket', back_populates='user_tickets')
+
+    def __init__(self, UID, TicketID):
+        self.UID = UID
+        self.TicketID = TicketID
+
+    def json(self):
+        return {
+            'UID': self.UID,
+            'TicketID': self.TicketID
+        }
 
     
 # GET all users
