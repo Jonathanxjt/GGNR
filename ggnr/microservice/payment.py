@@ -16,7 +16,7 @@ stripe.api_key = 'sk_test_51OuvQH2LfOffQtXeCwFG6wFjZAbQC5PVeBjQiVRx0QabJ7Y9cZM46
 app = Flask(__name__)
 CORS(app)
 
-YOUR_DOMAIN = 'http://127.0.0.1:5011'
+YOUR_DOMAIN = 'http://localhost:3000'
 
 @app.route('/create-checkout-session', methods=['POST'])
 def create_checkout_session():
@@ -31,7 +31,7 @@ def create_checkout_session():
                 },
             ],
             mode='payment',
-            return_url=YOUR_DOMAIN + '/return?session_id={CHECKOUT_SESSION_ID}',
+            return_url = f"{YOUR_DOMAIN}/return?session_id={{CHECKOUT_SESSION_ID}}"
         )
     except Exception as e:
         return str(e)
