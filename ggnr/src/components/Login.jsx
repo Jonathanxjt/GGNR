@@ -20,7 +20,7 @@ const Login = () => {
         e.preventDefault();
         try {
             const response = await axios.get(
-                `http://localhost:5000/user/check-password/${email}/password/${password}`
+                `http://localhost:5005/user/check-password/${email}/password/${password}`
             );
             if (response.data.code === 201 && response.data.message === 'Correct password') {
                 // Login successful

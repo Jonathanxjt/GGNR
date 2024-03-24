@@ -22,9 +22,9 @@ export const MyNavbar = () => {
           <Nav.Link href="/events">Events</Nav.Link>
           <Nav.Link href="#games">Games</Nav.Link>
         </Nav>
-        <Form inline className="d-flex align-items-center">
-          <BsPerson style={profileIconStyle} />
-        </Form>
+        <Nav.Link href="/login" style={profileIconStyle}>
+          <BsPerson />
+        </Nav.Link>
       </Navbar.Collapse>
     </Navbar>
   );

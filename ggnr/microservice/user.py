@@ -227,9 +227,9 @@ def get_user_by_uid(UID):
     ), 404
 
 # GET password - check password
-@app.route("/user/check-password/<string:username>/password/<string:input>")
-def check_password(username,input):
-    user = db.session.query(User).filter_by(username=username).first()
+@app.route("/user/check-password/<string:email>/password/<string:input>")
+def check_password(email,input):
+    user = db.session.query(User).filter_by(email=email).first()
 
     if user:
 
@@ -260,25 +260,27 @@ def check_password(username,input):
     )   
 
 # POST - create user
-@app.route("/user", methods= ["POST"])
+@app.route("/user", methods=["POST"])
 def create_user():
-
     username = request.get_json().get("username")
     password = request.get_json().get("password")
     preferences = request.get_json().get("preferences")
     email = request.get_json().get("email")
     contact = request.get_json().get("contact")
     organiser = request.get_json().get("organiser")
-    organiser_com = request.get_json().get("organiser_com")
+    organiser_company = request.get_json().get("organiser_com")
+
+    # Hash the password
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
     user = User(
-        username,
-        password,
-        preferences,
-        email,
-        contact,
-        organiser,
-        organiser_com
+        username=username,
+        password_hash=hashed_password.decode('utf-8'),  # Store the hashed password as a string
+        preferences=preferences,
+        email=email,
+        contact=contact,
+        organiser=organiser,
+        organiser_company=organiser_company
     )
 
     try:
@@ -301,13 +303,10 @@ def create_user():
         return jsonify(
             {
                 "code": 500,
-                "message": "An error occured while creating the ticket. " +str(e)
+                "message": "An error occurred while creating the user. " + str(e)
             }
         ), 500
     
-    print(json.dumps(user.json(), default=str))
-
-
     return jsonify(
         {
             "code": 201,

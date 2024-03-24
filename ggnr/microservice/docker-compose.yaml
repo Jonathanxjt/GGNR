@@ -29,7 +29,6 @@ services:
     ports:
       - "5011:5011"
 
-
   search:
     build:
       context: .
