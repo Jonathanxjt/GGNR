@@ -3,14 +3,21 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
+from sqlalchemy.dialects.mysql import TINYINT
 
 from os import environ
 from flask_cors import CORS
 import os
 import sys
 
+import bcrypt
+
+import json
+
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('dbURL')
+app.config["SQLALCHEMY_DATABASE_URI"] = (
+    environ.get("dbURL") or "mysql+mysqlconnector://root@localhost:3306/ggnr_database"
+)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db =SQLAlchemy(app)
@@ -29,6 +36,7 @@ class Attendee(db.Model):
     # Relationships
     event = relationship('Event', back_populates='attendees')
     user = relationship('User', back_populates='attendees')
+
     def __init__(self, EID, UID, ticketID, transactionID):
         self.EID = EID
         self.UID = UID
@@ -126,22 +134,44 @@ class Event(db.Model):
 class User(db.Model):
     __tablename__ = 'users'
     
-    UID = db.Column(db.Integer, primary_key=True)
+    UID = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    username = db.Column(db.Text)
+    password_hash = db.Column(db.Text)
     preferences = db.Column(db.Text)
+    email = db.Column(db.Text)
+    contact = db.Column(db.Text)
+    organiser = db.Column(TINYINT)
+    organiser_company = db.Column(db.Text)
     
     # Relationships
     attendees = relationship('Attendee', back_populates='user')
-    tickets = relationship('Ticket', back_populates='user')
+    tickets = relationship('Ticket', back_populates='user') 
 
-    def __init__(self, UID, preferences):
-        self.UID = UID
+    def __init__(self, username, password, preferences, email, contact, organiser, organiser_company):
+        # hash the password
+        hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+
+        self.username = username
+        self.password_hash = hashed_password
         self.preferences = preferences
+        self.email = email
+        self.contact = contact
+        self.organiser = organiser
+        self.organiser_company = organiser_company
     
     def json(self):
         return {
             'UID': self.UID,
-            'preferences': self.preferences
-        }
+            "username": self.username,
+            "password": self.password_hash,
+            'preferences': self.preferences,
+            "email": self.email,
+            "contact": self.contact,
+            "organiser": self.organiser,
+            "organiser_company": self.organiser_company       
+            }
+    
+
     
 # GET all users
 @app.route("/user")
@@ -167,9 +197,9 @@ def get_all():
 
 
 # GET user by uid
-@app.route("/user/<string:UID>")
+@app.route("/user/<int:UID>")
 def get_user_by_uid(UID):
-    user = db.session.scalar(db.select(User).filter_by(UID=UID).limit(1)).first()
+    user = db.session.scalar(db.select(User).filter_by(UID=UID)).all()
 
     if user:
         return jsonify(
@@ -185,6 +215,97 @@ def get_user_by_uid(UID):
             "message": "There is no user."
         }
     ), 404
+
+# GET password - check password
+@app.route("/user/check-password/<string:username>/password/<string:input>")
+def check_password(username,input):
+    user = db.session.query(User).filter_by(username=username).first()
+
+    if user:
+
+        entered_pw_bytes = input.encode("utf-8")
+        hashed_password = user.password_hash.encode("utf-8")
+
+        if bcrypt.checkpw(entered_pw_bytes, hashed_password):
+            return jsonify(
+                {
+                    "code": 201,
+                    "message": "Correct password",
+                    "data" : user.json()
+                }
+            )
+        else:
+            return jsonify(
+                {
+                    "code":201,
+                    "message": "Incorrect password"
+                }
+            )
+    
+    return jsonify(
+        {
+            "code": 404,
+            "message": "There is no user."
+        }
+    )   
+
+# POST - create user
+@app.route("/user", methods= ["POST"])
+def create_user():
+
+    username = request.get_json().get("username")
+    password = request.get_json().get("password")
+    preferences = request.get_json().get("preferences")
+    email = request.get_json().get("email")
+    contact = request.get_json().get("contact")
+    organiser = request.get_json().get("organiser")
+    organiser_com = request.get_json().get("organiser_com")
+
+    user = User(
+        username,
+        password,
+        preferences,
+        email,
+        contact,
+        organiser,
+        organiser_com
+    )
+
+    try:
+        db.session.add(user)
+        db.session.commit()
+    except Exception as e:
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        ex_str = (
+            str(e)
+            + " at "
+            + str(exc_type)
+            + ": "
+            + fname
+            + ": line "
+            + str(exc_tb.tb_lineno)
+        )
+        print(ex_str)
+
+        return jsonify(
+            {
+                "code": 500,
+                "message": "An error occured while creating the ticket. " +str(e)
+            }
+        ), 500
+    
+    print(json.dumps(user.json(), default=str))
+
+
+    return jsonify(
+        {
+            "code": 201,
+            "data": user.json()
+        }
+    ), 201
+
+
 
 # change port?
 if __name__ == "__main__":
