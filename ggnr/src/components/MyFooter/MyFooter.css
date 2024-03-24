@@ -1,6 +1,75 @@
 .custom-footer {
-    background-color: #003049; /* Set the background color of the footer */
-  }
-  
-  /* Add any other styles for your footer here */
-  
+  background-color: #003049; /* Set the background color of the footer */
+
+  bottom: 0;
+  width: 100%;
+  padding: 10px 0; /* Add some padding to the footer */
+}
+
+ul {
+  display: flex;
+  justify-content: center; /* Center the icons horizontally */
+  align-items: center; /* Center the icons vertically */
+  padding: 0; /* Remove default padding */
+  margin: 0; /* Remove default margin */
+}
+
+ul li {
+  list-style: none;
+}
+
+ul li a {
+  width: 60px; /* Reduce the width */
+  height: 60px; /* Reduce the height */
+  background-color: #fff;
+  text-align: center;
+  line-height: 60px; /* Adjust the line height */
+  font-size: 25px; /* Reduce the font size */
+  margin: 0 10px;
+  display: block;
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+  border: 3px solid #fff;
+  z-index: 1;
+}
+
+ul li a .icon {
+  position: relative;
+  color: #262626;
+  transition: .5s;
+  z-index: 3;
+}
+
+ul li a:hover .icon {
+  color: #fff;
+  transform: rotateY(360deg);
+}
+
+ul li a:before {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #f00;
+  transition: .5s;
+  z-index: 2;
+}
+
+ul li a:hover:before {
+  top: 0;
+}
+
+ul li:nth-child(1) a:before{
+  background: #55acee;
+}
+
+ul li:nth-child(2) a:before {
+  background: #d10deb;
+}
+
+ul li:nth-child(3) a:before {
+  background: #f23921;
+}
