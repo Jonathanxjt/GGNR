@@ -1,13 +1,51 @@
 .custom-navbar {
-    background-color: #003049; /* Blue background */
-    color: #FFFFFF; /* White text */
-  }
+	background-color: #003049; /* Blue background */
+	color: #ffffff; /* White text */
+}
 
-  .custom-navbar .navbar-brand,
-  .custom-navbar .nav-link {
-    color: #FFFFFF; /* White text */
-  }
-  
-  .custom-navbar .nav-link:hover {
-    color: #669bbc; /* Lighter shade for hover */
-  }
+.custom-navbar .navbar-brand,
+.custom-navbar .nav-link {
+	color: #ffffff; /* White text */
+	box-sizing: border-box;
+	transition: all 0.35s ease;
+	padding: 0.5em 0.8em;
+	color: #ffffff;
+	position: relative;
+	text-decoration: none;
+	font-size: 20px;
+}
+
+.custom-navbar .nav-link::before,
+.custom-navbar .nav-link::after {
+	content: "";
+	height: 14px;
+	width: 14px;
+	position: absolute;
+	transition: all 0.35s ease;
+	opacity: 0;
+}
+
+.custom-navbar .nav-link::before {
+	content: "";
+	right: 0;
+	top: 0;
+	border-top: 3px solid #3e8914;
+	border-right: 3px solid #2e640f;
+	transform: translate(-100%, 50%);
+}
+.custom-navbar .nav-link:after {
+	content: "";
+	left: 0;
+	bottom: 0;
+	border-bottom: 3px solid #2e640f;
+	border-left: 3px solid #3e8914;
+	transform: translate(100%, -50%);
+}
+.custom-navbar .nav-link:hover:before,
+.custom-navbar .nav-link:hover:after {
+	transform: translate(0, 0);
+	opacity: 1;
+}
+.custom-navbar .nav-link:hover {
+	color: #669bbc; /* Lighter shade for hover */
+}
