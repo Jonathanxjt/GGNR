@@ -29,7 +29,7 @@ function Registration() {
         <Row>
           <Col md={1}></Col>
           <Col
-            md={3}
+            md={4}
             style={{
               display: "flex",
               alignItems: "center",
@@ -38,14 +38,17 @@ function Registration() {
           >
             <div
               style={{
-                width: "300px",
-                height: "600px",
+                textAlign: "center",
+                justifyContent: "center",
+                display: "flex",
+                width: "1000px",
+                height: "300px",
                 backgroundColor: "#f0f0f0",
               }}
             >
               {selectedEvent && (
                 <img
-                  src={`path/to/your/images/${selectedEvent.EventLogo}`}
+                  src={selectedEvent.EventLogo}
                   alt="Event"
                   style={{ width: "100%", height: "100%" }}
                 />
@@ -60,7 +63,7 @@ function Registration() {
               {/* Location */}
               {selectedEvent && <p>{selectedEvent.Location}</p>}
               {/* Date/Time */}
-              {selectedEvent && <p>{selectedEvent.Time}</p>}
+              {selectedEvent && <p>{selectedEvent.FormattedTime}</p>}
               {/* Capacity */}
               {selectedEvent && <p>{selectedEvent.Capacity}</p>}
               {/* Price */}
@@ -71,9 +74,8 @@ function Registration() {
                   <Form.Label>Select Ticket Tier</Form.Label>
                   <Form.Select>
                     <option>Select a tier...</option>
-                    <option value="tier1">Tier 1</option>
-                    <option value="tier2">Tier 2</option>
-                    <option value="tier3">Tier 3</option>
+                    <option value="tier1">Attendee Ticket - Free</option>
+                    {selectedEvent.hasDuplicate && <option value="tier2">Competitor Ticket - 10.00 SGD</option>}
                   </Form.Select>
                 </Form.Group>
                 {/* Add more form fields here */}
@@ -83,7 +85,7 @@ function Registration() {
               </Form>
             </Card>
           </Col>
-          <Col md={1}></Col>
+
         </Row>
       </div>
     </div>

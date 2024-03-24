@@ -45,6 +45,13 @@ function EventPage() {
           },
           []
         );
+        // Add a hasDuplicate variable to each event
+        uniqueEvents.forEach((event) => {
+          const duplicateCount = response.data.data.events.filter(
+            (e) => e.EID === event.EID
+          ).length;
+          event.hasDuplicate = duplicateCount > 1;
+        });
 
         setEventData(uniqueEvents);
         console.log(uniqueEvents);
@@ -79,13 +86,19 @@ function EventPage() {
             <Card.Title>{event.Title}</Card.Title>
             <Card.Text>{event.GameName}</Card.Text>
             <Card.Text className="small-text">
-              <p><FaCalendar />{event.FormattedTime}</p>
+              <p>
+                <FaCalendar />
+                &nbsp;
+                {event.FormattedTime}
+              </p>
               <p>
                 <FaLocationDot />
+                &nbsp;
                 {event.Location}
               </p>
               <p>
                 <FaUser />
+                &nbsp;
                 {event.Capacity}
               </p>
             </Card.Text>
