@@ -1,0 +1,20 @@
+.circleButton {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 100px; /* Adjust width */
+    height: 100px; /* Adjust height */
+    background-color: blue;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  .circleButtonContent {
+    color: white;
+    font-size: 64px; /* Adjust font size */
+  }
+  

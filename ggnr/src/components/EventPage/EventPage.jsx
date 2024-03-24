@@ -69,25 +69,25 @@ const createCards = (events) => {
       <MyNavbar />
       <Carousel>
         <Carousel.Item>
-          <img src={image1} alt="First slide" width="100%" height="400" />
+          <img src={image1} alt="First slide" width="100%" height="600" />
           <Carousel.Caption>
-            <h3>First slide label</h3>
-            <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+            <h3></h3>
+            <p></p>
           </Carousel.Caption>
         </Carousel.Item>
         <Carousel.Item>
-          <img src={image2} alt="Second slide" width="100%" height="400" />
+          <img src={image2} alt="Second slide" width="100%" height="600" />
           <Carousel.Caption>
-            <h3>Second slide label</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <h3></h3>
+            <p></p>
           </Carousel.Caption>
         </Carousel.Item>
         <Carousel.Item>
-          <img src={image3} alt="Third slide" width="100%" height="400" />
+          <img src={image3} alt="Third slide" width="100%" height="600" />
           <Carousel.Caption>
-            <h3>Third slide label</h3>
+            <h3></h3>
             <p>
-              Praesent commodo cursus magna, vel scelerisque nisl consectetur.
+              
             </p>
           </Carousel.Caption>
         </Carousel.Item>
