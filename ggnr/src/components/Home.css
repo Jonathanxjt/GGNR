@@ -26,6 +26,7 @@ video {
     justify-content: center;
     align-items: center;
     color:white ;
+    font-size: 100px;
 }
 .overlay {
     position: absolute;

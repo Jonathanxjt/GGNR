@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col } from "react-bootstrap";
 import Carousel from "react-bootstrap/Carousel";
-import PlaceHolderImage from "../PlaceHolderImage/PlaceHolderImage";
+import { FaCalendar } from "react-icons/fa";
 import { MyNavbar } from "../MyNavbar/MyNavbar";
 import Card from "react-bootstrap/Card";
+import placeholder from "../../assets/placeholder.jpg";
+import { FaUser } from "react-icons/fa";
+import { FaLocationDot } from "react-icons/fa6";
 import image1 from "../../assets/image1.png";
 import image2 from "../../assets/image2.png";
 import image3 from "../../assets/image3.png";
@@ -19,13 +22,29 @@ function EventPage() {
       .then((response) => {
         // .data.data is because json data sends code and data due to the microservice json response
         // Remove duplicate events based on the Title property
-        const uniqueEvents = response.data.data.events.reduce((acc, current) => {
-          const isDuplicate = acc.find(event => event.EID === current.EID);
-          if (!isDuplicate) {
-            acc.push(current);
-          }
-          return acc;
-        }, []);
+        const uniqueEvents = response.data.data.events.reduce(
+          (acc, current) => {
+            const isDuplicate = acc.find((event) => event.EID === current.EID);
+            if (!isDuplicate) {
+              // Format the date and time here
+              const formattedDateTime = new Date(current.Time).toLocaleString(
+                "en-SG",
+                {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                  hour: "numeric",
+                  minute: "numeric",
+                  hour12: true,
+                }
+              );
+              current.FormattedTime = formattedDateTime;
+              acc.push(current);
+            }
+            return acc;
+          },
+          []
+        );
 
         setEventData(uniqueEvents);
         console.log(uniqueEvents);
@@ -36,27 +55,48 @@ function EventPage() {
   }, []);
 
   // Function to create cards for each event
-const createCards = (events) => {
-  return events.map((event, index) => (
-    <Col key={index} lg={3} md={4} sm={6} xs={12} className="mb-3">
-    <Card key={index} className="card" onClick={() => {
-      // Store the event data in local storage
-      localStorage.setItem('selectedEvent', JSON.stringify(event));
-      // Redirect to the registration page
-      window.location.href = '/registration';
-    }}>
-      <Card.Img variant="top" src={event.EventLogo} />
-      <Card.Body>
-        <Card.Title>{event.Title}</Card.Title>
-        <Card.Text>{event.Description}</Card.Text>
-      </Card.Body>
-      <Card.Footer>
-        <small className="text-muted">Last updated mins ago</small>
-      </Card.Footer>
-    </Card>
-    </Col>
-  ));
-};
+  const createCards = (events) => {
+    return events.map((event, index) => (
+      <Col key={index} lg={3} md={4} sm={6} xs={12} className="mb-3">
+        <Card
+          key={index}
+          className="card"
+          onClick={() => {
+            // Store the event data in local storage
+            localStorage.setItem("selectedEvent", JSON.stringify(event));
+            // Redirect to the registration page
+            window.location.href = "/registration";
+          }}
+        >
+          <Card.Img
+            variant="top"
+            src={event.EventLogo}
+            onError={(e) => {
+              e.target.src = { placeholder };
+            }} // Set a placeholder image on error
+          />
+          <Card.Body>
+            <Card.Title>{event.Title}</Card.Title>
+            <Card.Text>{event.GameName}</Card.Text>
+            <Card.Text className="small-text">
+              <p><FaCalendar />{event.FormattedTime}</p>
+              <p>
+                <FaLocationDot />
+                {event.Location}
+              </p>
+              <p>
+                <FaUser />
+                {event.Capacity}
+              </p>
+            </Card.Text>
+          </Card.Body>
+          <Card.Footer>
+            <small className="text-muted">Last updated mins ago</small>
+          </Card.Footer>
+        </Card>
+      </Col>
+    ));
+  };
 
   // Function to create carousel items with cards
   const createCarouselItems = () => {
@@ -95,17 +135,13 @@ const createCards = (events) => {
           <img src={image3} alt="Third slide" width="100%" height="600" />
           <Carousel.Caption>
             <h3></h3>
-            <p>
-              
-            </p>
+            <p></p>
           </Carousel.Caption>
         </Carousel.Item>
       </Carousel>
       {/* Events carousel */}
       <div className="container">
-      <Row className="py-2">
-          {createCards(eventData)}
-        </Row>
+        <Row className="py-2">{createCards(eventData)}</Row>
       </div>
     </div>
     // Cards
