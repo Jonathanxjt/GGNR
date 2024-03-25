@@ -41,7 +41,6 @@ const Login = () => {
         ) {
           // Login successful
           console.log("Login successful:", response.data.data);
-          // You can now redirect the user or set the user data in your state
           localStorage.setItem("user", JSON.stringify(response.data.data));
           toast.success("Login Successful!", {
             position: "top-center",
@@ -70,11 +69,11 @@ const Login = () => {
             theme: "dark",
             transition: Flip,
             });
-          // You can show an error message to the user
+
         }
       } catch (error) {
         console.error("Login error:", error.response.data.message);
-        // Handle other errors, such as network errors or server errors
+
       }
     } else {
       // Handle registration
@@ -91,11 +90,13 @@ const Login = () => {
         if (response.data.code === 201) {
           // Registration successful
           console.log("Registration successful:", response.data.data);
-          // You can now redirect the user or set the user data in your state
+          localStorage.setItem('toastMessage', 'Registration Successful!');
+          window.location.href = "/login";
+
         } else {
           // Registration failed
           console.log("Registration failed:", response.data.message);
-          // You can show an error message to the user
+
         }
       } catch (error) {
         console.error("Registration error:", error.response.data.message);
