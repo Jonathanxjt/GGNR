@@ -8,7 +8,7 @@ app = Flask(__name__)
 CORS(app)
 
 # URLs of other microservices
-events_url = "http://127.0.0.1:5000/create_event"
+events_url = "http://localhost:5000/create_event"
 
 @app.route("/create_event", methods=["POST"])
 def create_event():
@@ -16,7 +16,7 @@ def create_event():
     event_data = request.get_json()
 
     try:
-        response = invoke_http(events_url, method='POST', json=event_data)
+        response = invoke_http(events_url, json=event_data)
         if response["code"] not in range(200, 300):
             # Handle the error appropriately
             print("Error sending event data to other service:", response)
