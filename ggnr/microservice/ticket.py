@@ -12,7 +12,10 @@ import sys
 import json
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('dbURL')
+# app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('dbURL')
+app.config['SQLALCHEMY_DATABASE_URI'] = (  
+    environ.get("dbURL") or "mysql+mysqlconnector://root@localhost:3306/ggnr_database"  
+)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
@@ -211,38 +214,39 @@ def get_tickets_by_eid(EID):
         )
     return jsonify({"code": 404, "message": "There are no tickets for this event."}), 404
 
+# ticket no longer contains UID
 
-@app.route("/ticket/UID/<string:UID>")
-def get_tickets_by_uid(UID):
-    ticket_list = db.session.scalars(db.select(Ticket).filter_by(UID=UID)).all()
-    if len(ticket_list):
-        return jsonify(
-            {
-                "code": 201,
-                "data": [individual_ticket.json() for individual_ticket in ticket_list]
-            }
-        )
-    return jsonify({"code": 404, "message": "There are no tickets for this user."}), 404
+# @app.route("/ticket/UID/<string:UID>")
+# def get_tickets_by_uid(UID):
+#     ticket_list = db.session.scalars(db.select(Ticket).filter_by(UID=UID)).all()
+#     if len(ticket_list):
+#         return jsonify(
+#             {
+#                 "code": 201,
+#                 "data": [individual_ticket.json() for individual_ticket in ticket_list]
+#             }
+#         )
+#     return jsonify({"code": 404, "message": "There are no tickets for this user."}), 404
 
 # combine - UID,EID
-@app.route("/ticket/EID/<int:eid>/UID/<int:uid>")  
-def get_ticket_by_uid_eid(uid, eid):
-    ticket = Ticket.query.filter_by(UID=uid, EID=eid).first()
+# @app.route("/ticket/EID/<int:eid>/UID/<int:uid>")  
+# def get_ticket_by_uid_eid(uid, eid):
+#     ticket = Ticket.query.filter_by(UID=uid, EID=eid).first()
 
-    if ticket:
-        return jsonify(
-            {
-                "code": 200,
-                "data": ticket.json()
-            }
-        )
+#     if ticket:
+#         return jsonify(
+#             {
+#                 "code": 200,
+#                 "data": ticket.json()
+#             }
+#         )
     
-    return jsonify(
-        {
-            "code": 404,
-            "message": "Ticket not found."
-        }
-    ), 404
+#     return jsonify(
+#         {
+#             "code": 404,
+#             "message": "Ticket not found."
+#         }
+#     ), 404
 
 
 
@@ -253,14 +257,14 @@ def create_ticket(TicketID):
     eid = request.get_json().get("EID")
     uid = request.get_json().get("UID")
     tier = request.get_json().get("Tier")
-    price = request.get_json().get("Price")
+    PriceID = request.get_json().get("PriceID")
 
     ticket = Ticket(
         TicketID,
         eid,
         uid,
         tier,
-        price
+        PriceID
     )
 
     try:
@@ -294,6 +298,51 @@ def create_ticket(TicketID):
         {
             "code": 201,
             "data": ticket.json()
+        }
+    ), 201
+
+@app.route("/userticket", methods=["POST"])
+def create_userticket():
+
+    TicketID = request.get_json().get("TicketID")
+    UID = request.get_json().get("UID")
+
+    user_ticket = UserTicket(
+        UID,
+        TicketID
+    )
+
+    try:
+        db.session.add(user_ticket)
+        db.session.commit()
+    except Exception as e:
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        ex_str = (
+            str(e)
+            + " at "
+            + str(exc_type)
+            + ": "
+            + fname
+            + ": line "
+            + str(exc_tb.tb_lineno)
+        )
+        print(ex_str)
+
+        return jsonify(
+            {
+                "code": 500,
+                "message": "An error occured while creating the ticket. " +str(e)
+            }
+        ), 500
+    
+    print(json.dumps(user_ticket.json(), default=str))
+
+
+    return jsonify(
+        {
+            "code": 201,
+            "data": user_ticket.json()
         }
     ), 201
 

@@ -10,11 +10,10 @@ app = Flask(__name__)
 CORS(app)
 
 event_URL = "http://localhost:5000/event"
-ticket_URL = "http://localhost:5008/ticket"
+ticket_URL = "http://localhost:5008/userticket"
 attendees_list_URL = "http://localhost:5003/attendee"
 error_URL = "http://localhost:5007/error"   
 update_event_URL = "http://localhost:5000/event/{EID}" 
-create_ticket_URL = "http://localhost:5008/ticket/{TID}"
 # need to use different ports because all of them are running on localhost, if not there will be a port conflict
 # can use same port if they are all running on different machines(?) basically not all using localhost
 
@@ -56,16 +55,14 @@ def processBuyTicket(order):
     eid = order['EID']  # Assuming 'EID' is a key in the 'order' dictionary
     updated_event_url = update_event_URL.format(EID=eid)
     order_result = invoke_http(updated_event_url, method="PUT", json=order)
-    price = order_result["data"]["Price"]
+    print(order_result)
     print("\nTicket sent to events.\n")
 
 
     # 3. Create the ticket 
     # Invoke the ticket microservice
     print('\n-----Invoking ticket microservice-----')
-    tid = order["TID"]
-    created_ticket_url = create_ticket_URL.format(TID=tid,Price=price)
-    ticket_created = invoke_http(created_ticket_url, method="POST", json=order)
+    ticket_created = invoke_http(ticket_URL, method="POST", json=order)
     print('Created_Ticket:', ticket_created)
 
     # 4. Record in attendee_list microservice

@@ -13,7 +13,7 @@ import json
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = ( 
-    environ.get("dbURL") or "mysql+mysqlconnector://root:root@localhost:3306/ggnr_database" 
+    environ.get("dbURL") or "mysql+mysqlconnector://root@localhost:3306/ggnr_database" 
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
@@ -346,7 +346,19 @@ def update_event(EID):
 
         
         if capacity != None:
-            event.Capacity -= int(capacity)
+            if int(capacity) > event.Capacity:
+                return jsonify(
+                {
+                    "code": 404,
+                    "data": {
+                        "EID": EID
+                    },
+                    "message": "insufficient event capacity"
+                }
+            ), 404
+            else:
+                event.Capacity -= int(capacity)
+        
 
         
         db.session.commit()
