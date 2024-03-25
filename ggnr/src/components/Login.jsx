@@ -5,6 +5,7 @@ import "./Login.css";
 import { toast, ToastContainer, Flip } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { MyNavbar } from "./MyNavbar/MyNavbar";
+import logo from "../assets/logo.png";
 
 
 const Login = () => {
@@ -111,9 +112,17 @@ const Login = () => {
       
       <div className="login-container">
       <ToastContainer/>
-        <div className="card">
-          <h2>{isLogin ? "Login" : "Register"}</h2>
+        <div className="logincard">
           <form onSubmit={handleSubmit}>
+          <img src={logo} className="logo"/>
+          <div className="box">
+          <div className="loginhead">
+            <span>{isLogin ? "Login" : "Register"}</span>
+          </div>
+          <div className="loginhead">
+            <span>{isLogin ? "Login" : "Register"}</span>
+          </div>
+          </div>
             <Form.Floating className="mb-3">
               <Form.Control
                 id="floatingInputEmail"
@@ -216,7 +225,7 @@ const Login = () => {
                 )}
               </>
             )}
-            <button type="submit">{isLogin ? "Login" : "Register"}</button>
+            <button type="submit" className="submitbutton">{isLogin ? "Login" : "Register"}</button>
             <button
               type="button"
               className="switch-button"

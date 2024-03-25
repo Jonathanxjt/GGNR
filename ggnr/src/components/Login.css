@@ -1,110 +1,172 @@
 /* General styling for the login page */
+* {
+	font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+		"Lucida Sans", Arial, sans-serif;
+}
 .login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; 
-    background-color: #ffffff;
-  }
-  
-  .card {
-    width: 500px;
-    padding: 2rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    background-color: #ffffff;
-    position: relative;
-    min-height: 600px;
-  }
-  
-  /* Styling for form elements */
-  .form-floating {
-    margin-bottom: 1rem;
-  }
-  
-  .form-control {
-    border-radius: 5px;
-  }
-  
-  /* Styling for buttons */
-  button {
-    width: 100%;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: #ffffff;
-    margin-top: 1rem;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
-  .switch-button {
-    background-color: #6c757d;
-  }
-  
-  /* Styling for the switch button (slider) */
-  .switch {
-    position: relative;
-    display: inline-block;
-    width: 60px;
-    height: 34px;
-    margin-left: 1rem;
-  }
-  
-  .switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
-  
-  .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    -webkit-transition: 0.4s;
-    transition: 0.4s;
-  }
-  
-  .slider:before {
-    position: absolute;
-    content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    -webkit-transition: 0.4s;
-    transition: 0.4s;
-  }
-  
-  input:checked + .slider {
-    background-color: #2196F3;
-  }
-  
-  input:focus + .slider {
-    box-shadow: 0 0 1px #2196F3;
-  }
-  
-  input:checked + .slider:before {
-    -webkit-transform: translateX(26px);
-    -ms-transform: translateX(26px);
-    transform: translateX(26px);
-  }
-  
-  /* Rounded sliders */
-  .slider.round {
-    border-radius: 34px;
-  }
-  
-  .slider.round:before {
-    border-radius: 50%;
-  }
-  
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	align-self: center;
+	height: 100vh;
+	background-color: #ffffff;
+}
+.box {
+	display: flex;
+  margin: auto;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.box .loginhead {
+	width: 400px;
+	height: 200px;
+	line-height: 200px;
+	font-size: 4em;
+	font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+	font-weight: bold;
+	white-space: nowrap;
+	overflow: hidden;
+}
+.box .loginhead:first-child {
+	background-color:  #003049;
+	color: #ffffff;
+	transform-origin: right;
+	transform: perspective(100px) rotateY(-15deg);
+}
+
+.box .loginhead:last-child {
+	background-color: #74A4BC;
+	color: #F1FEC6;
+	transform-origin: left;
+	transform: perspective(100px) rotateY(15deg);
+}
+
+.box .loginhead span {
+	position: absolute;
+	animation: marquee 5s linear infinite;
+}
+
+.box .loginhead:first-child span {
+	animation-delay: 2.5s;
+	left: -100%;
+}
+
+@keyframes marquee {
+	from {
+		left: 100%;
+	}
+
+	to {
+		left: -100%;
+	}
+}
+.logo {
+	height: 100px;
+	width: 100px;
+	display: block;
+	margin: auto;
+}
+.logincard {
+	width: 500px;
+	padding: 2rem;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	border-radius: 10px;
+	background-color: #ffffff;
+	position: flex;
+	min-height: 600px;
+	align-content: center;
+}
+
+/* Styling for form elements */
+.form-floating {
+	margin-bottom: 1rem;
+}
+
+.form-control {
+	border-radius: 5px;
+}
+
+/* Styling for buttons */
+button {
+	width: 100%;
+	padding: 0.5rem 1rem;
+	border: none;
+	background-color: #007bff;
+	color: #ffffff;
+	margin-top: 1rem;
+	cursor: pointer;
+}
+.submitbutton{
+  border-radius: 5px;
+  margin-bottom: 3px;
+}
+button:hover {
+	background-color: #0056b3;
+}
+
+.switch-button {
+	background-color: #6c757d;
+  border-radius: 5px;
+}
+
+/* Styling for the switch button (slider) */
+.switch {
+	position: relative;
+	display: inline-block;
+	width: 60px;
+	height: 34px;
+	margin-left: 1rem;
+}
+
+.switch input {
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+
+.slider {
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #ccc;
+	-webkit-transition: 0.4s;
+	transition: 0.4s;
+}
+
+.slider:before {
+	position: absolute;
+	content: "";
+	height: 26px;
+	width: 26px;
+	left: 4px;
+	bottom: 4px;
+	background-color: white;
+	-webkit-transition: 0.4s;
+	transition: 0.4s;
+}
+
+input:checked + .slider {
+	background-color: #2196f3;
+}
+
+input:focus + .slider {
+	box-shadow: 0 0 1px #2196f3;
+}
+
+input:checked + .slider:before {
+	-webkit-transform: translateX(26px);
+	-ms-transform: translateX(26px);
+	transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+	border-radius: 34px;
+}
+
+.slider.round:before {
+	border-radius: 50%;
+}
