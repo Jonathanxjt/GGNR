@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form } from "react-bootstrap";
+import { Form, Row, Col } from "react-bootstrap";
 import axios from "axios"; // Import Axios
 import "./Login.css";
 import { toast, ToastContainer, Flip } from "react-toastify";
@@ -150,6 +150,8 @@ const Login = () => {
                     Confirm Password
                   </label>
                 </Form.Floating>
+                <Row>
+                  <Col>
                 <Form.Floating className="mb-3">
                   <Form.Control
                     id="floatingUsername"
@@ -161,6 +163,8 @@ const Login = () => {
                   />
                   <label htmlFor="floatingUsername">Username</label>
                 </Form.Floating>
+                </Col>
+                <Col>
                 <Form.Floating className="mb-3">
                   <Form.Control
                     id="floatingContact"
@@ -172,6 +176,8 @@ const Login = () => {
                   />
                   <label htmlFor="floatingContact">Contact Number</label>
                 </Form.Floating>
+                </Col>
+                </Row>
                 <Form.Floating className="mb-3">
                   <Form.Control
                     id="floatingPreferences"
