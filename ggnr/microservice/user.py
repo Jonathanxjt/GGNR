@@ -15,7 +15,10 @@ import bcrypt
 import json
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('dbURL')
+# app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('dbURL')
+app.config['SQLALCHEMY_DATABASE_URI'] = ( 
+    environ.get("dbURL") or "mysql+mysqlconnector://root@localhost:3306/ggnr_database" 
+)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db =SQLAlchemy(app)
@@ -257,7 +260,57 @@ def check_password(email,input):
             "code": 404,
             "message": "There is no user."
         }
-    )   
+    ), 404
+
+# GET - all email
+@app.route("/user/email")
+def get_all_emails():
+    user = db.session.scalars(db.select(User)).all()
+
+    if user:
+        email_list = []
+        for obj in user:
+            email_list.append(obj.email)
+        return jsonify(
+            {
+                "code": 200,
+                "data" : email_list
+            }
+        )
+    
+    return jsonify(
+        {
+            "code": 404,
+            "message": "Username list not found"
+        }
+    ),404
+
+# GET - contact information (for notifications.py only)
+@app.route("/user/contact-information")
+def get_contact_information():
+    attendee_list = request.get_json().get("attendee_list")
+
+    uid_list = []
+    for obj in attendee_list:
+        uid_list.append(obj["UID"])
+
+    user_list = db.session.query(User).filter(User.UID.in_(uid_list)).all()
+
+    if user_list:
+        return jsonify(
+            {
+                "code": 200,
+                "users": [user.json() for user in user_list]
+            }
+        )
+
+    # if fail
+    return jsonify(
+        {
+            "code": 404,
+            "message": "Contact infromation not found."
+        }
+    ), 404
 
 # POST - create user
 @app.route("/user", methods=["POST"])
@@ -315,7 +368,5 @@ def create_user():
     ), 201
 
 
-
-# change port?
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5005, debug=True)

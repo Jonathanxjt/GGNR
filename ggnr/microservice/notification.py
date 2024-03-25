@@ -15,6 +15,7 @@ app = Flask(__name__)
 CORS(app)
 
 attendee_URL = "http://127.0.0.1:5003/attendee/EID/{EID}"
+user_URL = "http://127.0.0.1:5005/user/contact-information"
 
 # exchangename = environ.get("exchangename")
 # exchangetype = environ.get("exchangetype")
@@ -36,7 +37,6 @@ def create_notification():
             notification = request.get_json()
             print("\nReceived a notification in JSON:", notification)
 
-            # 1. 
             result = getUIDbyEID(notification)
             print('\n------------------------')
             print('\nresult: ', result)
@@ -65,10 +65,11 @@ def getUIDbyEID(notification):
     # 2. GET request to get list of uid from eid 
     # Invoke the attendee microservice
     print("\n-----Invoking Attendee microservice-----")
+
     eid = notification["EID"]
-    print(notification["EID"])
+
     get_attendeeURL = attendee_URL.format(EID=eid)
-    print(get_attendeeURL)
+
     attendee_result = invoke_http(get_attendeeURL, method="GET", json=notification)
     print("attendee_result:", attendee_result)
 
@@ -100,10 +101,12 @@ def getUIDbyEID(notification):
             "attendee_list":  attendee_result["data"]["attendee_list"],
             "time": notification["time"]
         }
-        message = json.dumps(organised)
+
+        invoke_user_microservice_result = get_contact_number(organised)
+
+        message = json.dumps(invoke_user_microservice_result)
         print('\n\n-----Publishing the notification with routing_key=notification.info-----')        
 
-        # invoke_http(activity_log_URL, method="POST", json=order_result)            
         channel.basic_publish(exchange=exchangename, routing_key="notification.info", 
             body=message)
         
@@ -111,14 +114,48 @@ def getUIDbyEID(notification):
     # - reply from the invocation is not used;
     # continue even if this invocation fails
 
+    overall_result = {
+        "EID": eid,
+        "notification": invoke_user_microservice_result["notification"],
+        "time": invoke_user_microservice_result["time"],
+        "users": invoke_user_microservice_result["users"]
+    }
+
     return {
         "code": 201,
         "data": {
-            "notification": organised
+            "notification": overall_result
         }
     }
+
+def get_contact_number(organised):
+    user_results = invoke_http(user_URL, method="GET", json={"attendee_list": organised["attendee_list"]})
+
+    code = user_results['code']
+    if code not in range(200,300):
+
+        message = json.dumps(user_results)
+        print("\n\n-----Publishing the (attendee error) message with routing_key=attendee.error-----")
+
+        channel.basic_publish(exchange=exchangename, routing_key="attendee.error", 
+                              body=message, properties=pika.BasicProperties(delivery_mode=2))
+        
+        print("\nOrder status ({:d}) published to the RabbitMQ Exchange:".format(code), user_results)
+
+        return {
+            "code": 500,
+            "data": {
+                "user_results": user_results
+            },
+            "message": "Get users information failure sent for error handling."
+        }
+    
+    output = organised
+    output["users"] = user_results["users"]
+
+    return output
     
 # port number
 if __name__ == "__main__":
     print("This is flask "+ os.path.basename(__file__) + " for placing an order...")
-    app.run(host="0.0.0.0", port=5100, debug=True)
+    app.run(host="0.0.0.0", port=5110, debug=True)
