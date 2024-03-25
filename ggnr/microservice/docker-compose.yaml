@@ -67,3 +67,13 @@ services:
     ports:
       - "5006:5006"
 
+  event_management:
+    build:
+      context: .
+      dockerfile: dockerfile_event_management
+    restart: always
+    env_file:
+      - ggnr.env
+    ports:
+      - "5100:5100"
+

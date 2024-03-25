@@ -246,8 +246,9 @@ def find_by_gamename(gamename):
     ), 404
 
 # POST - create event
-@app.route("/event", methods=["POST"])
+@app.route("/create_event", methods=["POST"])
 def create_event():
+    #! Removed EID
     EID = request.json.get("EID")
     TierID = request.json.get("TierID")
     Title = request.json.get("Title")
@@ -281,6 +282,7 @@ def create_event():
         db.session.add(event)
         db.session.commit()
     except Exception as e:
+        db.session.rollback()
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
         ex_str = (
@@ -301,7 +303,6 @@ def create_event():
             }
         ), 500
     
-    print(json.dumps(event.json()), default=str)
 
     return jsonify(
         {
