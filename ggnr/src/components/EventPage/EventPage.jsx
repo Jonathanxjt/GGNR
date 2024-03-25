@@ -12,6 +12,8 @@ import image2 from "../../assets/image2.png";
 import image3 from "../../assets/image3.png";
 import "./EventPage.css";
 import axios from "axios";
+import CircleButton from "../CreateEventButton/CreateEventButton";
+import "../CreateEventButton/CreateEventButton.css";
 
 function EventPage() {
   const [eventData, setEventData] = useState([]);
@@ -156,7 +158,11 @@ function EventPage() {
       <div className="container">
         <Row className="py-2">{createCards(eventData)}</Row>
       </div>
+      <div>
+					<CircleButton url="http://localhost:3000/create_event" />
+				</div>
     </div>
+    
     // Cards
   );
 }

@@ -30,9 +30,6 @@ const HomePage = () => {
 				>
 					Browse Events{" "}
 				</Button>
-				<div>
-					<CircleButton url="http://localhost:3000/create_event" />
-				</div>
 			</div>
 			<MyFooter />
 		</div>
