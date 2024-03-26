@@ -28,6 +28,8 @@ services:
       context: .
       dockerfile: dockerfile_payment
     restart: always
+    env_file:
+      - .env
     ports:
       - "5011:5011"
 

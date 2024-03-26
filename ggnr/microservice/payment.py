@@ -8,10 +8,13 @@ Python 3.6 or newer required.
 import os
 from flask import Flask, jsonify, redirect, request
 from flask_cors import CORS
+from dotenv import load_dotenv
 
 import stripe
+load_dotenv()
 # This is your test secret API key.
-stripe.api_key = 'sk_test_51OuvQH2LfOffQtXeCwFG6wFjZAbQC5PVeBjQiVRx0QabJ7Y9cZM46fgBBVmBAKN1xdVt9oVRmMjouRHjSUVrvQzn00HHTHM3Q7'
+stripe_api_key = os.getenv('STRIPE_API_KEY')
+stripe.api_key = stripe_api_key
 
 app = Flask(__name__)
 CORS(app)
