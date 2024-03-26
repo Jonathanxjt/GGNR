@@ -20,6 +20,8 @@ services:
       - ggnr.env
     ports:
       - "5000:5000"
+    networks:
+      - ggnr_network
 
   payment:
     build:
@@ -78,4 +80,12 @@ services:
       - ggnr.env
     ports:
       - "5100:5100"
+    depends_on:
+      - event
+    networks:
+      - ggnr_network
+      
+networks:
+  ggnr_network:
+    driver: bridge
 
