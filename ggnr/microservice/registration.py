@@ -9,11 +9,10 @@ import json
 app = Flask(__name__)
 CORS(app)
 
-event_URL = "http://localhost:5000/event"
-ticket_URL = "http://localhost:5008/userticket"
-attendees_list_URL = "http://localhost:5003/attendee"
-error_URL = "http://localhost:5007/error"   
-update_event_URL = "http://localhost:5000/event/{EID}" 
+event_URL = "http://event:5000/event"
+ticket_URL = "http://ticket:5008/userticket"
+attendees_list_URL = "http://attendee:5003/attendee"
+update_event_URL = "http://event:5000/event/{EID}" 
 # need to use different ports because all of them are running on localhost, if not there will be a port conflict
 # can use same port if they are all running on different machines(?) basically not all using localhost
 
@@ -75,13 +74,6 @@ def processBuyTicket(order):
     # Check the order result; if a failure, send it to the error microservice.
     code = order_result["code"]
     if code not in range(200, 300):
-
-    # Inform the error microservice
-        print('\n\n-----Invoking error microservice as order fails-----')
-        invoke_http(error_URL, method="POST", json=order_result)
-        # - reply from the invocation is not used; 
-        # continue even if this invocation fails
-        print("Order status ({:d}) sent to the error microservice:".format(code), order_result)
 
     # 7. Return error
         return {
