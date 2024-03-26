@@ -34,6 +34,8 @@ services:
       context: .
       dockerfile: dockerfile_search
     restart: always
+    env_file:
+      - .env
     ports:
       - "5009:5009"
 

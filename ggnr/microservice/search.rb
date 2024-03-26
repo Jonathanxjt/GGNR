@@ -26,8 +26,8 @@ options "*" do
 def fetch_cover_urls(game_data)
   access_url = URI("https://id.twitch.tv/oauth2/token")
   access_params = {
-    'client_id' => '429jpzpf7x2073d3kwsscsrpnftx04',
-    'client_secret' => 'qh3rx6nnlruawu3il3hqbk0ase4yfa',
+    'client_id' => ENV['CLIENT_ID'],
+    'client_secret' => ENV['CLIENT_SECRET'],
     'grant_type' => 'client_credentials'
   }
   access_response = Net::HTTP.post_form(access_url, access_params)
