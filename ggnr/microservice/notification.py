@@ -158,4 +158,4 @@ def get_contact_number(organised):
 # port number
 if __name__ == "__main__":
     print("This is flask "+ os.path.basename(__file__) + " for placing an order...")
-    app.run(host="0.0.0.0", port=5110, debug=True)
+    app.run(host="0.0.0.0", port=5200, debug=True)
