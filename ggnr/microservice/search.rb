@@ -41,7 +41,7 @@ def fetch_cover_urls(game_data)
     http = Net::HTTP.new(cover_url.host, cover_url.port)
     http.use_ssl = true
     request = Net::HTTP::Post.new(cover_url)
-    request["Client-ID"] = '429jpzpf7x2073d3kwsscsrpnftx04'
+    request["Client-ID"] = ENV['CLIENT_ID']
     request["Authorization"] = "Bearer #{access_token}"
     request.body = cover_body
     cover_response = http.request(request)
@@ -63,8 +63,8 @@ post '/search' do
 
   access_url = URI("https://id.twitch.tv/oauth2/token")
   access_params = {
-    'client_id' => '429jpzpf7x2073d3kwsscsrpnftx04',
-    'client_secret' => 'qh3rx6nnlruawu3il3hqbk0ase4yfa',
+    'client_id' => ENV['CLIENT_ID'],
+    'client_secret' => ENV['CLIENT_SECRET'],
     'grant_type' => 'client_credentials'
   }
   access_response = Net::HTTP.post_form(access_url, access_params)
@@ -74,7 +74,7 @@ post '/search' do
   http = Net::HTTP.new(game_url.host, game_url.port)
   http.use_ssl = true
   request = Net::HTTP::Post.new(game_url)
-  request["Client-ID"] = '429jpzpf7x2073d3kwsscsrpnftx04'
+  request["Client-ID"] = ENV['CLIENT_ID'] 
   request["Authorization"] = "Bearer #{access_token}"
   request.body = "fields *; search \"#{game_name}\"; limit 5;"
   game_response = http.request(request)
