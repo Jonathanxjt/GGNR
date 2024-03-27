@@ -23,45 +23,30 @@ function EventPage() {
       .get("http://localhost:5000/event")
       .then((response) => {
         // .data.data is because json data sends code and data due to the microservice json response
-        // Remove duplicate events based on the Title property
-        const uniqueEvents = response.data.data.events.reduce(
-          (acc, current) => {
-            const isDuplicate = acc.find((event) => event.EID === current.EID);
-            if (!isDuplicate) {
-              // Format the date and time here
-              const formattedDateTime = new Date(current.Time).toLocaleString(
-                "en-SG",
-                {
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                  hour: "numeric",
-                  minute: "numeric",
-                  hour12: true,
-                }
-              );
-              current.FormattedTime = formattedDateTime;
-              acc.push(current);
+        response.data.data.events.forEach((event) => {
+          // Format the date and time here
+          const formattedDateTime = new Date(event.Time).toLocaleString(
+            "en-SG",
+            {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+              hour: "numeric",
+              minute: "numeric",
+              hour12: true,
             }
-            return acc;
-          },
-          []
-        );
-        // Add a hasDuplicate variable to each event
-        uniqueEvents.forEach((event) => {
-          const duplicateCount = response.data.data.events.filter(
-            (e) => e.EID === event.EID
-          ).length;
-          event.hasDuplicate = duplicateCount > 1;
+          );
+          event.FormattedTime = formattedDateTime;
         });
 
-        setEventData(uniqueEvents);
-        console.log(uniqueEvents);
+        setEventData(response.data.data.events);
+        console.log(response.data.data.events);
       })
       .catch((error) => {
         console.error("There was an error!", error);
       });
   }, []);
+
 
   // Function to create cards for each event
   const createCards = (events) => {
@@ -74,7 +59,7 @@ function EventPage() {
             // Store the event data in local storage
             localStorage.setItem("selectedEvent", JSON.stringify(event));
             // Redirect to the registration page
-            window.location.href = "/registration";
+            window.location.href = `/registration?title=${encodeURIComponent(event.Title)}`;
           }}
         >
           <Card.Img

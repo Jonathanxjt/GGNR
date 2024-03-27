@@ -1,26 +1,55 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button, Col, Row, Card } from "react-bootstrap";
+import { useLocation } from "react-router-dom";
 import { MyNavbar } from "../MyNavbar/MyNavbar";
 import axios from "axios";
 
 function Registration() {
   const [eventData, setEventData] = useState(null);
-  const selectedEvent = JSON.parse(localStorage.getItem("selectedEvent"));
-
-  console.log(selectedEvent); // Use these values as needed
+  const [selectedPriceId, setSelectedPriceId] = useState('');
+  const location = useLocation();
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/event/1")
-      .then((response) => {
-        // .data.data is because json data sends code and data due to the microservice json response
-        setEventData(response.data.data);
-        console.log(response.data.data);
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-      });
-  }, []);
+    // Extract the title from the URL
+    const title = new URLSearchParams(location.search).get("title");
+    if (title) {
+      axios
+        .get(`http://localhost:5000/get_event/${title}`)
+        .then((response) => {
+          // Assuming the response contains the event data directly
+          const event = response.data.data;
+
+          // Format the time
+          const formattedDateTime = new Date(event.Time).toLocaleString(
+            "en-SG",
+            {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+              hour: "numeric",
+              minute: "numeric",
+              hour12: true,
+            }
+          );
+          event.FormattedTime = formattedDateTime;
+
+          setEventData(event);
+          console.log(event);
+        })
+        .catch((error) => {
+          console.error("There was an error!", error);
+        });
+    }
+  }, [location.search]); // Re-run the effect if the search part of the URL changes
+
+  const handleRegistrationSubmit = (e) => {
+    e.preventDefault();
+    if (selectedPriceId) {
+      window.location.href = `/checkout?priceId=${encodeURIComponent(selectedPriceId)}`;
+    } else {
+      alert('Please select a ticket tier.');
+    }
+  };
 
   return (
     <div>
@@ -46,9 +75,9 @@ function Registration() {
                 backgroundColor: "#f0f0f0",
               }}
             >
-              {selectedEvent && (
+              {eventData && (
                 <img
-                  src={selectedEvent.EventLogo}
+                  src={eventData.EventLogo}
                   alt="Event"
                   style={{ width: "100%", height: "100%" }}
                 />
@@ -56,36 +85,60 @@ function Registration() {
             </div>
           </Col>
           <Col md={6}>
-            <Card style={{ background: "#003049", color: "white", padding:"0 20px", paddingBottom: "20px"}}>
-              <Card.Header>{selectedEvent && selectedEvent.Title}</Card.Header>
+            <Card
+              style={{
+                background: "#003049",
+                color: "white",
+                padding: "0 20px",
+                paddingBottom: "20px",
+              }}
+            >
+              <Card.Header>{eventData && eventData.Title}</Card.Header>
               {/* Description */}
-              {selectedEvent && <p>{selectedEvent.Description}</p>}
+              {eventData && <p>{eventData.Description}</p>}
               {/* Location */}
-              {selectedEvent && <p>{selectedEvent.Location}</p>}
+              {eventData && <p>{eventData.Location}</p>}
               {/* Date/Time */}
-              {selectedEvent && <p>{selectedEvent.FormattedTime}</p>}
+              {eventData && <p>{eventData.FormattedTime}</p>}
               {/* Capacity */}
-              {selectedEvent && <p>{selectedEvent.Capacity}</p>}
+              {eventData &&
+                eventData.event_types &&
+                eventData.event_types.map((eventType, index) => (
+                  <div key={index}>
+                    <p>
+                      {eventType.Category} - Slots left: {eventType.Capacity}
+                    </p>
+                  </div>
+                ))}
+
               {/* Price */}
-              {selectedEvent && <p>{selectedEvent.Price}</p>}
+              {eventData && <p>{eventData.Price}</p>}
 
               <Form>
                 <Form.Group className="mb-3">
                   <Form.Label>Select Ticket Tier</Form.Label>
-                  <Form.Select>
+                  <Form.Select onChange={(e) => setSelectedPriceId(e.target.value)}>
                     <option>Select a tier...</option>
-                    <option value="tier1">Attendee Ticket - Free</option>
-                    {selectedEvent.hasDuplicate && <option value="tier2">Competitor Ticket - 10.00 SGD</option>}
+                    {eventData &&
+                      eventData.event_types &&
+                      eventData.event_types.map((eventType, index) => (
+                        <option key={index} value={eventType.PriceID}>
+                          {eventType.Price === 0
+                            ? `${eventType.Category} Ticket - Free Entry`
+                            : `${
+                                eventType.Category
+                              } Ticket - ${eventType.Price.toFixed(2)} SGD`}
+                        </option>
+                      ))}
                   </Form.Select>
                 </Form.Group>
                 {/* Add more form fields here */}
-                <Button variant="primary" type="submit">
+                <Button variant="primary" type="submit" onClick={handleRegistrationSubmit}>
                   Register
                 </Button>
               </Form>
             </Card>
           </Col>
-
         </Row>
       </div>
     </div>

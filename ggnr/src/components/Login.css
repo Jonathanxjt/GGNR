@@ -1,9 +1,9 @@
 /* General styling for the login page */
-* {
+.login-page * {
 	font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
 		"Lucida Sans", Arial, sans-serif;
 }
-.login-container {
+.login-page .login-container {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -11,13 +11,13 @@
 	height: 100vh;
 	background-color: #ffffff;
 }
-.box {
+.login-page .box {
 	display: flex;
   margin: auto;
   padding-top: 20px;
   padding-bottom: 20px;
 }
-.box .loginhead {
+.login-page .box .loginhead {
 	width: 300px;
 	height: 150px;
 	line-height: 150px;
@@ -27,26 +27,26 @@
 	white-space: nowrap;
 	overflow: hidden;
 }
-.box .loginhead:first-child {
+.login-page .box .loginhead:first-child {
 	background-color:  #003049;
 	color: #ffffff;
 	transform-origin: right;
 	transform: perspective(100px) rotateY(-15deg);
 }
 
-.box .loginhead:last-child {
+.login-page .box .loginhead:last-child {
 	background-color: #74A4BC;
 	color: #F1FEC6;
 	transform-origin: left;
 	transform: perspective(100px) rotateY(15deg);
 }
 
-.box .loginhead span {
+.login-page .box .loginhead span {
 	position: absolute;
 	animation: marquee 5s linear infinite;
 }
 
-.box .loginhead:first-child span {
+.login-page .box .loginhead:first-child span {
 	animation-delay: 2.5s;
 	left: -100%;
 }
@@ -60,13 +60,13 @@
 		left: -100%;
 	}
 }
-.logo {
+.login-page .logo {
 	height: 75px;
 	width: 75px;
 	display: block;
 	margin: auto;
 }
-.logincard {
+.login-page .logincard {
 	width: 500px;
 	padding: 2rem;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -78,16 +78,16 @@
 }
 
 /* Styling for form elements */
-.form-floating {
+.login-page .form-floating {
 	margin-bottom: 1rem;
 }
 
-.form-control {
+.login-page .form-control {
 	border-radius: 5px;
 }
 
 /* Styling for buttons */
-button {
+.login-page button {
 	width: 100%;
 	padding: 0.5rem 1rem;
 	border: none;
@@ -96,21 +96,21 @@ button {
 	margin-top: 1rem;
 	cursor: pointer;
 }
-.submitbutton{
+.login-page .submitbutton{
   border-radius: 5px;
   margin-bottom: 3px;
 }
-button:hover {
+.login-page button:hover {
 	background-color: #0056b3;
 }
 
-.switch-button {
+.login-page .switch-button {
 	background-color: #6c757d;
   border-radius: 5px;
 }
 
 /* Styling for the switch button (slider) */
-.switch {
+.login-page .switch {
 	position: relative;
 	display: inline-block;
 	width: 60px;
@@ -118,13 +118,13 @@ button:hover {
 	margin-left: 1rem;
 }
 
-.switch input {
+.login-page .switch input {
 	opacity: 0;
 	width: 0;
 	height: 0;
 }
 
-.slider {
+.login-page .slider {
 	position: absolute;
 	cursor: pointer;
 	top: 0;
@@ -136,7 +136,7 @@ button:hover {
 	transition: 0.4s;
 }
 
-.slider:before {
+.login-page .slider:before {
 	position: absolute;
 	content: "";
 	height: 26px;
@@ -148,25 +148,25 @@ button:hover {
 	transition: 0.4s;
 }
 
-input:checked + .slider {
+.login-page input:checked + .slider {
 	background-color: #2196f3;
 }
 
-input:focus + .slider {
+.login-page input:focus + .slider {
 	box-shadow: 0 0 1px #2196f3;
 }
 
-input:checked + .slider:before {
+.login-page input:checked + .slider:before {
 	-webkit-transform: translateX(26px);
 	-ms-transform: translateX(26px);
 	transform: translateX(26px);
 }
 
 /* Rounded sliders */
-.slider.round {
+.login-page .slider.round {
 	border-radius: 34px;
 }
 
-.slider.round:before {
+.login-page .slider.round:before {
 	border-radius: 50%;
 }

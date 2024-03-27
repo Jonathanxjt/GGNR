@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
-
+from datetime import datetime
 from os import environ
 from flask_cors import CORS
 import os
@@ -77,9 +77,8 @@ class Ticket(db.Model):
 
 class Event(db.Model):
     __tablename__ = 'events'
-    
+
     EID = db.Column(db.Integer, primary_key=True)
-    TierID = db.Column(db.SmallInteger, primary_key=True)
     Title = db.Column(db.String(255))
     Description = db.Column(db.Text)
     EventLogo = db.Column(db.Text)
@@ -88,16 +87,13 @@ class Event(db.Model):
     Location = db.Column(db.String(255))
     Time = db.Column(db.DateTime)
     GameCompany = db.Column(db.String(255))
-    Capacity = db.Column(db.Integer)
-    PriceID = db.Column(db.String(255))
-    
+
     # Relationships
     attendees = relationship('Attendee', back_populates='event')
     tickets = relationship('Ticket', back_populates='event')
+    event_types = relationship('Event_type', back_populates='event')
 
-    def __init__(self, EID, TierID, Title, Description, EventLogo, GameName, GameLogo, Location, Time, GameCompany, Capacity, PriceID):
-        self.EID = EID
-        self.TierID = TierID
+    def __init__(self, Title, Description, EventLogo, GameName, GameLogo, Location, Time, GameCompany):
         self.Title = Title
         self.Description = Description
         self.EventLogo = EventLogo
@@ -106,13 +102,10 @@ class Event(db.Model):
         self.Location = Location
         self.Time = Time
         self.GameCompany = GameCompany
-        self.Capacity = Capacity
-        self.PriceID = PriceID
 
     def json(self):
         return {
             "EID": self.EID,
-            "TierID": self.TierID,
             "Title": self.Title,
             "Description": self.Description,
             "EventLogo": self.EventLogo,
@@ -121,9 +114,27 @@ class Event(db.Model):
             "Location": self.Location,
             "Time": self.Time.isoformat() if self.Time else None,  # ISO formatting for dateTime
             "GameCompany": self.GameCompany,
-            "Capacity": self.Capacity,
-            "PriceID": self.PriceID
         }
+
+class Event_type(db.Model):
+    __tablename__ = 'events_type'
+
+    EID = db.Column(db.Integer, db.ForeignKey('events.EID'), primary_key=True)
+    TierID = db.Column(db.SmallInteger, primary_key=True)
+    Category = db.Column(db.String(255))
+    Capacity = db.Column(db.Integer)
+    Price = db.Column(db.Float)
+    PriceID = db.Column(db.String(255))
+
+    # Relationships
+    event = relationship('Event', back_populates='event_types')
+
+    def __init__(self, TierID, Category, Price, Capacity, PriceID):
+        self.TierID = TierID
+        self.Category = Category
+        self.Capacity = Capacity
+        self.PriceID = PriceID
+        self.Price = Price
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -203,6 +214,39 @@ def get_all():
         }
     ), 404
 
+# GET - Retrieve a specific event by title and its event_types
+@app.route("/get_event/<title>", methods=["GET"])
+def get_event(title):
+    event = Event.query.filter_by(Title=title).first()
+    if event:
+        # Serialize the Event object
+        event_data = {
+            "EID": event.EID,
+            "Title": event.Title,
+            "Description": event.Description,
+            "EventLogo": event.EventLogo,
+            "GameName": event.GameName,
+            "GameLogo": event.GameLogo,
+            "Location": event.Location,
+            "Time": event.Time.isoformat() if event.Time else None,
+            "GameCompany": event.GameCompany,
+            "event_types": []
+        }
+
+        # Serialize associated Event_type objects
+        for etype in event.event_types:
+            event_data['event_types'].append({
+                "EID": etype.EID,
+                "TierID": etype.TierID,
+                "Category": etype.Category,
+                "Capacity": etype.Capacity,
+                "Price": etype.Price,
+                "PriceID": etype.PriceID
+            })
+
+        return jsonify({"code": 200, "data": event_data}), 200
+    else:
+        return jsonify({"code": 404, "message": "Event not found"}), 404
 
 # GET EID
 @app.route("/event/<string:EID>")
@@ -248,35 +292,51 @@ def find_by_gamename(gamename):
 # POST - create event
 @app.route("/create_event", methods=["POST"])
 def create_event():
-    #! Removed EID
-    EID = request.json.get("EID")
-    TierID = request.json.get("TierID")
+    # Event details
     Title = request.json.get("Title")
     Description = request.json.get("Description")
     EventLogo = request.json.get("EventLogo")
     GameName = request.json.get("GameName")
-    GameLogo = request.json.get("GameLogo") 
+    GameLogo = request.json.get("GameLogo")
     Location = request.json.get("Location")
     Time = request.json.get("Time")
     GameCompany = request.json.get("GameCompany")
-    Capacity = request.json.get("Capacity")
-    PriceID = request.json.get("PriceID")
 
+    # Convert Time from string to datetime object
+    # Time = datetime.strptime(Time, '%Y-%m-%d %H:%M:%S') if Time else None
 
+    # Create Event
     event = Event(
-        EID = EID,
-        TierID = TierID,
-        Title = Title,
-        Description = Description,
-        EventLogo = EventLogo,
-        GameName = GameName,
-        GameLogo = GameLogo,
-        Location = Location,
-        Time = Time,
-        GameCompany = GameCompany,
-        Capacity = Capacity,
-        PriceID = PriceID,
+        Title=Title,
+        Description=Description,
+        EventLogo=EventLogo,
+        GameName=GameName,
+        GameLogo=GameLogo,
+        Location=Location,
+        Time=Time,
+        GameCompany=GameCompany,
     )
+
+    # Event_type details (expecting a list of event types)
+    event_types_details = request.json.get("EventTypes", [])
+    for event_type_detail in event_types_details:
+        TierID = event_type_detail.get("TierID")
+        Category = event_type_detail.get("Category")
+        Price = event_type_detail.get("Price")
+        Capacity = event_type_detail.get("Capacity")
+        PriceID = event_type_detail.get("PriceID")
+
+        # Create Event_type
+        event_type = Event_type(
+            TierID=TierID,
+            Category=Category,
+            Price=Price,
+            Capacity=Capacity,
+            PriceID=PriceID,
+        )
+
+        # Associate Event_type with Event
+        event.event_types.append(event_type)
 
     try:
         db.session.add(event)
@@ -299,10 +359,9 @@ def create_event():
         return jsonify(
             {
                 "code": 500,
-                "message": "An error occured while creating the event. " +str(e)
+                "message": "An error occurred while creating the event. " + str(e)
             }
         ), 500
-    
 
     return jsonify(
         {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Row, Col } from "react-bootstrap";
 import axios from "axios"; // Import Axios
 import "./Login.css";
@@ -6,6 +6,7 @@ import { toast, ToastContainer, Flip } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { MyNavbar } from "./MyNavbar/MyNavbar";
 import logo from "../assets/logo.png";
+import { useNavigate } from "react-router-dom";
 
 
 const Login = () => {
@@ -29,6 +30,15 @@ const Login = () => {
   const handleOrganiserCompanyChange = (e) =>
     setOrganiserCompany(e.target.value);
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const user = JSON.parse(sessionStorage.getItem("user"));
+    if (user) {
+      navigate('/');
+    }
+  }, [navigate]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isLogin) {
@@ -42,7 +52,7 @@ const Login = () => {
         ) {
           // Login successful
           console.log("Login successful:", response.data.data);
-          localStorage.setItem("user", JSON.stringify(response.data.data));
+          sessionStorage.setItem("user", JSON.stringify(response.data.data));
           toast.success("Login Successful!", {
             position: "top-center",
             autoClose: 2000,
@@ -74,6 +84,17 @@ const Login = () => {
         }
       } catch (error) {
         console.error("Login error:", error.response.data.message);
+        toast.error("Login failed: Incorrect email or password!", {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          transition: Flip,
+          });
 
       }
     } else {
@@ -108,60 +129,60 @@ const Login = () => {
 
   return (
     <div>
-      <MyNavbar />
-      
-      <div className="login-container">
-      <ToastContainer/>
-        <div className="logincard">
-          <form onSubmit={handleSubmit}>
-          <img src={logo} className="logo"/>
-          <div className="box">
+  <MyNavbar />
+  <ToastContainer />
+  <div className="login-page">
+  <div className="login-container">
+    <div className="logincard">
+      <form onSubmit={handleSubmit}>
+        <img src={logo} className="logo" />
+        <div className="box">
           <div className="loginhead">
             <span>{isLogin ? "Login" : "Register"}</span>
           </div>
           <div className="loginhead">
             <span>{isLogin ? "Login" : "Register"}</span>
           </div>
-          </div>
+        </div>
+        <Form.Floating className="mb-3">
+          <Form.Control
+            id="floatingInputEmail"
+            type="email"
+            placeholder="name@example.com"
+            value={email}
+            onChange={handleEmailChange}
+            required
+          />
+          <label htmlFor="floatingInputEmail">Email address</label>
+        </Form.Floating>
+        <Form.Floating className="mb-3">
+          <Form.Control
+            id="floatingPassword"
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={handlePasswordChange}
+            required
+          />
+          <label htmlFor="floatingPassword">Password</label>
+        </Form.Floating>
+        {!isLogin && (
+          <>
             <Form.Floating className="mb-3">
               <Form.Control
-                id="floatingInputEmail"
-                type="email"
-                placeholder="name@example.com"
-                value={email}
-                onChange={handleEmailChange}
-                required
-              />
-              <label htmlFor="floatingInputEmail">Email address</label>
-            </Form.Floating>
-            <Form.Floating className="mb-3">
-              <Form.Control
-                id="floatingPassword"
+                id="floatingConfirmPassword"
                 type="password"
-                placeholder="Password"
-                value={password}
-                onChange={handlePasswordChange}
-                required
+                placeholder="Confirm Password"
+                value={confirmPassword}
+                onChange={handleConfirmPasswordChange}
+                required={!isLogin}
               />
-              <label htmlFor="floatingPassword">Password</label>
+              <label htmlFor="floatingConfirmPassword">
+                Confirm Password
+              </label>
             </Form.Floating>
-            {!isLogin && (
-              <>
-                <Form.Floating className="mb-3">
-                  <Form.Control
-                    id="floatingConfirmPassword"
-                    type="password"
-                    placeholder="Confirm Password"
-                    value={confirmPassword}
-                    onChange={handleConfirmPasswordChange}
-                    required={!isLogin}
-                  />
-                  <label htmlFor="floatingConfirmPassword">
-                    Confirm Password
-                  </label>
-                </Form.Floating>
-                <Row>
-                  <Col>
+            <Row>
+              <Col>
                 <Form.Floating className="mb-3">
                   <Form.Control
                     id="floatingUsername"
@@ -173,8 +194,8 @@ const Login = () => {
                   />
                   <label htmlFor="floatingUsername">Username</label>
                 </Form.Floating>
-                </Col>
-                <Col>
+              </Col>
+              <Col>
                 <Form.Floating className="mb-3">
                   <Form.Control
                     id="floatingContact"
@@ -186,57 +207,60 @@ const Login = () => {
                   />
                   <label htmlFor="floatingContact">Contact Number</label>
                 </Form.Floating>
-                </Col>
-                </Row>
-                <Form.Floating className="mb-3">
-                  <Form.Control
-                    id="floatingPreferences"
-                    type="text"
-                    placeholder="Preferences of Games"
-                    value={preferences}
-                    onChange={handlePreferencesChange}
-                    required={!isLogin}
-                  />
-                  <label htmlFor="floatingPreferences">
-                    Preferences of Games
-                  </label>
-                </Form.Floating>
-                <Form.Check
-                  type="checkbox"
-                  id="organiserCheck"
-                  label="Organiser"
-                  checked={isOrganiser}
-                  onChange={handleOrganiserChange}
+              </Col>
+            </Row>
+            <Form.Floating className="mb-3">
+              <Form.Control
+                id="floatingPreferences"
+                type="text"
+                placeholder="Preferences of Games"
+                value={preferences}
+                onChange={handlePreferencesChange}
+                required={!isLogin}
+              />
+              <label htmlFor="floatingPreferences">
+                Preferences of Games
+              </label>
+            </Form.Floating>
+            <Form.Check
+              type="checkbox"
+              id="organiserCheck"
+              label="Organiser"
+              checked={isOrganiser}
+              onChange={handleOrganiserChange}
+            />
+            {isOrganiser && (
+              <Form.Floating className="mb-3">
+                <Form.Control
+                  id="floatingOrganiserCompany"
+                  type="text"
+                  placeholder="Organiser Company"
+                  value={organiserCompany}
+                  onChange={handleOrganiserCompanyChange}
+                  required={isOrganiser}
                 />
-                {isOrganiser && (
-                  <Form.Floating className="mb-3">
-                    <Form.Control
-                      id="floatingOrganiserCompany"
-                      type="text"
-                      placeholder="Organiser Company"
-                      value={organiserCompany}
-                      onChange={handleOrganiserCompanyChange}
-                      required={isOrganiser}
-                    />
-                    <label htmlFor="floatingOrganiserCompany">
-                      Organiser Company
-                    </label>
-                  </Form.Floating>
-                )}
-              </>
+                <label htmlFor="floatingOrganiserCompany">
+                  Organiser Company
+                </label>
+              </Form.Floating>
             )}
-            <button type="submit" className="submitbutton">{isLogin ? "Login" : "Register"}</button>
-            <button
-              type="button"
-              className="switch-button"
-              onClick={() => setIsLogin(!isLogin)}
-            >
-              {isLogin ? "Switch to Register" : "Switch to Login"}
-            </button>
-          </form>
-        </div>
-      </div>
+          </>
+        )}
+        <button type="submit" className="submitbutton">
+          {isLogin ? "Login" : "Register"}
+        </button>
+        <button
+          type="button"
+          className="switch-button"
+          onClick={() => setIsLogin(!isLogin)}
+        >
+          {isLogin ? "Switch to Register" : "Switch to Login"}
+        </button>
+      </form>
     </div>
+  </div>
+</div>
+</div>
   );
 };
 
