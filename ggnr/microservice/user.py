@@ -15,10 +15,10 @@ import bcrypt
 import json
 
 app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('dbURL')
-app.config['SQLALCHEMY_DATABASE_URI'] = ( 
-    environ.get("dbURL") or "mysql+mysqlconnector://root@localhost:3306/ggnr_database" 
-)
+app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('dbURL')
+# app.config['SQLALCHEMY_DATABASE_URI'] = ( 
+#     environ.get("dbURL") or "mysql+mysqlconnector://root@localhost:3306/ggnr_database" 
+# )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db =SQLAlchemy(app)
@@ -242,7 +242,7 @@ def check_password(email,input):
         if bcrypt.checkpw(entered_pw_bytes, hashed_password):
             return jsonify(
                 {
-                    "code": 201,
+                    "code": 200,
                     "message": "Correct password",
                     "data" : user.json()
                 }
@@ -250,7 +250,7 @@ def check_password(email,input):
         else:
             return jsonify(
                 {
-                    "code":201,
+                    "code":200,
                     "message": "Incorrect password"
                 }
             )
@@ -300,7 +300,7 @@ def get_contact_information():
         return jsonify(
             {
                 "code": 200,
-                "users": [user.json() for user in user_list]
+                "data": [user.json() for user in user_list]
             }
         )
 
@@ -313,7 +313,7 @@ def get_contact_information():
     ), 404
 
 # POST - create user
-@app.route("/user", methods=["POST"])
+@app.route("/user/create_user", methods=["POST"])
 def create_user():
     username = request.get_json().get("username")
     password = request.get_json().get("password")
@@ -367,6 +367,88 @@ def create_user():
         }
     ), 201
 
+# PUT - edit user's preference
+@app.route("/user/edit_preference/<string:UID>", methods=["PUT"])
+def edit_user_preference(UID):
+    try:
+        user = db.session.scalars(db.select(User).filter_by(UID=UID).limit(1)).first()
+        if not user:
+            return jsonify(
+                {
+                    "code": 404,
+                    "data": {
+                        "UID": UID
+                    },
+                    "message": "User not found."
+                }
+            ), 404
+        
+        # front end sends json {"preferences": [...]}
+        get_preference_list = request.get_json().get("preferences")
+
+        user_current_preferences = user.preferences
+
+        if user_current_preferences == "":
+            user_updated_preferences = ",".join(get_preference_list)
+        else:
+            current_list = user_current_preferences.split(",")
+            for new_preference in get_preference_list:
+                if new_preference not in current_list:
+                    current_list.append(new_preference)
+
+            user_updated_preferences = ",".join(current_list)
+
+        user.preferences = user_updated_preferences
+
+        db.session.commit()
+        return jsonify(
+            {
+                "code": 201,
+                "data": user.json()
+            }
+        ), 201
+    
+    except Exception as e:
+        return jsonify(
+            {
+                "code":500,
+                "data": {
+                    "UID": UID
+                },
+                "message": "An error occured while updating user preferences. " + str(e)
+            }
+        ), 500
+    
+# GET - get list of users whose preferences align with GameName
+@app.route("/user/user_list_gamename")
+def get_user_list_gamename():
+    # update the function
+    gamename = request.get_json().get("GameName")
+    user_list = db.session.scalars(db.select(User)).all()
+
+    if len(user_list):
+
+        output = []
+        for obj in user_list:
+            preference_str = obj.preferences
+            preference_list = preference_str.split(",")
+
+            if gamename in preference_list:
+                output.append(obj)
+
+        return jsonify(
+            {
+                "code": 200,
+                "data": [user.json() for user in output]
+            }
+        )
+
+    return jsonify(
+        {
+            "code": 404,
+            "message": "User list not found."
+        }
+    ), 404
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5005, debug=True)
