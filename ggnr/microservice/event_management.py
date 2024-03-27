@@ -8,9 +8,13 @@ app = Flask(__name__)
 CORS(app)
 
 # URLs of other microservices
-events_url = "http://127.0.0.1:5000/event/create_event"
-user_url = "http://127.0.0.1:5005/user/perference"
-notification_url = "http://127.0.0.1:5200/notification"
+# always follow service names in YAML, e.g. http://event:5000 for event microservice
+#* http://<service_name>:<port_number>/<endpoint>   FOLLOW THIS!!!
+# TODO: Update the URLs as needed
+
+events_url = "http://event:5000/create_event"
+user_url = "http://user:5005/preference"
+# notification_url = "http://127.0.0.1:5200/notification"
 
 @app.route("/create", methods=["POST"])
 def create_event():

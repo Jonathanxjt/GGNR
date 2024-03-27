@@ -9,6 +9,10 @@ import json
 app = Flask(__name__)
 CORS(app)
 
+
+# URLs of other microservices
+# always follow service names in YAML, e.g. http://event:5000 for event microservice
+#* http://<service_name>:<port_number>/<endpoint>   FOLLOW THIS!!!
 event_URL = "http://event:5000/event"
 ticket_URL = "http://ticket:5008/userticket"
 attendees_list_URL = "http://attendee:5003/attendee"
