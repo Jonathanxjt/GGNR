@@ -52,7 +52,7 @@ def create_event():
     #     "message": "Invalid JSON input: " + str(request.get_data())
     # }), 400
 
-
+# Function to call event microservice
 def call_event_microservice(event_data):
     try:
         response = invoke_http(events_url, method='POST', json=event_data)
