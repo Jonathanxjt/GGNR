@@ -21,60 +21,7 @@ db = SQLAlchemy(app)
 
 CORS(app)
 
-class Attendee(db.Model):
-    __tablename__ = 'attendees'
-    
-    AID = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    EID = db.Column(db.Integer, ForeignKey('events.EID'))
-    UID = db.Column(db.Integer, ForeignKey('users.UID'))
-    ticketID = db.Column(db.Integer)
-    transactionID = db.Column(db.Integer)
-    
-    # Relationships
-    event = relationship('Event', back_populates='attendees')
-    user = relationship('User', back_populates='attendees')
-    def __init__(self, EID, UID, ticketID, transactionID):
-        self.EID = EID
-        self.UID = UID
-        self.ticketID = ticketID
-        self.transactionID = transactionID
-    
-    def json(self):
-        return {
-            'AID': self.AID,
-            'EID': self.EID,
-            'UID': self.UID,
-            'ticketID': self.ticketID,
-            'transactionID': self.transactionID
-        }
-    
-
-class Ticket(db.Model):
-    __tablename__ = 'tickets'
-    
-    TicketID = db.Column(db.Integer, primary_key=True)
-    EID = db.Column(db.Integer, ForeignKey('events.EID'))
-    TierID = db.Column(db.SmallInteger)
-    PriceID = db.Column(db.String(255))
-    
-    # Relationships
-    event = relationship('Event', back_populates='tickets')
-    user_tickets = relationship('UserTicket', back_populates='tickets')
-    def __init__(self, TicketID, EID, UID, TierID, PriceID):
-        self.TicketID = TicketID
-        self.EID = EID
-        self.UID = UID
-        self.TierID = TierID
-        self.PriceID = PriceID
-    
-    def json(self):
-        return {
-            'TicketID': self.TicketID,
-            'EID': self.EID,
-            'TierID': self.TierID,
-            'PriceID': self.PriceID
-        }
-
+# * ORM Classes
 class Event(db.Model):
     __tablename__ = 'events'
 
@@ -89,8 +36,6 @@ class Event(db.Model):
     GameCompany = db.Column(db.String(255))
 
     # Relationships
-    attendees = relationship('Attendee', back_populates='event')
-    tickets = relationship('Ticket', back_populates='event')
     event_types = relationship('Event_type', back_populates='event')
 
     def __init__(self, Title, Description, EventLogo, GameName, GameLogo, Location, Time, GameCompany):
@@ -136,83 +81,63 @@ class Event_type(db.Model):
         self.PriceID = PriceID
         self.Price = Price
 
-class User(db.Model):
-    __tablename__ = 'users'
 
-    UID = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(255), nullable=False)
-    password_hash = db.Column(db.String(255), nullable=False)
-    preferences = db.Column(db.Text)
-    email = db.Column(db.String(255), nullable=False)
-    contact = db.Column(db.String(20), nullable=False)
-    organiser = db.Column(db.Boolean, nullable=False)
-    organiser_company = db.Column(db.String(255))
-    
-    # Relationships
-    attendees = relationship('Attendee', back_populates='user')
-    user_tickets = relationship('UserTicket', back_populates='user')
-
-    def __init__(self, username, password_hash, preferences, email, contact, organiser, organiser_company):
-        self.username = username
-        self.password_hash = password_hash
-        self.preferences = preferences
-        self.email = email
-        self.contact = contact
-        self.organiser = organiser
-        self.organiser_company = organiser_company
-    
-    def json(self):
-        return {
-            'UID': self.UID,
-            'username': self.username,
-            'preferences': self.preferences,
-            'email': self.email,
-            'contact': self.contact,
-            'organiser': self.organiser,
-            'organiser_company': self.organiser_company
-        }
-        
-class UserTicket(db.Model):
-    __tablename__ = 'user_tickets'
-
-    UID = db.Column(db.Integer, ForeignKey('users.UID'), primary_key=True)
-    TicketID = db.Column(db.Integer, ForeignKey('tickets.TicketID'), primary_key=True)
-
-    # Relationships
-    user = relationship('User', back_populates='user_tickets')
-    tickets = relationship('Ticket', back_populates='user_tickets')
-
-    def __init__(self, UID, TicketID):
-        self.UID = UID
-        self.TicketID = TicketID
-
-    def json(self):
-        return {
-            'UID': self.UID,
-            'TicketID': self.TicketID
-        }
-
-
-# GET ALL
+# GET ALL events with their types
 @app.route("/event")
 def get_all():
-    eventlist = db.session.scalars(db.select(Event)).all()
-    if len(eventlist):
+    # Get all events and their related types using joined loading
+    eventlist = db.session.query(Event).options(db.joinedload(Event.event_types)).all()
+    
+    # Check if the event list is not empty
+    if eventlist:
+        events_data = []
+        for event in eventlist:
+            # Serialize the Event object
+            event_data = {
+                "EID": event.EID,
+                "Title": event.Title,
+                "Description": event.Description,
+                "EventLogo": event.EventLogo,
+                "GameName": event.GameName,
+                "GameLogo": event.GameLogo,
+                "Location": event.Location,
+                "Time": event.Time.isoformat() if event.Time else None,
+                "GameCompany": event.GameCompany,
+                "event_types": []
+            }
+
+            # Serialize associated Event_type objects
+            for etype in event.event_types:
+                event_data['event_types'].append({
+                    "EID": etype.EID,
+                    "TierID": etype.TierID,
+                    "Category": etype.Category,
+                    "Capacity": etype.Capacity,
+                    "Price": etype.Price,
+                    "PriceID": etype.PriceID
+                })
+            
+            # Add the serialized Event with its types to the events_data list
+            events_data.append(event_data)
+        
+        # Return the JSON response with all events and their types
         return jsonify(
             {
                 "code": 200,
                 "data": {
-                    "events": [event.json() for event in eventlist]
+                    "events": events_data
                 }
             }
         )
     
+    # If no events were found, return a 404 response
     return jsonify(
         {
             "code": 404,
             "message": "There are no events."
         }
     ), 404
+
 
 # GET - Retrieve a specific event by title and its event_types
 @app.route("/get_event/<title>", methods=["GET"])
@@ -286,7 +211,7 @@ def find_by_gamename(gamename):
         {
             "code": 404,
             "message": "There are no events."
-        }
+        }   
     ), 404
 
 # POST - create event

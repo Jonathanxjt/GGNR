@@ -47,7 +47,7 @@ const Login = () => {
           `http://localhost:5005/user/check-password/${email}/password/${password}`
         );
         if (
-          response.data.code === 201 &&
+          response.data.code === 200 &&
           response.data.message === "Correct password"
         ) {
           // Login successful
@@ -100,7 +100,7 @@ const Login = () => {
     } else {
       // Handle registration
       try {
-        const response = await axios.post("http://localhost:5005/user", {
+        const response = await axios.post("http://localhost:5005/user/create_user", {
           username,
           password,
           preferences,
@@ -209,23 +209,11 @@ const Login = () => {
                 </Form.Floating>
               </Col>
             </Row>
-            <Form.Floating className="mb-3">
-              <Form.Control
-                id="floatingPreferences"
-                type="text"
-                placeholder="Preferences of Games"
-                value={preferences}
-                onChange={handlePreferencesChange}
-                required={!isLogin}
-              />
-              <label htmlFor="floatingPreferences">
-                Preferences of Games
-              </label>
-            </Form.Floating>
+
             <Form.Check
               type="checkbox"
               id="organiserCheck"
-              label="Organiser"
+              label="Are you an Organiser?"
               checked={isOrganiser}
               onChange={handleOrganiserChange}
             />

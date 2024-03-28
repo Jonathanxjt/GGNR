@@ -14,6 +14,9 @@ import "./EventPage.css";
 import axios from "axios";
 import CircleButton from "../CreateEventButton/CreateEventButton";
 import "../CreateEventButton/CreateEventButton.css";
+import { RiVipFill } from "react-icons/ri";
+import { IoGameController } from "react-icons/io5";
+
 
 function EventPage() {
   const [eventData, setEventData] = useState([]);
@@ -22,8 +25,28 @@ function EventPage() {
     axios
       .get("http://localhost:5000/event")
       .then((response) => {
-        // .data.data is because json data sends code and data due to the microservice json response
-        response.data.data.events.forEach((event) => {
+        const formattedEvents = response.data.data.events.map((event) => {
+          const now = new Date();
+          const eventStart = new Date(event.Time);
+          const timeDifference = eventStart - now;
+
+          // Make sure to calculate only for future events
+          if (timeDifference > 0) {
+            // Calculate days, hours, minutes
+            let days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+            let hours = Math.floor(
+              (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+            );
+            let minutes = Math.floor(
+              (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+            );
+            // Add StartingIn attribute
+            event.StartingIn = `Starting in ${days}D ${hours}H ${minutes}M`;
+          } else {
+            // For past events or events that have already started
+            event.StartingIn = "Event has Ended";
+          }
+
           // Format the date and time here
           const formattedDateTime = new Date(event.Time).toLocaleString(
             "en-SG",
@@ -36,18 +59,44 @@ function EventPage() {
               hour12: true,
             }
           );
-          event.FormattedTime = formattedDateTime;
+
+          // Initialize capacities
+          let audienceCap = 0;
+          let vipCap = 0;
+          let competitorCap = 0;
+
+          // Calculate the capacity of each category
+          event.event_types.forEach((type) => {
+            if (type.Category === "Audience") {
+              audienceCap += type.Capacity;
+            } else if (type.Category === "VIP") {
+              vipCap += type.Capacity;
+            } else if (type.Category === "Competitor") {
+              competitorCap += type.Capacity;
+            }
+          });
+
+          // Add formatted time and capacities to the event object
+          return {
+            ...event,
+            FormattedTime: formattedDateTime,
+            AudienceCap: audienceCap,
+            VIPCap: vipCap,
+            CompetitorCap: competitorCap,
+          };
         });
 
-        setEventData(response.data.data.events);
-        console.log(response.data.data.events);
+        formattedEvents.sort((a, b) => {
+          return new Date(a.Time) - new Date(b.Time);
+        });
+
+        setEventData(formattedEvents);
+        console.log(formattedEvents);
       })
       .catch((error) => {
         console.error("There was an error!", error);
       });
   }, []);
-
-
   // Function to create cards for each event
   const createCards = (events) => {
     return events.map((event, index) => (
@@ -59,14 +108,16 @@ function EventPage() {
             // Store the event data in local storage
             localStorage.setItem("selectedEvent", JSON.stringify(event));
             // Redirect to the registration page
-            window.location.href = `/registration?title=${encodeURIComponent(event.Title)}`;
+            window.location.href = `/registration?title=${encodeURIComponent(
+              event.Title
+            )}`;
           }}
         >
           <Card.Img
             variant="top"
             src={event.EventLogo}
             onError={(e) => {
-              e.target.src = { placeholder };
+              e.target.src = placeholder;
             }} // Set a placeholder image on error
           />
           <Card.Body>
@@ -86,19 +137,39 @@ function EventPage() {
               <p>
                 <FaUser />
                 &nbsp;
-                {event.Capacity}
+                {event.AudienceCap+event.VIPCap+event.CompetitorCap} Tickets Left
               </p>
+              {/* {event.AudienceCap > 0 && (<p>
+                <FaUser />
+                &nbsp;
+                {event.AudienceCap} Tickets Left
+              </p>)}
+              {event.VIPCap > 0 && (
+                <p>
+                  <RiVipFill />
+                  &nbsp;
+                  {event.VIPCap} VIP Tickets Left
+                </p>
+              )}
+
+              {event.CompetitorCap > 0 && (
+                <p>
+                  <IoGameController />
+                  &nbsp;
+                  {event.CompetitorCap} Competitor Tickets Left
+                </p>
+              )} */}
             </Card.Text>
           </Card.Body>
           <Card.Footer>
-            <small className="text-muted">Last updated mins ago</small>
+            <small className="text-muted">{event.StartingIn}</small>
           </Card.Footer>
         </Card>
       </Col>
     ));
   };
 
-  // Function to create carousel items with cards
+  // !DEPRECATED Function to create carousel items with cards
   const createCarouselItems = () => {
     const items = [];
     for (let i = 0; i < eventData.length; i += 4) {
@@ -144,10 +215,10 @@ function EventPage() {
         <Row className="py-2">{createCards(eventData)}</Row>
       </div>
       <div>
-					<CircleButton url="http://localhost:3000/create_event" />
-				</div>
+        <CircleButton url="http://localhost:3000/create_event" />
+      </div>
     </div>
-    
+
     // Cards
   );
 }

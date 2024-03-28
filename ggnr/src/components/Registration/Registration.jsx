@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import { MyNavbar } from "../MyNavbar/MyNavbar";
 import axios from "axios";
 
+// TODO: Find some way to make the priceID work in the backend api call for matt
 function Registration() {
   const [eventData, setEventData] = useState(null);
   const [selectedPriceId, setSelectedPriceId] = useState('');
