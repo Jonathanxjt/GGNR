@@ -67,11 +67,11 @@ function EventPage() {
 
           // Calculate the capacity of each category
           event.event_types.forEach((type) => {
-            if (type.Category === "Audience") {
+            if (type.TierID === 1) {
               audienceCap += type.Capacity;
-            } else if (type.Category === "VIP") {
+            } else if (type.TierID === 2) {
               vipCap += type.Capacity;
-            } else if (type.Category === "Competitor") {
+            } else if (type.TierID === 3) {
               competitorCap += type.Capacity;
             }
           });
