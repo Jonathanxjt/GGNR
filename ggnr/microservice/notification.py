@@ -151,7 +151,7 @@ def get_contact_number(organised):
         }
     
     output = organised
-    output["users"] = user_results["users"]
+    output["users"] = user_results["data"]
 
     return output
     
