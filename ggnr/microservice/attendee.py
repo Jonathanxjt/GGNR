@@ -300,6 +300,10 @@ def delete_attendee_list(EID):
             try:
                 db.session.delete(attendee)
                 db.session.commit()
+                return {
+                    "code": 201,
+                    "message": "Event attendee list has been deleted."
+                }
             except Exception as e:
                 exc_type, exc_obj, exc_tb = sys.exc_info()
                 fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
