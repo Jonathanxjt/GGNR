@@ -228,7 +228,7 @@ def get_attendee_by_EID(EID):
 # Get by UID
 @app.route("/attendee/UID/<string:UID>")
 def get_attendee_by_UID(UID):
-    attendee_list = db.session.scalrs(db.select(Attendee).filter_by(UID=UID)).all()
+    attendee_list = db.session.scalars(db.select(Attendee).filter_by(UID=UID)).all()
 
     if len(attendee_list):
         return jsonify(
