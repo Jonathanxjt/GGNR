@@ -81,6 +81,15 @@ class Event_type(db.Model):
         self.PriceID = PriceID
         self.Price = Price
 
+    def json(self):
+        return {
+            "TierID": self.TierID,
+            "Category": self.Category,
+            "Capacity": self.Capacity,
+            "PriceID": self.PriceID,
+            "Price": self.Price,
+        }
+
 
 # GET ALL events with their types
 @app.route("/event")
@@ -295,7 +304,7 @@ def create_event():
         }
     ), 201
 
-# PUT - edit event's Time or Price or Location
+# PUT - edit event's Time or Location
 @app.route("/event/<string:EID>", methods=['PUT'])
 def update_event(EID):
     try:
@@ -314,38 +323,14 @@ def update_event(EID):
         # update Time or Price or Location
         # data = request.get_json()
         time = request.get_json().get("Time")
-        px = request.get_json().get("PriceID")
         location = request.get_json().get("Location")
-        capacity = request.get_json().get("Capacity")
 
         if time != None:
             event.Time = time
-
-        
-        if px != None:
-            event.Price = px
-
         
         if location != None:
             event.Location = location
 
-        
-        if capacity != None:
-            if int(capacity) > event.Capacity:
-                return jsonify(
-                {
-                    "code": 404,
-                    "data": {
-                        "EID": EID
-                    },
-                    "message": "insufficient event capacity"
-                }
-            ), 404
-            else:
-                event.Capacity -= int(capacity)
-        
-
-        
         db.session.commit()
         return jsonify(
             {
@@ -364,7 +349,6 @@ def update_event(EID):
             }
         ), 500
     
-
 # delete event
 @app.route("/event/<string:EID>", methods=["DELETE"])
 def delete_event(EID):
@@ -409,6 +393,61 @@ def delete_event(EID):
     
     return jsonify({"code": 201, "EID": EID}), 201
 
+# edit events_type table's capacity 
+@app.route("/event_type", methods=['PUT'])
+def update_event_type():
+    
+    EID = request.get_json().get("EID")
+    TierID = request.get_json().get("TierID")  
+
+    try:
+        event_type = db.session.scalars(db.select(Event_type).filter_by(EID=EID, TierID=TierID).limit(1)).first()
+        if not event_type:
+            return jsonify(
+                {
+                    "code": 404,
+                    "data": {
+                        "EID": EID,
+                        "TierID": TierID
+                    },
+                    "message": "event_type not found."
+                }
+            ), 404
+
+        capacity = request.get_json().get("Capacity")
+        if capacity != None:
+            if int(capacity) > event_type.Capacity:
+                return jsonify(
+                {
+                    "code": 404,
+                    "data": {
+                        "EID": EID,
+                        "TierID": TierID
+                    },
+                    "message": "insufficient event capacity"
+                }
+            ), 404
+            else:
+                event_type.Capacity -= int(capacity)
+
+        db.session.commit()
+        return jsonify(
+            {
+                "code": 200,
+                "data": event_type.json()
+            }
+        ), 200
+    except Exception as e:
+        return jsonify(
+            {
+                "code": 500,
+                "data": {
+                    "EID": EID,
+                    "TierID": TierID
+                },
+                "message": "An error occurred while updating the event. " + str(e)
+            }
+        ), 500
 
 # may change port number
 if __name__ == '__main__':
