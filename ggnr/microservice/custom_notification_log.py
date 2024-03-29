@@ -39,13 +39,6 @@ def callback(channel, method, properties, body): # required signature for the ca
     processOrderLog(json.loads(body))
     print()
 
-# def processOrderLog(order):
-#     print("Notification_Log: Recording an order log:")
-#     print(order)
-
-#     print("Extracted Contact Information:")
-#     for user in order['users']:
-#         print(f"User ID: {user['UID']}, Contact: {user['contact']}")
 
 def processOrderLog(order):
 
