@@ -10,6 +10,7 @@ import Return from "./components/Return/Return";
 import TestPage from "./components/TestPage/TestPage";
 import Login from "./components/Login";
 import ProtectedRoute from "./ProtectedRoute";
+import UserProfile from "./components/UserProfile/UserProfile";
 
 const RouteConfig = () => {
   return (
@@ -30,8 +31,11 @@ const RouteConfig = () => {
         <Route path="/checkout" element={<CheckoutForm />} />
         <Route path="/return" element={<Return />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/profile" element={<UserProfile />} />
         <Route path="/test" element={<TestPage />} />
+        
         <Route path="*" element={<NotFoundPage />} />
+
       </Routes>
     </Router>
   );

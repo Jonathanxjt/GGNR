@@ -212,8 +212,7 @@ def get_all():
 # GET user by uid
 @app.route("/user/<int:UID>")
 def get_user_by_uid(UID):
-    user = db.session.scalar(db.select(User).filter_by(UID=UID)).all()
-
+    user = db.session.scalars(db.select(User).filter_by(UID=UID).limit(1)).first()
     if user:
         return jsonify(
             {
@@ -383,24 +382,15 @@ def edit_user_preference(UID):
                 }
             ), 404
         
-        # front end sends json {"preferences": [...]}
-        get_preference_list = request.get_json().get("preferences")
+        # Get the new preferences from the request body
+        new_preferences = request.get_json().get("preferences", "")
 
-        user_current_preferences = user.preferences
+        # Update the user's preferences
+        user.preferences = new_preferences
 
-        if user_current_preferences == "":
-            user_updated_preferences = ",".join(get_preference_list)
-        else:
-            current_list = user_current_preferences.split(",")
-            for new_preference in get_preference_list:
-                if new_preference not in current_list:
-                    current_list.append(new_preference)
-
-            user_updated_preferences = ",".join(current_list)
-
-        user.preferences = user_updated_preferences
-
+        # Commit the changes to the database
         db.session.commit()
+
         return jsonify(
             {
                 "code": 201,
@@ -411,13 +401,15 @@ def edit_user_preference(UID):
     except Exception as e:
         return jsonify(
             {
-                "code":500,
+                "code": 500,
                 "data": {
                     "UID": UID
                 },
-                "message": "An error occured while updating user preferences. " + str(e)
+                "message": "An error occurred while updating user preferences. " + str(e)
             }
         ), 500
+
+
     
 # GET - get list of users whose preferences align with GameName
 @app.route("/user/user_preference_gamename")
