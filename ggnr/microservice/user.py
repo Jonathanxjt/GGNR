@@ -420,8 +420,8 @@ def edit_user_preference(UID):
         ), 500
     
 # GET - get list of users whose preferences align with GameName
-@app.route("/user/user_list_gamename")
-def get_user_list_gamename():
+@app.route("/user/user_preference_gamename")
+def get_user_preference_gamename():
     # update the function
     gamename = request.get_json().get("GameName")
     user_list = db.session.scalars(db.select(User)).all()

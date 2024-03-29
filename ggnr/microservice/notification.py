@@ -84,7 +84,7 @@ def getUIDbyEID(notification):
         channel.basic_publish(exchange=exchangename, routing_key="attendee.error", 
                               body=message, properties=pika.BasicProperties(delivery_mode=2))
         
-        print("\nOrder status ({:d}) published to the RabbitMQ Exchange:".format(code), attendee_result)
+        print("\nNotification status ({:d}) published to the RabbitMQ Exchange:".format(code), attendee_result)
 
         return {
             "code": 500,
@@ -118,7 +118,7 @@ def getUIDbyEID(notification):
         "EID": eid,
         "notification": invoke_user_microservice_result["notification"],
         "time": invoke_user_microservice_result["time"],
-        "users": invoke_user_microservice_result["users"]
+        "users": invoke_user_microservice_result["data"]
     }
 
     return {

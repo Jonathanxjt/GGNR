@@ -62,6 +62,8 @@ services:
       - ggnr.env
     ports:
       - "5005:5005"
+    networks:
+      - ggnr_network
 
   registration:
     build:
@@ -84,6 +86,7 @@ services:
       - "5100:5100"
     depends_on:
       - event
+      - user
     networks:
       - ggnr_network
       
