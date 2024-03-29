@@ -29,7 +29,6 @@ const RouteConfig = () => {
         <Route path="/registration" element={<Registration />} />
         <Route path="/checkout" element={<CheckoutForm />} />
         <Route path="/return" element={<Return />} />
-
         <Route path="/login" element={<Login />} />
         <Route path="/test" element={<TestPage />} />
         <Route path="*" element={<NotFoundPage />} />
