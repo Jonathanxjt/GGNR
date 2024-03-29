@@ -17,7 +17,7 @@ CORS(app)
 event_URL = "http://event:5000/event"
 ticket_URL = "http://ticket:5008/userticket"
 attendees_list_URL = "http://attendee:5003/attendee"
-update_event_URL = "http://event:5000/event/{EID}" 
+update_event_capacity_URL = "http://event:5000/event_type" 
 # need to use different ports because all of them are running on localhost, if not there will be a port conflict
 # can use same port if they are all running on different machines(?) basically not all using localhost
 
@@ -54,11 +54,10 @@ def registration():
     }), 400
 
 def processBuyTicket(order):
-    # 2. PUT request to reduce capacity of Events
+    # 2. PUT request to reduce capacity of Events_type
     print('\n\n-----Invoking events microservice-----')
-    eid = order['EID']  # Assuming 'EID' is a key in the 'order' dictionary
-    updated_event_url = update_event_URL.format(EID=eid)
-    order_result = invoke_http(updated_event_url, method="PUT", json=order)
+    print(order)
+    order_result = invoke_http(update_event_capacity_URL, method="PUT", json=order)
     print(order_result)
     print("\nTicket sent to events.\n")
 

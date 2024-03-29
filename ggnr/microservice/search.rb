@@ -76,7 +76,7 @@ post '/search' do
   request = Net::HTTP::Post.new(game_url)
   request["Client-ID"] = ENV['CLIENT_ID'] 
   request["Authorization"] = "Bearer #{access_token}"
-  request.body = "fields *; search \"#{game_name}\"; limit 5;"
+  request.body = "fields *; search \"#{game_name}\"; where version_parent=null; limit 5;"
   game_response = http.request(request)
   game_data = JSON.parse(game_response.body)
 

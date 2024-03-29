@@ -37,6 +37,5 @@ video {
     background-color: rgba(0, 0, 0, 0.5);
 }
 .MyNavbar {
-    /* Other styles */
     z-index: 1; /* Ensure the navbar is above the video */
 }

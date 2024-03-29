@@ -46,6 +46,14 @@
 	transform: translate(0, 0);
 	opacity: 1;
 }
-.custom-navbar .nav-link:hover {
+.custom-navbar .nav-link:hover{
 	color: #669bbc; /* Lighter shade for hover */
+}
+
+a.navbar-brand:hover{
+	color: #669bbc;
+}
+
+span.navbar-toggler-icon{
+	color: #ffffff;
 }

@@ -9,3 +9,4 @@ stripe==8.7.0
 requests==2.31.0
 bcrypt==4.1.2
 python-dotenv==0.19.1
+twilio==9.0.2
