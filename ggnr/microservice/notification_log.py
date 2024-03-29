@@ -10,6 +10,15 @@ a_queue_name = 'Notification_Log' # queue to be subscribed by Notification_Log m
 # Instead of hardcoding the values, we can also get them from the environ as shown below
 # a_queue_name = environ.get('Notification_Log') #Notification_Log
 
+# import twilio client
+import os
+from twilio.rest import Client
+
+account_sid = os.environ['TWILIO_ACCOUNT_SID']
+auth_token = os.environ['TWILIO_AUTH_TOKEN']
+client = Client(account_sid, auth_token)
+# end of twilio setup
+
 def receiveOrderLog(channel):
     try:
         # set up a consumer and start to wait for coming messages
@@ -30,9 +39,40 @@ def callback(channel, method, properties, body): # required signature for the ca
     processOrderLog(json.loads(body))
     print()
 
+# def processOrderLog(order):
+#     print("Notification_Log: Recording an order log:")
+#     print(order)
+
+#     print("Extracted Contact Information:")
+#     for user in order['users']:
+#         print(f"User ID: {user['UID']}, Contact: {user['contact']}")
+
 def processOrderLog(order):
-    print("Notification_Log: Recording an order log:")
+
+    print("Starting to process order log...")
     print(order)
+    
+    if 'users' in order:
+        print("Extracted Contact Information:")
+        for user in order['users']:
+            contact = user['contact']
+            print(f"User ID: {user['UID']}, Contact: {user['contact']}, Email: {user['email']}, Username: {user['username']}")
+            message_body = order['notification']
+            send_sms(contact, message_body)
+    else:
+        print("No users found in the order.")
+
+def send_sms(contact, message_body):
+    try:
+        message = client.messages.create(
+            body=message_body,
+            from_='+19287560401',  
+            to=contact
+        )
+        print(f"Message sent to {contact}, SID: {message.sid}")
+    except Exception as e:
+        print(f"Failed to send message to {contact}: {e}")  
+
 
 if __name__ == "__main__":  # execute this program only if it is run as a script (not by 'import')
     print("Notification_Log: Getting Connection")
