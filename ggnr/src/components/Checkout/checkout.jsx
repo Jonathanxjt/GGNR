@@ -3,7 +3,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from '@stripe/react-stripe-js';
 import { useLocation } from "react-router-dom";
 
-const stripePromise = loadStripe("pk_test_51OuvQH2LfOffQtXergftoxL0CtUh2brY7a5jhtBucRIN250k0Q1OLDKyEk142rUfEbwU4SE4kR8qq6duHXH8hrJD00Qkj6ZBfD");
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 
 const CheckoutForm = () => {
   const location = useLocation();
