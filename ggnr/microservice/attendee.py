@@ -79,7 +79,6 @@ class Event(db.Model):
     __tablename__ = 'events'
     
     EID = db.Column(db.Integer, primary_key=True)
-    TierID = db.Column(db.SmallInteger, primary_key=True)
     Title = db.Column(db.String(255))
     Description = db.Column(db.Text)
     EventLogo = db.Column(db.Text)
@@ -88,16 +87,13 @@ class Event(db.Model):
     Location = db.Column(db.String(255))
     Time = db.Column(db.DateTime)
     GameCompany = db.Column(db.String(255))
-    Capacity = db.Column(db.Integer)
-    PriceID = db.Column(db.String(255))
-    
+
     # Relationships
+    event_types = relationship('Event_type', back_populates='event')
     attendees = relationship('Attendee', back_populates='event')
     tickets = relationship('Ticket', back_populates='event')
 
-    def __init__(self, EID, TierID, Title, Description, EventLogo, GameName, GameLogo, Location, Time, GameCompany, Capacity, PriceID):
-        self.EID = EID
-        self.TierID = TierID
+    def __init__(self, Title, Description, EventLogo, GameName, GameLogo, Location, Time, GameCompany):
         self.Title = Title
         self.Description = Description
         self.EventLogo = EventLogo
@@ -106,13 +102,10 @@ class Event(db.Model):
         self.Location = Location
         self.Time = Time
         self.GameCompany = GameCompany
-        self.Capacity = Capacity
-        self.PriceID = PriceID
 
     def json(self):
         return {
             "EID": self.EID,
-            "TierID": self.TierID,
             "Title": self.Title,
             "Description": self.Description,
             "EventLogo": self.EventLogo,
@@ -121,8 +114,35 @@ class Event(db.Model):
             "Location": self.Location,
             "Time": self.Time.isoformat() if self.Time else None,  # ISO formatting for dateTime
             "GameCompany": self.GameCompany,
+        }
+
+class Event_type(db.Model):
+    __tablename__ = 'events_type'
+
+    EID = db.Column(db.Integer, db.ForeignKey('events.EID'), primary_key=True)
+    TierID = db.Column(db.SmallInteger, primary_key=True)
+    Category = db.Column(db.String(255))
+    Capacity = db.Column(db.Integer)
+    Price = db.Column(db.Float)
+    PriceID = db.Column(db.String(255))
+
+    # Relationships
+    event = relationship('Event', back_populates='event_types')
+
+    def __init__(self, TierID, Category, Price, Capacity, PriceID):
+        self.TierID = TierID
+        self.Category = Category
+        self.Capacity = Capacity
+        self.PriceID = PriceID
+        self.Price = Price
+
+    def json(self):
+        return {
+            "TierID": self.TierID,
+            "Category": self.Category,
             "Capacity": self.Capacity,
-            "PriceID": self.PriceID
+            "PriceID": self.PriceID,
+            "Price": self.Price,
         }
 
 class User(db.Model):
