@@ -135,7 +135,6 @@ const Login = () => {
   <div className="login-container">
     <div className="logincard">
       <form onSubmit={handleSubmit}>
-        <img src={logo} className="logo" />
         <div className="box">
           <div className="loginhead">
             <span>{isLogin ? "Login" : "Register"}</span>

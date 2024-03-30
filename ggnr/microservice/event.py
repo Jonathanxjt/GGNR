@@ -186,23 +186,37 @@ def get_event(title):
 # GET EID
 @app.route("/event/<string:EID>")
 def find_by_event_id(EID):
-    event = db.session.scalars(db.select(Event).filter_by(EID=EID).limit(1)).first()
+    event = Event.query.filter_by(EID=EID).first()
     if event:
-        return jsonify(
-            {
-                "code": 200,
-                "data": event.json()
-            }
-        )
-    return jsonify(
-        {
-            "code": 404,
-            "data": {
-                "EID": EID
-            },
-            "message": "Event not found."
+        # Serialize the Event object
+        event_data = {
+            "EID": event.EID,
+            "Title": event.Title,
+            "Description": event.Description,
+            "EventLogo": event.EventLogo,
+            "GameName": event.GameName,
+            "GameLogo": event.GameLogo,
+            "Location": event.Location,
+            "Time": event.Time.isoformat() if event.Time else None,
+            "GameCompany": event.GameCompany,
+            "event_types": []
         }
-    ), 404
+
+        # Serialize associated Event_type objects
+        for etype in event.event_types:
+            event_data['event_types'].append({
+                "EID": etype.EID,
+                "TierID": etype.TierID,
+                "Category": etype.Category,
+                "Capacity": etype.Capacity,
+                "Price": etype.Price,
+                "PriceID": etype.PriceID
+            })
+
+        return jsonify({"code": 200, "data": event_data}), 200
+    else:
+        return jsonify({"code": 404, "message": "Event not found"}), 404
+
 
 # GET - games name
 @app.route("/event/gamename/<string:gamename>")
