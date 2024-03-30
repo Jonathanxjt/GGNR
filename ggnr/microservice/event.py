@@ -88,6 +88,7 @@ class Event_type(db.Model):
             "Capacity": self.Capacity,
             "PriceID": self.PriceID,
             "Price": self.Price,
+
         }
 
 
