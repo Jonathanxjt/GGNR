@@ -10,6 +10,8 @@ services:
       - ggnr.env
     ports:
       - "5003:5003"
+    networks:
+      - ggnr_ticket
 
   event:
     build:
@@ -22,6 +24,7 @@ services:
       - "5000:5000"
     networks:
       - ggnr_network
+      - ggnr_ticket
 
   payment:
     build:
@@ -52,6 +55,8 @@ services:
       - ggnr.env
     ports:
       - "5008:5008"
+    networks:
+      - ggnr_ticket
 
   user:
     build:
@@ -74,6 +79,13 @@ services:
       - ggnr.env
     ports:
       - "5006:5006"
+    depends_on:
+      - event
+      - attendee
+      - ticket
+    networks:
+      - ggnr_ticket
+    
 
   event_management:
     build:
@@ -92,5 +104,7 @@ services:
       
 networks:
   ggnr_network:
+    driver: bridge
+  ggnr_ticket:
     driver: bridge
 

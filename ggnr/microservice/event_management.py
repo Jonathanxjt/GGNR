@@ -11,6 +11,8 @@ CORS(app)
 # always follow service names in YAML, e.g. http://event:5000 for event microservice
 #* http://<service_name>:<port_number>/<endpoint>   FOLLOW THIS!!!
 # TODO: Update the URLs as needed
+# TODO: update the delete functions and update functions 
+
 
 events_url = "http://event:5000/create_event"
 user_url = "http://user:5005/user/user_preference_gamename"

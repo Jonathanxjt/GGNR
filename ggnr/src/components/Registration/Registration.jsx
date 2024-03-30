@@ -7,7 +7,9 @@ import axios from "axios";
 // TODO: Find some way to make the priceID work in the backend api call for matt
 function Registration() {
   const [eventData, setEventData] = useState(null);
-  const [selectedPriceId, setSelectedPriceId] = useState('');
+  const [selectedPriceId, setSelectedPriceId] = useState("");
+  const [selectedTierId, setSelectedTierId] = useState("");
+  const user = JSON.parse(sessionStorage.getItem("user"));
   const location = useLocation();
 
   useEffect(() => {
@@ -43,12 +45,38 @@ function Registration() {
     }
   }, [location.search]); // Re-run the effect if the search part of the URL changes
 
-  const handleRegistrationSubmit = (e) => {
+  const handleRegistrationSubmit = async (e) => {
     e.preventDefault();
-    if (selectedPriceId) {
-      window.location.href = `/checkout?priceId=${encodeURIComponent(selectedPriceId)}`;
+    if (selectedTierId) {
+      const registrationData = {
+        EID: eventData.EID,
+        TierID: selectedTierId,
+        PriceID: selectedPriceId,
+        UID: user.UID,
+      };
+
+      try {
+        await axios.post("http://localhost:5006/register", registrationData);
+        // Registration successful, redirect to checkout
+        // TODO: Improve notification and proper redirection 
+        if (selectedPriceId == "null" || selectedPriceId === null) 
+        {
+          alert("Create successfully");
+        }
+        else
+        {
+          window.location.href = `/checkout?priceId=${encodeURIComponent(
+            selectedPriceId
+          )}`;
+        }
+        
+      } catch (error) {
+        // Handle registration error
+        console.error("Registration error:", error);
+        alert("Registration failed.");
+      }
     } else {
-      alert('Please select a ticket tier.');
+      alert("Please select a ticket tier.");
     }
   };
 
@@ -118,12 +146,21 @@ function Registration() {
               <Form>
                 <Form.Group className="mb-3">
                   <Form.Label>Select Ticket Tier</Form.Label>
-                  <Form.Select onChange={(e) => setSelectedPriceId(e.target.value)}>
+                  <Form.Select
+                    onChange={(e) => {
+                      const [tierId, priceId] = e.target.value.split("-");
+                      setSelectedTierId(tierId);
+                      setSelectedPriceId(priceId === "null" ? null : priceId);
+                    }}
+                  >
                     <option>Select a tier...</option>
                     {eventData &&
                       eventData.event_types &&
                       eventData.event_types.map((eventType, index) => (
-                        <option key={index} value={eventType.PriceID}>
+                        <option
+                          key={index}
+                          value={`${eventType.TierID}-${eventType.PriceID}`}
+                        >
                           {eventType.Price === 0
                             ? `${eventType.Category} Ticket - Free Entry`
                             : `${
@@ -134,7 +171,11 @@ function Registration() {
                   </Form.Select>
                 </Form.Group>
                 {/* Add more form fields here */}
-                <Button variant="primary" type="submit" onClick={handleRegistrationSubmit}>
+                <Button
+                  variant="primary"
+                  type="submit"
+                  onClick={handleRegistrationSubmit}
+                >
                   Register
                 </Button>
               </Form>

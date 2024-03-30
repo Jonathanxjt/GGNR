@@ -53,7 +53,7 @@ class Attendee(db.Model):
 class Ticket(db.Model):
     __tablename__ = 'tickets'
     
-    TicketID = db.Column(db.Integer, primary_key=True)
+    TicketID = db.Column(db.Integer, primary_key=True, autoincrement=True)  # Set autoincrement to True
     EID = db.Column(db.Integer, ForeignKey('events.EID'))
     TierID = db.Column(db.SmallInteger)
     PriceID = db.Column(db.String(255))
@@ -61,8 +61,8 @@ class Ticket(db.Model):
     # Relationships
     event = relationship('Event', back_populates='tickets')
     user_tickets = relationship('UserTicket', back_populates='tickets')
-    def __init__(self, TicketID, EID, TierID, PriceID):
-        self.TicketID = TicketID
+
+    def __init__(self, EID, TierID, PriceID):
         self.EID = EID
         self.TierID = TierID
         self.PriceID = PriceID
@@ -270,69 +270,43 @@ def get_tickets_by_eid(EID):
 
 
 # POST - create ticket
-@app.route("/ticket/<string:TicketID>", methods=["POST"])
-def create_ticket(TicketID):
-
+@app.route("/ticket", methods=["POST"])
+def create_ticket():
     eid = request.get_json().get("EID")
     tier = request.get_json().get("TierID")
-    PriceID = request.get_json().get("PriceID")
+    price_id = request.get_json().get("PriceID")
+    uid = request.get_json().get("UID")
 
+    # Create a new Ticket
     ticket = Ticket(
-        TicketID,
-        eid,
-        tier,
-        PriceID
+        EID=eid,
+        TierID=tier,
+        PriceID=price_id
     )
 
     try:
         db.session.add(ticket)
-        db.session.commit()
-    except Exception as e:
-        exc_type, exc_obj, exc_tb = sys.exc_info()
-        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        ex_str = (
-            str(e)
-            + " at "
-            + str(exc_type)
-            + ": "
-            + fname
-            + ": line "
-            + str(exc_tb.tb_lineno)
+        db.session.flush()  # Flush the changes to get the generated TicketID
+
+        # Create a new UserTicket
+        user_ticket = UserTicket(
+            UID=uid,
+            TicketID=ticket.TicketID
         )
-        print(ex_str)
-
-        return jsonify(
-            {
-                "code": 500,
-                "message": "An error occured while creating the ticket. " +str(e)
-            }
-        ), 500
-    
-    print(json.dumps(ticket.json(), default=str))
-
-
-    return jsonify(
-        {
-            "code": 201,
-            "data": ticket.json()
-        }
-    ), 201
-
-@app.route("/userticket", methods=["POST"])
-def create_userticket():
-
-    TicketID = request.get_json().get("TicketID")
-    UID = request.get_json().get("UID")
-
-    user_ticket = UserTicket(
-        UID,
-        TicketID
-    )
-
-    try:
         db.session.add(user_ticket)
+
         db.session.commit()
+        return jsonify(
+            {
+                "code": 201,
+                "data": {
+                    "ticket": ticket.json(),
+                    "user_ticket": user_ticket.json()
+                }
+            }
+        ), 201
     except Exception as e:
+        db.session.rollback()
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
         ex_str = (
@@ -345,23 +319,13 @@ def create_userticket():
             + str(exc_tb.tb_lineno)
         )
         print(ex_str)
-
         return jsonify(
             {
                 "code": 500,
-                "message": "An error occured while creating the ticket. " +str(e)
+                "message": "An error occurred while creating the ticket. " + str(e)
             }
         ), 500
-    
-    print(json.dumps(user_ticket.json(), default=str))
 
-
-    return jsonify(
-        {
-            "code": 201,
-            "data": user_ticket.json()
-        }
-    ), 201
 
 if __name__ == '__main__':
     print("This is flask for " + os.path.basename(__file__) + ": manage event ...")

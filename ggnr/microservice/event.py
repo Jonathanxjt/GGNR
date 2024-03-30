@@ -411,7 +411,6 @@ def delete_event(EID):
 # edit events_type table's capacity 
 @app.route("/event_type", methods=['PUT'])
 def update_event_type():
-    
     EID = request.get_json().get("EID")
     TierID = request.get_json().get("TierID")  
 
@@ -429,21 +428,20 @@ def update_event_type():
                 }
             ), 404
 
-        capacity = request.get_json().get("Capacity")
-        if capacity != None:
-            if int(capacity) > event_type.Capacity:
-                return jsonify(
+        # Decrement the capacity by 1
+        if event_type.Capacity > 0:
+            event_type.Capacity -= 1
+        else:
+            return jsonify(
                 {
-                    "code": 404,
+                    "code": 400,
                     "data": {
                         "EID": EID,
                         "TierID": TierID
                     },
-                    "message": "insufficient event capacity"
+                    "message": "No more capacity left for this event type."
                 }
-            ), 404
-            else:
-                event_type.Capacity -= int(capacity)
+            ), 400
 
         db.session.commit()
         return jsonify(
@@ -463,6 +461,7 @@ def update_event_type():
                 "message": "An error occurred while updating the event. " + str(e)
             }
         ), 500
+
 
 # may change port number
 if __name__ == '__main__':
