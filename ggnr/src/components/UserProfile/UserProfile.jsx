@@ -180,7 +180,7 @@ const UserProfile = () => {
                         <img
                           src={ticket.eventLogo}
                           alt="Event Logo"
-                          style={{ width: "50px", height: "50px" }}
+                          style={{ width: "150px", height: "100px" }}
                         />
                       </td>
                       <td>{ticket.eventName}</td>
