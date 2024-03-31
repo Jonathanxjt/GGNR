@@ -91,7 +91,7 @@ def invoke_event_microservice(event_data):
             # Handle the error appropriately
             print("Error sending event data to other service:", response)
 
-            invoke_http(notification_url, method="POST",json=event_data)
+            invoke_http(notification_url, method="POST",json=response)
 
             return jsonify({"code": 500, "message": "Failed to send event data to the other service."}), 500
 
