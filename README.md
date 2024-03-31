@@ -1,7 +1,6 @@
 # GGNR
 
-GGNR is a React-based platform designed for organizers to host various events such as esports tournaments, gatherings.
-Users can register for these events in different capacities such as audience, VIP, or competitor.
+GGNR is a React-based platform designed for organisers to host various events such as esports tournaments or gatherings. Interested parties can make use of GGNR to sign up and pay for events as spectators or competitors. 
 
 ## Features
 
@@ -48,6 +47,16 @@ Users can register for these events in different capacities such as audience, VI
    ```
 
    This will start all the required microservices for the application to function correctly.
+
+## External APIs used
+
+- **Internet Games Database (IGDB)**
+   - [Link to documentation](https://api-docs.igdb.com/#getting-started)
+   - This API was used to query games for the events on GGNR. 
+
+- **Stripe Payment**
+   - [Link to documentation](https://docs.stripe.com/)
+   - Stripe was used to handle payment for the event tickets. 
 
 ## Usage
 
