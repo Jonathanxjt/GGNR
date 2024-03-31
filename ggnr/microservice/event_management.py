@@ -67,7 +67,7 @@ def create_event():
             else:
                 event_title = event_data.get("Title", "")
                 event_time = event_data.get("Time", "")
-                time_obj = datetime.strptime(event_time, "%H%M")
+                time_obj = datetime.strptime(event_time, "%Y-%m-%d %H:%M:%S")
                 time_am_pm = time_obj.strftime("%I:%M %p")
                 game_company = event_data.get("GameCompany", "")
                 event_location = event_data.get("Location", "")

@@ -10,7 +10,7 @@ COPY requirements.txt ./
 # Install any needed packages specified in requirements.txt
 RUN python -m pip install --no-cache-dir -r requirements.txt
 
-COPY ./event_management.py ./amqp_connection.py ./invokes.py ./
+COPY . .
 
 # Run app.py when the container launches
 CMD ["python", "./event_management.py"]
