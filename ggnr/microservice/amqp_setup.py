@@ -3,10 +3,10 @@ import pika
 from os import environ
 
 # non-hardcoding the values
-# hostname = "localhost"
+hostname = "localhost"
 # port = environ.get("port")
-# exchangename = environ.get("exchangename")
-# exchangetype = environ.get("exchangetype")
+exchangename = environ.get("exchangename")
+exchangetype = environ.get("exchangetype")
 # notif_queue_name = environ.get("Notification_log") #Notification_Log
 # error_queue_name = environ.get("Error") #Error
 

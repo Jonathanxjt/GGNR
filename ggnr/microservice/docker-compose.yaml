@@ -1,5 +1,8 @@
 version: '3.8'
 
+volumes:
+  rabbitmq_data:
+
 services:
   attendee:
     build:
@@ -12,6 +15,7 @@ services:
       - "5003:5003"
     networks:
       - ggnr_ticket
+      - ggnr_network
 
   event:
     build:
@@ -89,6 +93,20 @@ services:
       - ggnr_ticket
     
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: esd-rabbit
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes: 
+      - ./rabbitmq.config:/etc/rabbitmq/rabbitmq.config
+      - ./rabbitmq_definitions.json:/etc/rabbitmq/rabbitmq_definitions.json
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - ggnr_network
+
   event_management:
     build:
       context: .
@@ -102,9 +120,68 @@ services:
       - event
       - user
       - search
+      - notification_log
+      - notification_error
+      - rabbitmq
+    environment:
+      rabbit_host: rabbitmq
+      rabbit_port: 5672
+      exchangename: notification_topic
+      exchangetype: topic
+    networks:
+      - ggnr_network
+
+  notification_log:
+    build:
+      context: .
+      dockerfile: dockerfile_notification_log
+    restart: always
+    depends_on:
+      - rabbitmq
+    environment:
+      rabbit_host: rabbitmq
+      rabbit_port: 5672
+      a_queue_name: Notification_Log
+      PYTHONUNBUFFERED: 1
+    networks:
+      - ggnr_network
+
+  notification_error:
+    build:
+      context: .
+      dockerfile: dockerfile_notification_error
+    restart: always
+    depends_on:
+      - rabbitmq
+    environment:
+      rabbit_host: rabbitmq
+      rabbit_port: 5672
+      e_queue_name: Error
+      PYTHONUNBUFFERED: 
+    networks:
+      - ggnr_network
+
+  custom_notification:
+    build:
+      context: .
+      dockerfile: dockerfile_custom_notification
+    restart: always
+    depends_on:
+      - attendee
+      - user
+      - notification_log
+      - notification_error
+      - rabbitmq
+    environment:
+      rabbit_host: rabbitmq
+      rabbit_port: 5672
+      exchangename: notification_topic
+      exchangetype: topic
+      PYTHONUNBUFFERED: 1
     networks:
       - ggnr_network
       
+
 networks:
   ggnr_network:
     driver: bridge

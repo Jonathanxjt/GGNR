@@ -2,25 +2,29 @@
 import amqp_connection
 import json
 import pika
-#from os import environ
+from os import environ
 
-a_queue_name = 'Notification_Log' # queue to be subscribed by Notification_Log microservice
+# a_queue_name = 'Notification_Log' # queue to be subscribed by Notification_Log microservice
 
 # Instead of hardcoding the values, we can also get them from the environ as shown below
-# a_queue_name = environ.get('Notification_Log') #Notification_Log
+a_queue_name = environ.get('a_queue_name') #Notification_Log
 
 # import twilio client
 import os
 from twilio.rest import Client
 
-account_sid = os.environ['TWILIO_ACCOUNT_SID']
-auth_token = os.environ['TWILIO_AUTH_TOKEN']
+# account_sid = os.environ['TWILIO_ACCOUNT_SID']
+# auth_token = os.environ['TWILIO_AUTH_TOKEN']
+account_sid = "ACf13cd74a8c16dca69ec57c6114a1ec5f"
+auth_token = "749eb46cfa8e1e9323ceadc30aff8a5c"
+
+
 client = Client(account_sid, auth_token)
 # end of twilio setup
 
 #import scheduler
 from apscheduler.schedulers.background import BackgroundScheduler
-from datetime import datetime, time
+from datetime import datetime, timedelta
 import pytz
 
 scheduler = BackgroundScheduler()
@@ -86,7 +90,7 @@ def processOrderLog(order):
         print("Extracted Contact Information:")
         message_body = order['notification']
         send_time = order['time']
-        for user in order['users']:
+        for user in order['users']['data']:
             contact = user['contact']
             print(f"Scheduling message for User ID: {user['UID']}, Contact: {contact}, Email: {user['email']}, Username: {user['username']}")
             schedule_message_sending(contact, message_body, send_time)

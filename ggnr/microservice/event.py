@@ -238,6 +238,25 @@ def find_by_gamename(gamename):
         }   
     ), 404
 
+@app.route("/event/gamecompany/<string:gamecompany>")
+def find_by_gamecompany(gamecompany):
+    event_list = db.session.scalars(db.select(Event).filter_by(GameCompany=gamecompany)).all()
+    if len(event_list):
+        return jsonify(
+            {
+                "code": 200,
+                "data": {
+                    "events": [event.json() for event in event_list]
+                }
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "There are no events."
+        }   
+    ), 404
+
 # POST - create event
 @app.route("/create_event", methods=["POST"])
 def create_event():

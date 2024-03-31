@@ -17,11 +17,11 @@ CORS(app)
 attendee_URL = "http://127.0.0.1:5003/attendee/EID/{EID}"
 user_URL = "http://127.0.0.1:5005/user/contact-information"
 
-# exchangename = environ.get("exchangename")
-# exchangetype = environ.get("exchangetype")
+exchangename = environ.get("exchangename")
+exchangetype = environ.get("exchangetype")
 
-exchangename = "notification_topic"
-exchangetype = "topic"
+# exchangename = "notification_topic"
+# exchangetype = "topic"
 
 connection = amqp_connection.create_connection()
 channel = connection.channel()
