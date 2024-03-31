@@ -7,28 +7,16 @@ from os import environ
 import requests
 from invokes import invoke_http
 
-import pika
 import json
-import amqp_connection
+
 
 app = Flask(__name__)
 CORS(app)
 
-attendee_URL = "http://127.0.0.1:5003/attendee/EID/{EID}"
-user_URL = "http://127.0.0.1:5005/user/contact-information"
+attendee_URL = "http://attendee:5003/attendee/EID/{EID}"
+user_URL = "http://user:5005/user/contact-information"
+notification_URL = "http://notification:5010/send-notification"
 
-exchangename = environ.get("exchangename")
-exchangetype = environ.get("exchangetype")
-
-# exchangename = "notification_topic"
-# exchangetype = "topic"
-
-connection = amqp_connection.create_connection()
-channel = connection.channel()
-
-if not amqp_connection.check_exchange(channel, exchangename, exchangetype):
-    print("\nCreate the 'Exchange' before running this microservice. \nExiting the program.")
-    sys.exit(0)
 
 @app.route("/notification", methods=['POST'])
 def create_notification():
@@ -75,16 +63,9 @@ def getUIDbyEID(notification):
 
     # ceck the attendee_result; if a failure, send it to the error microservice
     code = attendee_result["code"]
-    message = json.dumps(attendee_result)
-
     if code not in range(200, 300):
-        # Inform the error microservice
-        print("\n\n-----Publishing the (attendee error) message with routing_key=attendee.error-----")
-
-        channel.basic_publish(exchange=exchangename, routing_key="attendee.error", 
-                              body=message, properties=pika.BasicProperties(delivery_mode=2))
         
-        print("\nNotification status ({:d}) published to the RabbitMQ Exchange:".format(code), attendee_result)
+        invoke_http(notification_URL, method="POST", json=attendee_result)
 
         return {
             "code": 500,
@@ -104,15 +85,7 @@ def getUIDbyEID(notification):
 
         invoke_user_microservice_result = get_contact_number(organised)
 
-        message = json.dumps(invoke_user_microservice_result)
-        print('\n\n-----Publishing the notification with routing_key=notification.info-----')        
-
-        channel.basic_publish(exchange=exchangename, routing_key="notification.info", 
-            body=message)
-        
-    # print("\Notification published to RabbitMQ Exchange.\n")
-    # - reply from the invocation is not used;
-    # continue even if this invocation fails
+        invoke_http(notification_URL, method="POST", json=invoke_user_microservice_result)
 
     overall_result = {
         "EID": eid,
@@ -134,13 +107,7 @@ def get_contact_number(organised):
     code = user_results['code']
     if code not in range(200,300):
 
-        message = json.dumps(user_results)
-        print("\n\n-----Publishing the (attendee error) message with routing_key=attendee.error-----")
-
-        channel.basic_publish(exchange=exchangename, routing_key="attendee.error", 
-                              body=message, properties=pika.BasicProperties(delivery_mode=2))
-        
-        print("\nOrder status ({:d}) published to the RabbitMQ Exchange:".format(code), user_results)
+        invoke_http(notification_URL, method="POST", json=user_results)
 
         return {
             "code": 500,
