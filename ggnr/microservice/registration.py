@@ -23,9 +23,6 @@ update_event_capacity_URL = "http://event:5000/event_type"
 # need to use different ports because all of them are running on localhost, if not there will be a port conflict
 # can use same port if they are all running on different machines(?) basically not all using localhost
 
-# ? May remove, not sure as database is in a mess right now 
-def generate_transaction_id(length=8):
-    return ''.join(random.choices(string.digits, k=length))
 
 @app.route("/register", methods=["POST"])
 def create_attendee_with_ticket():
@@ -34,7 +31,6 @@ def create_attendee_with_ticket():
     UID = data.get("UID")
     TierID = data.get("TierID")
     PriceID = data.get("PriceID")
-    transactionID = generate_transaction_id()
 
     # Step 1: Reduce event capacity
     reduce_capacity_response = invoke_http(update_event_capacity_URL, method='PUT', json={"EID": EID, "TierID": TierID})
@@ -48,7 +44,7 @@ def create_attendee_with_ticket():
     ticket_data = create_ticket_response["data"]["ticket"]
 
     # Step 3: Create attendee
-    create_attendee_response = invoke_http(attendees_list_URL, method='POST', json={"EID": EID, "UID": UID, "ticketID": ticket_data["TicketID"], "transactionID": transactionID})
+    create_attendee_response = invoke_http(attendees_list_URL, method='POST', json={"EID": EID, "UID": UID, "ticketID": ticket_data["TicketID"]})
     if create_attendee_response["code"] != 201:
         return jsonify({"code": create_attendee_response["code"], "message": "Failed to create attendee"}), create_attendee_response["code"]
 

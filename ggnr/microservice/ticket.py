@@ -29,24 +29,22 @@ class Attendee(db.Model):
     EID = db.Column(db.Integer, ForeignKey('events.EID'))
     UID = db.Column(db.Integer, ForeignKey('users.UID'))
     ticketID = db.Column(db.Integer)
-    transactionID = db.Column(db.Integer)
     
     # Relationships
     event = relationship('Event', back_populates='attendees')
     user = relationship('User', back_populates='attendees')
-    def __init__(self, EID, UID, ticketID, transactionID):
+    def __init__(self, EID, UID, ticketID):
         self.EID = EID
         self.UID = UID
         self.ticketID = ticketID
-        self.transactionID = transactionID
+
     
     def json(self):
         return {
             'AID': self.AID,
             'EID': self.EID,
             'UID': self.UID,
-            'ticketID': self.ticketID,
-            'transactionID': self.transactionID
+            'ticketID': self.ticketID
         }
     
 
@@ -86,14 +84,14 @@ class Event(db.Model):
     GameLogo = db.Column(db.Text)
     Location = db.Column(db.String(255))
     Time = db.Column(db.DateTime)
-    GameCompany = db.Column(db.String(255))
+    organiser_company = db.Column(db.String(255))
 
     # Relationships
     event_types = relationship('Event_type', back_populates='event')
     attendees = relationship('Attendee', back_populates='event')
     tickets = relationship('Ticket', back_populates='event')
 
-    def __init__(self, Title, Description, EventLogo, GameName, GameLogo, Location, Time, GameCompany):
+    def __init__(self, Title, Description, EventLogo, GameName, GameLogo, Location, Time, organiser_company):
         self.Title = Title
         self.Description = Description
         self.EventLogo = EventLogo
@@ -101,7 +99,7 @@ class Event(db.Model):
         self.GameLogo = GameLogo
         self.Location = Location
         self.Time = Time
-        self.GameCompany = GameCompany
+        self.organiser_company = organiser_company
 
     def json(self):
         return {
@@ -113,7 +111,7 @@ class Event(db.Model):
             "GameLogo": self.GameLogo,
             "Location": self.Location,
             "Time": self.Time.isoformat() if self.Time else None,  # ISO formatting for dateTime
-            "GameCompany": self.GameCompany,
+            "organiser_company": self.organiser_company,
         }
 
 class Event_type(db.Model):

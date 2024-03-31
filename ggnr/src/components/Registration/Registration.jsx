@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button, Col, Row, Card } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
+import { toast, ToastContainer, Flip } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { MyNavbar } from "../MyNavbar/MyNavbar";
 import axios from "axios";
 
@@ -61,7 +63,16 @@ function Registration() {
         // TODO: Improve notification and proper redirection 
         if (selectedPriceId == "null" || selectedPriceId === null) 
         {
-          alert("Create successfully");
+          toast.success("Login Successful!", {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+            transition: Flip,});
         }
         else
         {
@@ -83,6 +94,7 @@ function Registration() {
   return (
     <div>
       <MyNavbar />
+      <ToastContainer />
       <div className="container pt-3">
         <Row>
           <Col md={1}></Col>
