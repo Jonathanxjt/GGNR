@@ -3,6 +3,8 @@ from flask_cors import CORS
 from invokes import invoke_http
 import os, sys
 import json
+import requests
+
 
 app = Flask(__name__)
 CORS(app)
@@ -16,9 +18,19 @@ CORS(app)
 
 events_url = "http://event:5000/create_event"
 user_url = "http://user:5005/user/user_preference_gamename"
+search_url = "http://search:5009/search"
 # notification_url = "http://127.0.0.1:5200/notification"
 
 
+
+# Search for games: 
+@app.route("/search", methods=["POST"])
+def search_games():
+    game_name = request.json.get("game_name")
+    search_results = invoke_http(search_url, method='POST', json={"game_name": game_name})
+    return jsonify(search_results)
+
+# Creating an event
 @app.route("/create", methods=["POST"])
 def create_event():
     # Extract event data from the request

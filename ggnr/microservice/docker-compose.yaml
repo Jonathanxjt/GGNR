@@ -45,6 +45,8 @@ services:
       - .env
     ports:
       - "5009:5009"
+    networks:
+      - ggnr_network
 
   ticket:
     build:
@@ -99,6 +101,7 @@ services:
     depends_on:
       - event
       - user
+      - search
     networks:
       - ggnr_network
       

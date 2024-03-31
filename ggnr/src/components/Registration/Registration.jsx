@@ -17,9 +17,10 @@ function Registration() {
   useEffect(() => {
     // Extract the title from the URL
     const title = new URLSearchParams(location.search).get("title");
-    if (title) {
+    const EID = new URLSearchParams(location.search).get("eid");
+    if (EID) {
       axios
-        .get(`http://localhost:5000/get_event/${title}`)
+        .get(`http://localhost:5000/event/${EID}`)
         .then((response) => {
           // Assuming the response contains the event data directly
           const event = response.data.data;
@@ -63,7 +64,7 @@ function Registration() {
         // TODO: Improve notification and proper redirection 
         if (selectedPriceId == "null" || selectedPriceId === null) 
         {
-          toast.success("Login Successful!", {
+          toast.success("Ticket issued to your account!", {
             position: "top-center",
             autoClose: 2000,
             hideProgressBar: false,
@@ -95,7 +96,7 @@ function Registration() {
     <div>
       <MyNavbar />
       <ToastContainer />
-      <div className="container pt-3">
+      <div className="container mt-5">
         <Row>
           <Col md={1}></Col>
           <Col
@@ -125,7 +126,7 @@ function Registration() {
               )}
             </div>
           </Col>
-          <Col md={6}>
+          <Col md={7}>
             <Card
               style={{
                 background: "#003049",
@@ -137,6 +138,8 @@ function Registration() {
               <Card.Header>{eventData && eventData.Title}</Card.Header>
               {/* Description */}
               {eventData && <p>{eventData.Description}</p>}
+              {/* Organiser */}
+              {eventData && <p>Organiser: {eventData.organiser_company}</p>}
               {/* Location */}
               {eventData && <p>{eventData.Location}</p>}
               {/* Date/Time */}

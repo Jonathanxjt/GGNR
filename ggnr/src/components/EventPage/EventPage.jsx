@@ -17,7 +17,6 @@ import "../CreateEventButton/CreateEventButton.css";
 import { RiVipFill } from "react-icons/ri";
 import { IoGameController } from "react-icons/io5";
 
-
 function EventPage() {
   const [eventData, setEventData] = useState([]);
 
@@ -110,7 +109,7 @@ function EventPage() {
             // Redirect to the registration page
             window.location.href = `/registration?title=${encodeURIComponent(
               event.Title
-            )}`;
+            )}&eid=${encodeURIComponent(event.EID)}`;
           }}
         >
           <Card.Img
@@ -137,7 +136,8 @@ function EventPage() {
               <p>
                 <FaUser />
                 &nbsp;
-                {event.AudienceCap+event.VIPCap+event.CompetitorCap} Tickets Left
+                {event.AudienceCap + event.VIPCap + event.CompetitorCap} Tickets
+                Left
               </p>
               {/* {event.AudienceCap > 0 && (<p>
                 <FaUser />

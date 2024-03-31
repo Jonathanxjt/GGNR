@@ -2,6 +2,7 @@
 import React from 'react';
 import RouteConfig from './Route';
 import ToastManager from './components/ToastManager';
+import './App.css';
 
 function App() {
 
