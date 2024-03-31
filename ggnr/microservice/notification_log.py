@@ -47,23 +47,6 @@ def callback(channel, method, properties, body): # required signature for the ca
     processOrderLog(json.loads(body))
     print()
 
-<<<<<<< Updated upstream:ggnr/microservice/notification_log.py
-
-def processOrderLog(order):
-
-    print("Starting to process order log...")
-    print(order)
-    
-    if 'users' in order:
-        print("Extracted Contact Information:")
-        for user in order['users']:
-            contact = user['contact']
-            print(f"User ID: {user['UID']}, Contact: {user['contact']}, Email: {user['email']}, Username: {user['username']}")
-            message_body = order['notification']
-            send_sms(contact, message_body)
-    else:
-        print("No users found in the order.")
-=======
 def schedule_message_sending(contact, message_body, send_time):
     """Schedule a message to be sent at the specified time."""
     try:
@@ -82,7 +65,6 @@ def schedule_message_sending(contact, message_body, send_time):
         print(f"Scheduled message to {contact} at {send_datetime}")
     except Exception as e:
         print(f"Failed to schedule message to {contact}: {e}")
->>>>>>> Stashed changes:ggnr/microservice/custom_notification_log.py
 
 def send_sms(contact, message_body):
     try:
