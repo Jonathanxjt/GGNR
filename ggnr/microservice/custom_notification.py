@@ -18,7 +18,7 @@ user_URL = "http://user:5005/user/contact-information"
 notification_URL = "http://notification:5010/send-notification"
 
 
-@app.route("/notification", methods=['POST'])
+@app.route("/custom_notification", methods=['POST'])
 def create_notification():
     if request.is_json:
         try:

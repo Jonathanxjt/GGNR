@@ -91,7 +91,6 @@ services:
       - ticket
     networks:
       - ggnr_ticket
-    
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -120,9 +119,21 @@ services:
       - event
       - user
       - search
-      - notification_log
-      - notification_error
+      - notification
+    networks:
+      - ggnr_network
+
+  notification:
+    build:
+      context: .
+      dockerfile: dockerfile_notification
+    restart: always
+    env_file:
+      - ggnr.env
+    depends_on:
       - rabbitmq
+    ports:
+      - "5010:5010"
     environment:
       rabbit_host: rabbitmq
       rabbit_port: 5672
@@ -157,7 +168,7 @@ services:
       rabbit_host: rabbitmq
       rabbit_port: 5672
       e_queue_name: Error
-      PYTHONUNBUFFERED: 
+      PYTHONUNBUFFERED: 1
     networks:
       - ggnr_network
 
@@ -166,18 +177,14 @@ services:
       context: .
       dockerfile: dockerfile_custom_notification
     restart: always
+    env_file:
+      - ggnr.env
+    ports:
+      - "5200:5200"
     depends_on:
       - attendee
       - user
-      - notification_log
-      - notification_error
-      - rabbitmq
-    environment:
-      rabbit_host: rabbitmq
-      rabbit_port: 5672
-      exchangename: notification_topic
-      exchangetype: topic
-      PYTHONUNBUFFERED: 1
+      - notification
     networks:
       - ggnr_network
       
