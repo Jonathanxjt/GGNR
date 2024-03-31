@@ -231,39 +231,20 @@ def get_tickets_by_eid(EID):
         )
     return jsonify({"code": 404, "message": "There are no tickets for this event."}), 404
 
-# ticket no longer contains UID
+# Get tickets based on the user ID
+@app.route("/ticket/<int:uid>", methods=["GET"])
+def get_user_tickets(uid):
+    user_tickets = db.session.scalars(db.select(UserTicket).filter_by(UID=uid)).all()
+    if not user_tickets:
+        return jsonify({"code": 404, "message": "No tickets found for this user."}), 404
 
-# @app.route("/ticket/UID/<string:UID>")
-# def get_tickets_by_uid(UID):
-#     ticket_list = db.session.scalars(db.select(Ticket).filter_by(UID=UID)).all()
-#     if len(ticket_list):
-#         return jsonify(
-#             {
-#                 "code": 201,
-#                 "data": [individual_ticket.json() for individual_ticket in ticket_list]
-#             }
-#         )
-#     return jsonify({"code": 404, "message": "There are no tickets for this user."}), 404
+    tickets = []
+    for user_ticket in user_tickets:
+        ticket = db.session.get(Ticket, user_ticket.TicketID)
+        if ticket:
+            tickets.append(ticket.json())
 
-# combine - UID,EID
-# @app.route("/ticket/EID/<int:eid>/UID/<int:uid>")  
-# def get_ticket_by_uid_eid(uid, eid):
-#     ticket = Ticket.query.filter_by(UID=uid, EID=eid).first()
-
-#     if ticket:
-#         return jsonify(
-#             {
-#                 "code": 200,
-#                 "data": ticket.json()
-#             }
-#         )
-    
-#     return jsonify(
-#         {
-#             "code": 404,
-#             "message": "Ticket not found."
-#         }
-#     ), 404
+    return jsonify({"code": 200, "data": tickets}), 200
 
 
 

@@ -62,7 +62,7 @@ function Registration() {
         await axios.post("http://localhost:5006/register", registrationData);
         // Registration successful, redirect to checkout
         // TODO: Improve notification and proper redirection 
-        if (selectedPriceId == "null" || selectedPriceId === null) 
+        if (selectedPriceId === "null" || selectedPriceId === null) 
         {
           toast.success("Ticket issued to your account!", {
             position: "top-center",

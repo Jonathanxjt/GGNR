@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import "./CreateEvent.css";
 import { toast, ToastContainer, Flip } from "react-toastify";
@@ -7,6 +7,7 @@ import { MyNavbar } from "../MyNavbar/MyNavbar";
 import axios from "axios";
 
 const CreateEvent = () => {
+
   const [title, setTitle] = useState("");
   const [selectedTiers, setSelectedTiers] = useState(["Free Entry"]);
   const [freeEntryCapacity, setFreeEntryCapacity] = useState("");
@@ -20,12 +21,19 @@ const CreateEvent = () => {
   const [time, setTime] = useState("");
   const [previewImage, setPreviewImage] = useState(null);
   const [gameName, setGameName] = useState("");
-  const [gameCompany, setCompanyName] = useState("TODO");
+  const [organiser_company, setOrganiserCompany] = useState("");
   const [gameLogo, setGameLogo] = useState("");
   const [gameResults, setGameResults] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [isLoading, setIsLoading] = useState(false); // New state for loading status
 
+  useEffect(() => {
+    const user = JSON.parse(sessionStorage.getItem('user'));
+    if (user) {
+      setOrganiserCompany(user.organiser_company); // Assuming company is a property of the user object
+    }
+  }, []);
+  
   const handleKeyDown = async (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
@@ -107,7 +115,7 @@ const CreateEvent = () => {
       GameLogo: gameLogo, 
       Location: location,
       Time: `${date} ${time}`,
-      GameCompany: gameCompany,
+      organiser_company: organiser_company,
       EventTypes: eventTypes
     };
     console.log('Submitting event data:', eventData); // Print the JSON data
