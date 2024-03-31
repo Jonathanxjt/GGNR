@@ -4,8 +4,6 @@ from invokes import invoke_http
 import os, sys
 from os import environ
 import json
-import pika 
-import amqp_connection
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
@@ -21,18 +19,7 @@ CORS(app)
 events_url = "http://event:5000/create_event"
 user_url = "http://user:5005/user/user_preference_gamename"
 search_url = "http://search:5009/search"
-# notification_url = "http://127.0.0.1:5200/notification"
-
-exchangename = environ.get("exchangename")
-exchangetype = environ.get("exchangetype")
-
-connection = amqp_connection.create_connection()
-channel = connection.channel()
-
-if not amqp_connection.check_exchange(channel, exchangename, exchangetype):
-    print("\nCreate the 'Exchange' before running this microservice. \nExiting the program.")
-    sys.exit(0)
-
+notification_url = "http://notification:5010/send-notification"
 
 # Search for games: 
 @app.route("/search", methods=["POST"])
@@ -60,10 +47,8 @@ def create_event():
             user_response = invoke_user_microservice(user_data)
 
             if user_response["data"] == []:
-                message = json.dumps(user_response)
-                channel.basic_publish(exchange=exchangename, routing_key="user.error", 
-                        body=message, properties=pika.BasicProperties(delivery_mode=2))
-            
+                invoke_http(notification_url, method="POST", json={"code": 404,"message": "User list is empty."})
+                
             else:
                 event_title = event_data.get("Title", "")
                 event_time = event_data.get("Time", "")
@@ -78,17 +63,12 @@ def create_event():
                 organised = {
                     "notification": message,
                     "users": user_response,
-                    "time": current_time_plus_3min_str
+                    "time": current_time_plus_3min_str,
+                    "code": 201
                 }
                 
                 # send message to the notification queue
-                message = json.dumps(organised)
-                channel.basic_publish(exchange=exchangename, routing_key="notification.info", 
-                        body=message, properties=pika.BasicProperties(delivery_mode=2))
-
-            return jsonify(user_response)
-        
-            # TODO: notification.py - need to create new function since data different
+                invoke_http(notification_url, method="POST", json=organised)
         
         except Exception as e:
             # Unexpected error in code
@@ -111,16 +91,16 @@ def invoke_event_microservice(event_data):
             # Handle the error appropriately
             print("Error sending event data to other service:", response)
 
-            print("\n\n-----Publishing the (event error) message with routing_key=event.error-----")
-            message = json.dumps(response)
-            channel.basic_publish(exchange=exchangename, routing_key="event.error", 
-                                body=message, properties=pika.BasicProperties(delivery_mode=2))
+            invoke_http(notification_url, method="POST",json=event_data)
 
             return jsonify({"code": 500, "message": "Failed to send event data to the other service."}), 500
 
     except Exception as e:
         # Handle exceptions
-        print("Error sending event data to other service:", e)
+        print("Error invoking event microservice:", e)
+
+        invoke_http(notification_url, method="POST",json={"code": 500, "message":'Internal server error'})
+
         return jsonify({"code": 500, "message": "Failed to send event data to the other service."}), 500
 
     return jsonify({"code": 201, "message": "Event created successfully"}), 201
@@ -132,11 +112,6 @@ def invoke_user_microservice(data):
     code = user_result["code"]
 
     if code not in range(200,300):
-        print("\n\n-----Publishing the (event error) message with routing_key=event.error-----")
-        message = json.dumps(user_result)
-        channel.basic_publish(exchange=exchangename, routing_key="event.error", 
-                                body=message, properties=pika.BasicProperties(delivery_mode=2))
-
         return {
             "code": 500,
             "data": {
@@ -150,5 +125,5 @@ def invoke_user_microservice(data):
 
 
 if __name__ == "__main__":
-    print("This is flask " + os.path.basename(__file__) + " for placing an order...")
+    print("This is flask " + os.path.basename(__file__) + " for creating an event...")
     app.run(host="0.0.0.0", port=5100, debug=True)
