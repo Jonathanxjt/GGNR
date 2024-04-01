@@ -54,7 +54,7 @@ def callback(channel, method, properties, body): # required signature for the ca
 def schedule_message_sending(contact, message_body, send_time_str):
     """Schedule a message to be sent at the specified time."""
     try:
-        send_time = datetime.strptime(send_time_str, '%Y-%d-%m %H:%M:%S')
+        send_time = datetime.strptime(send_time_str, '%Y-%m-%d %H:%M:%S')
 
         # set timezone to SG time
         singapore_zone = pytz.timezone('Asia/Singapore')
@@ -64,11 +64,11 @@ def schedule_message_sending(contact, message_body, send_time_str):
         now = datetime.now(singapore_zone)
         
         # If the scheduled time is in the past, add a day
-        if send_datetime < now:
-            send_datetime += timedelta(days=1)
+        if send_time < now:
+            send_time += timedelta(days=1)
         
-        scheduler.add_job(send_sms, 'date', run_date=send_datetime, args=[contact, message_body])
-        print(f"Scheduled message to {contact} at {send_datetime}")
+        scheduler.add_job(send_sms, 'date', run_date=send_time, args=[contact, message_body])
+        print(f"Scheduled message to {contact} at {send_time}")
         
     except Exception as e:
         print(f"Failed to schedule message to {contact}: {e}")
