@@ -17,6 +17,8 @@ const Return = () => {
   const [countdown, setCountdown] = useState(10); // Initial countdown time in seconds
   const [isStatusChecked, setIsStatusChecked] = useState(false); // State to indicate if the status check is completed
   const [soldOut, setSoldOut] = useState(false);
+  // Add a new state variable to track if the registration attempt has been made
+  const [isRegistrationAttempted, setRegistrationAttempted] = useState(false);
   const storedRegistrationData = JSON.parse(
     sessionStorage.getItem("registrationData")
   );
@@ -44,8 +46,9 @@ const Return = () => {
   }, [sessionId]);
 
   useEffect(() => {
-    if (isStatusChecked) {
+    if (isStatusChecked && !isRegistrationAttempted) {
       (async () => {
+        setRegistrationAttempted(true); // Set to true to prevent multiple attempts
         try {
           await axios.post(
             "http://localhost:5006/register",
@@ -64,7 +67,7 @@ const Return = () => {
             // Refund successful, handle accordingly
             toast.error("Tickets SOLD OUT 😭!", {
               position: "top-center",
-              autoClose: 10000,
+              autoClose: 5000,
               hideProgressBar: false,
               closeOnClick: true,
               pauseOnHover: true,
@@ -75,7 +78,7 @@ const Return = () => {
             });
             toast.info("Your payment has been refunded!", {
               position: "top-center",
-              autoClose: 10000,
+              autoClose: 5000,
               hideProgressBar: false,
               closeOnClick: true,
               pauseOnHover: true,
@@ -84,18 +87,6 @@ const Return = () => {
               theme: "dark",
               transition: Flip,
             });
-            // Start countdown timer only after refund is successful
-            const countdownInterval = setInterval(() => {
-              setCountdown((prevCountdown) => prevCountdown - 1);
-            }, 1500);
-
-            // Redirect to homepage after countdown reaches 0
-            if (countdown === 0) {
-              navigate("/events");
-            }
-
-            // Clear interval on component unmount
-            return () => clearInterval(countdownInterval);
           } catch (refundError) {
             // Handle refund error
           }
@@ -106,9 +97,26 @@ const Return = () => {
     isStatusChecked,
     storedRegistrationData,
     paymentintent,
-    countdown,
     navigate,
   ]);
+
+  useEffect(() => {
+    // Start countdown timer only if the status check is completed
+    let countdownInterval;
+    if (isStatusChecked) {
+      countdownInterval = setInterval(() => {
+        setCountdown((prevCountdown) => prevCountdown - 1);
+      }, 1000);
+    }
+  
+    // Redirect to homepage after countdown reaches 0
+    if (countdown === 0) {
+      window.location.href = "/events";
+    }
+  
+    // Clear interval on component unmount or when isStatusChecked changes
+    return () => clearInterval(countdownInterval);
+  }, [countdown, isStatusChecked, navigate]);
 
   // Function to refund a payment upo ticket sold out scenario.
   const refundPayment = async (paymentIntentId) => {

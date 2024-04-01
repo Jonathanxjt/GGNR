@@ -15,6 +15,10 @@ const ProtectedRoute = ({ children }) => {
     };
 
     const isLoggedInAndOrganiser = checkLoginAndRole();
+    localStorage.setItem(
+      "toastErrorMessage",
+      "Login as a valid organiser to create an event!"
+    );
     return isLoggedInAndOrganiser ? children : <Navigate to="/login" />;
 };
 

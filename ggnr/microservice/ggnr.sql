@@ -172,7 +172,7 @@ INSERT INTO events_type (EID, TierID, Category, PriceID, Price, Capacity)
 VALUES
 (1, 1, 'Audience', NULL, 0, 1700),
 (1, 2, 'VIP', 'price_1OxkTz2LfOffQtXe2Amrcy0e', 10.00, 20),
-(1, 3, 'Competitor', 'price_1OxkUn2LfOffQtXeGLBwfvyu', 15.00, 10),
+(1, 3, 'Competitor', 'price_1OxkUn2LfOffQtXeGLBwfvyu', 15.00, 0),
 (2, 1, 'Audience', NULL, 0, 1300),
 (2, 2, 'VIP', 'price_1OxkTz2LfOffQtXe2Amrcy0e', 10.00, 20),
 (2, 3, 'Competitor', 'price_1OxkUn2LfOffQtXeGLBwfvyu', 15.00, 10),
