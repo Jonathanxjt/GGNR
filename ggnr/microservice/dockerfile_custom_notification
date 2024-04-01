@@ -11,7 +11,7 @@ COPY requirements.txt ./
 RUN python -m pip install --no-cache-dir -r requirements.txt
 
 # Copy the current directory contents into the container at /usr/src/app
-COPY ./custom_notification.py ./amqp_connection.py ./invokes.py ./
+COPY ./custom_notification.py ./invokes.py ./
 
 # Run app.py when the container launches
 CMD ["python", "./custom_notification.py"]
