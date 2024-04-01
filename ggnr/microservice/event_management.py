@@ -47,8 +47,8 @@ def create_event():
             user_response = invoke_user_microservice(user_data)
 
             if user_response["data"] == []:
-                error = invoke_http(notification_url, method="POST", json={"code": 404,"message": "User list is empty."})
-                return error
+                # Event created but no users to notify
+                return jsonify({"code": 201, "message": "Event created successfully, but no users to notify."}), 201
                 
             else:
                 event_title = event_data.get("Title", "")
@@ -70,8 +70,7 @@ def create_event():
                 
                 # send message to the notification queue
                 result = invoke_http(notification_url, method="POST", json=organised)
-                return result
-        
+                return jsonify({"code": 201, "message": "Event created successfully, notifications sent.", "data": result}), 201
         except Exception as e:
             # Unexpected error in code
             exc_type, exc_obj, exc_tb = sys.exc_info()

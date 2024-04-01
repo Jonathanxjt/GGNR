@@ -54,7 +54,7 @@ class Event(db.Model):
             "Title": self.Title,
             "Description": self.Description,
             "EventLogo": self.EventLogo,
-            "GameName": self.GameName,
+            "GameName": self.GameName,  
             "GameLogo": self.GameLogo,
             "Location": self.Location,
             "Time": self.Time.isoformat() if self.Time else None,  # ISO formatting for dateTime
@@ -149,7 +149,7 @@ def get_all():
     ), 404
 
 
-# GET - Retrieve a specific event by title and its event_types
+# ! DEPRECATED GET - Retrieve a specific event by title and its event_types
 @app.route("/get_event/<title>", methods=["GET"])
 def get_event(title):
     event = Event.query.filter_by(Title=title).first()
@@ -183,7 +183,7 @@ def get_event(title):
     else:
         return jsonify({"code": 404, "message": "Event not found"}), 404
 
-# GET EID
+# GET Event by EID
 @app.route("/event/<string:EID>")
 def find_by_event_id(EID):
     event = Event.query.filter_by(EID=EID).first()
@@ -218,7 +218,7 @@ def find_by_event_id(EID):
         return jsonify({"code": 404, "message": "Event not found"}), 404
 
 
-# GET - games name
+# GET - Retrieve events by GameName 
 @app.route("/event/gamename/<string:gamename>")
 def find_by_gamename(gamename):
     event_list = db.session.scalars(db.select(Event).filter_by(GameName=gamename)).all()
@@ -238,26 +238,8 @@ def find_by_gamename(gamename):
         }   
     ), 404
 
-@app.route("/event/gamecompany/<string:gamecompany>")
-def find_by_gamecompany(gamecompany):
-    event_list = db.session.scalars(db.select(Event).filter_by(GameCompany=gamecompany)).all()
-    if len(event_list):
-        return jsonify(
-            {
-                "code": 200,
-                "data": {
-                    "events": [event.json() for event in event_list]
-                }
-            }
-        )
-    return jsonify(
-        {
-            "code": 404,
-            "message": "There are no events."
-        }   
-    ), 404
 
-# POST - create event
+# POST - Creates an event
 @app.route("/create_event", methods=["POST"])
 def create_event():
     # Event details
@@ -269,9 +251,6 @@ def create_event():
     Location = request.json.get("Location")
     Time = request.json.get("Time")
     organiser_company = request.json.get("organiser_company")
-
-    # Convert Time from string to datetime object
-    # Time = datetime.strptime(Time, '%Y-%m-%d %H:%M:%S') if Time else None
 
     # Create Event
     event = Event(
@@ -369,7 +348,8 @@ def update_event(EID):
         return jsonify(
             {
                 "code": 200,
-                "data": event.json()
+                "data": event.json(),
+                "Message": "Event updated successfully."
             }
         ), 200
     except Exception as e:
@@ -382,52 +362,58 @@ def update_event(EID):
                 "message": "An error occurred while updating the event. " + str(e)
             }
         ), 500
-    
-# delete event
-@app.route("/event/<string:EID>", methods=["DELETE"])
-def delete_event(EID):
-    event = db.session.scalars(db.select(Event).filter_by(EID=EID).limit(1)).first()
 
-    if not event:
-        return jsonify(
-            {
-                "code": 404,
-                "data": {
-                    "EID": EID
-                },
-                "message": "Event not found."
-            }
-        ), 400
-    
-    try:
-        db.session.delete(event)
-        db.session.commit()
-    
-    except Exception as e:
-        exc_type, exc_obj, exc_tb = sys.exc_info()
-        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        ex_str = (
-            str(e)
-            + " at "
-            + str(exc_type)
-            + ": "
-            + fname
-            + ": line "
-            + str(exc_tb.tb_lineno)
-        )
-        print(ex_str)
+# Delete event
+# @app.route("/event/<string:EID>", methods=["DELETE"])
+# def delete_event(EID):
+#     event = db.session.scalars(db.select(Event).filter_by(EID=EID).limit(1)).first()
 
-        return jsonify(
-            {
-                "code": 500,
-                "data": {"EID": EID},
-                "message": "An unexpected error occurred deleting the event. " + ex_str,
-            }
-        ), 500
+#     if not event:
+#         return jsonify(
+#             {
+#                 "code": 404,
+#                 "data": {
+#                     "EID": EID
+#                 },
+#                 "message": "Event not found."
+#             }
+#         ), 404
     
-    return jsonify({"code": 201, "EID": EID}), 201
+#     try:
+#         # Delete related event_types
+#         event_types = db.session.scalars(db.select(Event_type).filter_by(EID=EID)).all()
+#         for event_type in event_types:
+#             db.session.delete(event_type)
+        
+#         # Delete the event
+#         db.session.delete(event)
+#         db.session.commit()
+    
+#     except Exception as e:
+#         exc_type, exc_obj, exc_tb = sys.exc_info()
+#         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+#         ex_str = (
+#             str(e)
+#             + " at "
+#             + str(exc_type)
+#             + ": "
+#             + fname
+#             + ": line "
+#             + str(exc_tb.tb_lineno)
+#         )
+#         print(ex_str)
 
-# edit events_type table's capacity 
+#         return jsonify(
+#             {
+#                 "code": 500,
+#                 "data": {"EID": EID},
+#                 "message": "An unexpected error occurred deleting the event. " + ex_str,
+#             }
+#         ), 500
+    
+#     return jsonify({"code": 200, "message": f"Event with EID {EID} and its related event types have been successfully deleted."}), 200
+
+# PUT - Reduce the capacity of an event type / capacity by 1
 @app.route("/event_type", methods=['PUT'])
 def update_event_type():
     EID = request.get_json().get("EID")
