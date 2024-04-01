@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Tab, Tabs, Form, Button, Table} from "react-bootstrap";
+import { Tab, Tabs, Form, Button, Table, Card} from "react-bootstrap";
 import { toast, ToastContainer, Flip } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { MyNavbar } from "../MyNavbar/MyNavbar";
 import axios from "axios";
+import "./UserProfile.css";
 
 const UserProfile = () => {
   const [key, setKey] = useState("tickets");
@@ -161,6 +162,9 @@ const UserProfile = () => {
         <h2>User Profile</h2>
         <Tabs activeKey={key} onSelect={(k) => setKey(k)} className="mb-3">
           <Tab eventKey="tickets" title="My Tickets">
+            <div className="card-container">
+            <Card>
+              <Card.Body>
             {userTickets.length > 0 ? (
               <Table striped bordered hover>
                 <thead>
@@ -195,8 +199,14 @@ const UserProfile = () => {
             ) : (
               <p>You do not have any tickets.</p>
             )}
+            </Card.Body>
+            </Card>
+            </div>
           </Tab>
           <Tab eventKey="preferences" title="Preferences">
+          <div className="card-container">
+            <Card>
+              <Card.Body>
             <Form>
               {userPreferences.map((preference, index) => (
                 <Form.Check
@@ -298,8 +308,14 @@ const UserProfile = () => {
                 Save Preferences
               </Button>
             </Form>
+            </Card.Body>
+            </Card>
+            </div>
           </Tab>
           <Tab eventKey="username" title="Username">
+            <div className="card-container">
+            <Card>
+            <Card.Body>
             <Form>
               <Form.Group className="mb-3">
                 <Form.Label>Username</Form.Label>
@@ -314,8 +330,14 @@ const UserProfile = () => {
                 Save Username
               </Button>
             </Form>
+            </Card.Body>
+            </Card>
+            </div>
           </Tab>
           <Tab eventKey="password" title="Password">
+            <div className="card-container">
+          <Card>
+            <Card.Body>
             <Form>
               <Form.Group className="mb-3">
                 <Form.Label>Password</Form.Label>
@@ -334,6 +356,9 @@ const UserProfile = () => {
                 Save Password
               </Button>
             </Form>
+            </Card.Body>
+            </Card>
+            </div>
           </Tab>
         </Tabs>
       </div>

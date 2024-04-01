@@ -1,3 +1,13 @@
-.red-placeholder::placeholder {
-    color: red;
-  }
+
+.user-profile {
+  background-color: #f4f4f4; /* Light grey background */
+  padding: 20px; /* Adds padding inside the div */
+  border-radius: 8px; /* Optional: adds rounded corners */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: adds a subtle shadow */
+}
+
+.user-profile h2 {
+  text-align: center; /* Centers the heading text */
+  color: #333; /* Sets the text color */
+  margin-bottom: 20px; /* Adds space below the heading */
+}
