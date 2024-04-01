@@ -35,12 +35,12 @@ def create_attendee_with_ticket():
     # Step 1: Reduce event capacity
     reduce_capacity_response = invoke_http(update_event_capacity_URL, method='PUT', json={"EID": EID, "TierID": TierID})
     if reduce_capacity_response["code"] != 200:
-        return jsonify({"code": reduce_capacity_response["code"], "message": "Failed to reduce event capacity"}), reduce_capacity_response["code"]
+        return jsonify({"code": reduce_capacity_response["code"], "message": "Tickets are SOLD OUT!"}), reduce_capacity_response["code"]
 
     # Step 2: Create ticket
     create_ticket_response = invoke_http(ticket_URL, method='POST', json={"EID": EID, "TierID": TierID, "PriceID": PriceID, "UID": UID})
     if create_ticket_response["code"] != 201:
-        return jsonify({"code": create_ticket_response["code"], "message": "Failed to create ticket"}), create_ticket_response["code"]
+        return jsonify({"code": create_ticket_response["code"], "message": "Tickets are SOLD OUT!"}), create_ticket_response["code"]
     ticket_data = create_ticket_response["data"]["ticket"]
 
     # Step 3: Create attendee

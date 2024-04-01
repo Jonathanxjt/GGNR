@@ -158,7 +158,7 @@ const UserProfile = () => {
   return (
     <div>
       <MyNavbar />
-      <div className="user-profile py-3">
+      <div className="container user-profile py-3">
         <h2>User Profile</h2>
         <Tabs activeKey={key} onSelect={(k) => setKey(k)} className="mb-3">
           <Tab eventKey="tickets" title="My Tickets">
@@ -166,7 +166,7 @@ const UserProfile = () => {
             <Card>
               <Card.Body>
             {userTickets.length > 0 ? (
-              <Table striped bordered hover>
+              <Table striped bordered hover responsive>
                 <thead>
                   <tr>
                     <th>Event Logo</th>

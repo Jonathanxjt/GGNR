@@ -6,7 +6,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { MyNavbar } from "../MyNavbar/MyNavbar";
 import axios from "axios";
 
-// TODO: Find some way to make the priceID work in the backend api call for matt
 function Registration() {
   const [eventData, setEventData] = useState(null);
   const [selectedPriceId, setSelectedPriceId] = useState("");
@@ -57,13 +56,10 @@ function Registration() {
         PriceID: selectedPriceId,
         UID: user.UID,
       };
-
-      try {
-        await axios.post("http://localhost:5006/register", registrationData);
-        // Registration successful, redirect to checkout
-        // TODO: Improve notification and proper redirection 
-        if (selectedPriceId === "null" || selectedPriceId === null) 
-        {
+      if (selectedPriceId === "null" || selectedPriceId === null) {
+        try {
+          await axios.post("http://localhost:5006/register", registrationData);
+          // Registration successful, redirect to checkout
           toast.success("Ticket issued to your account!", {
             position: "top-center",
             autoClose: 2000,
@@ -73,19 +69,18 @@ function Registration() {
             draggable: true,
             progress: undefined,
             theme: "dark",
-            transition: Flip,});
+            transition: Flip,
+          });
+        } catch (error) {
+          // Handle registration error
+          console.error("Registration error:", error);
+          alert("Registration failed.");
         }
-        else
-        {
-          window.location.href = `/checkout?priceId=${encodeURIComponent(
-            selectedPriceId
-          )}`;
-        }
-        
-      } catch (error) {
-        // Handle registration error
-        console.error("Registration error:", error);
-        alert("Registration failed.");
+      } else {
+        sessionStorage.setItem('registrationData', JSON.stringify(registrationData));
+        window.location.href = `/checkout?priceId=${encodeURIComponent(
+          selectedPriceId
+        )}`;
       }
     } else {
       alert("Please select a ticket tier.");
