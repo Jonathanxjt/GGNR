@@ -11,3 +11,9 @@
   color: #333; /* Sets the text color */
   margin-bottom: 20px; /* Adds space below the heading */
 }
+
+.card-container {
+  display: flex; /* Displays the cards in a row */
+  flex-wrap: wrap; /* Allows the cards to wrap to the next line */
+  justify-content: center; /* Centers the cards */
+}

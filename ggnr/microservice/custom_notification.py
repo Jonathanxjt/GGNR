@@ -65,7 +65,7 @@ def getUIDbyEID(notification):
     attendee_result = invoke_http(get_attendeeURL, method="GET", json=notification)
     print("attendee_result:", attendee_result)
 
-    # ceck the attendee_result; if a failure, send it to the error microservice
+    # check the attendee_result; if a failure, send it to the error microservice
     code = attendee_result["code"]
     if code not in range(200, 300):
         
