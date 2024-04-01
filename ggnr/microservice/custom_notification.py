@@ -133,7 +133,7 @@ def get_contact_number(organised):
 
 # scenario 3 
 @app.route("/schedule_notification", methods=["GET"])
-def create_notification():
+def schedule_notification():
 
     event_results = invoke_http(event_URL, method="GET", json={})
     print('\n------------------------')
