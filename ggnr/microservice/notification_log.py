@@ -55,7 +55,7 @@ def callback(channel, method, properties, body): # required signature for the ca
 def schedule_message_sending(contact, message_body, send_time_str):
     """Schedule a message to be sent at the specified time."""
     try:
-        send_time = datetime.strptime(send_time_str, '%Y-%m-%d %H:%M:%S')
+        send_time = datetime.strptime(send_time_str, '%Y-%m-%dT%H:%M:%S')
 
         # set timezone to SG time
         singapore_zone = pytz.timezone('Asia/Singapore')

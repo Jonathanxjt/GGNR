@@ -3,11 +3,15 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
+from sqlalchemy import and_
 from datetime import datetime
 from os import environ
 from flask_cors import CORS
 import os
 import sys
+import pytz
+
+from datetime import datetime, timedelta, timezone
 
 import json
 
@@ -466,6 +470,39 @@ def update_event_type():
                 "message": "An error occurred while updating the event. " + str(e)
             }
         ), 500
+
+# GET - check for events that is happening in 1 hour
+@app.route("/check_events_in_the_next_hour")
+def check_event():
+    # Get the current UTC time
+    utc_now = datetime.now(timezone.utc)
+    # set timezone to SG time
+    sg_timezone = pytz.timezone('Asia/Singapore')
+    sg_now = utc_now.astimezone(sg_timezone)
+    event_list = db.session.scalars(
+        db.select(Event).where(
+            and_(
+                Event.Time >= sg_now,
+                Event.Time <= sg_now + timedelta(hours=1)
+            )
+        )
+    ).all()    
+    print(datetime.now())
+    # Assuming Event is a class with attributes that you want to return,
+    # convert each event object into a dictionary.
+    if len(event_list) != 0:
+        return jsonify({
+            "code": 201,
+            "data": {
+                "events": [event.json() for event in event_list]
+            }
+        })
+
+    # Use jsonify to convert the list of dictionaries into a JSON response
+    return jsonify({
+        "code": 404,
+        "message": "There is no events within 1 hour."
+    }), 404
 
 
 # may change port number
