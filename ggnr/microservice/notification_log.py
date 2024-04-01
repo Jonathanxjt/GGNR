@@ -3,7 +3,8 @@ import amqp_connection
 import json
 import pika
 from os import environ
-
+from dotenv import load_dotenv
+load_dotenv()
 # a_queue_name = 'Notification_Log' # queue to be subscribed by Notification_Log microservice
 
 # Instead of hardcoding the values, we can also get them from the environ as shown below
@@ -13,10 +14,10 @@ a_queue_name = environ.get('a_queue_name') #Notification_Log
 import os
 from twilio.rest import Client
 
-# account_sid = os.environ['TWILIO_ACCOUNT_SID']
-# auth_token = os.environ['TWILIO_AUTH_TOKEN']
-account_sid = "ACf13cd74a8c16dca69ec57c6114a1ec5f"
-auth_token = "749eb46cfa8e1e9323ceadc30aff8a5c"
+account_sid= os.getenv('TWILIO_ACCOUNT_SID')
+print(account_sid)
+auth_token=os.getenv('TWILIO_AUTH_TOKEN')
+print(auth_token)
 
 
 client = Client(account_sid, auth_token)

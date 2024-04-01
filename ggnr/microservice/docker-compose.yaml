@@ -149,6 +149,8 @@ services:
     restart: always
     depends_on:
       - rabbitmq
+    env_file:
+      - .env
     environment:
       rabbit_host: rabbitmq
       rabbit_port: 5672
@@ -164,6 +166,8 @@ services:
     restart: always
     depends_on:
       - rabbitmq
+    env_file:
+      - .env
     environment:
       rabbit_host: rabbitmq
       rabbit_port: 5672

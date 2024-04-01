@@ -10,7 +10,6 @@ const Return = () => {
   const sessionId = searchParams.get("session_id");
 
   const [status, setStatus] = useState(null);
-  const [customerEmail, setCustomerEmail] = useState('');
   const [error, setError] = useState(null);
   const [countdown, setCountdown] = useState(10); // Initial countdown time in seconds
   const [isStatusChecked, setIsStatusChecked] = useState(false); // State to indicate if the status check is completed
@@ -56,7 +55,7 @@ const Return = () => {
       {status === "paid" ? (
         <div id="success">
           <p>
-            Payment was successful! A confirmation email will be sent to you.
+            Payment was successful! Please check your profile for your ticket.
             If you have any questions, please contact support.
           </p>
           <p>Redirecting in {countdown} seconds...</p>
