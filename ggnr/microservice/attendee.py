@@ -20,7 +20,7 @@ db =SQLAlchemy(app)
 
 CORS(app)
 
-# what is AID
+#TODO what is AID
 class Attendee(db.Model):
     __tablename__ = 'attendees'
     

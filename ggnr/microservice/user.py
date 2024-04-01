@@ -64,6 +64,7 @@ class User(db.Model):
 # GET all users
 @app.route("/user")
 def get_all():
+    # get all users
     user_list = db.session.scalars(db.select(User)).all()
 
     if len(user_list):

@@ -11,9 +11,10 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 
 import stripe
+#load environment variables
 load_dotenv()
 
-# This is your test secret API key.
+# importing api key
 stripe.api_key = os.getenv('STRIPE_API_KEY')
 
 app = Flask(__name__)
@@ -27,6 +28,7 @@ def create_checkout_session():
         # Retrieve priceId from the request body
         price_id = request.json['priceId']
         print(price_id)
+        # Create new Checkout Session for the order
         session = stripe.checkout.Session.create(
             ui_mode='embedded',
             line_items=[
