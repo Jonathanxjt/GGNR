@@ -11,6 +11,7 @@ const Return = () => {
 
   const [status, setStatus] = useState(null);
   const [error, setError] = useState(null);
+  const [paymentintent, setPaymentIntent] = useState(null);
   const [countdown, setCountdown] = useState(10); // Initial countdown time in seconds
   const [isStatusChecked, setIsStatusChecked] = useState(false); // State to indicate if the status check is completed
 
@@ -22,6 +23,7 @@ const Return = () => {
         const response = await axios.get(`http://localhost:5011/session-status?session_id=${sessionId}`);
         console.log(response.data);
         setStatus(response.data.status);
+        setPaymentIntent(response.data.payment_intent);
         console.log("Payment status:", response.data.status); // Print the status
         setIsStatusChecked(true); // Set status check to completed
       } catch (error) {
@@ -48,7 +50,21 @@ const Return = () => {
       // Clear interval on component unmount
       return () => clearInterval(countdownInterval);
     }
-  }, [isStatusChecked, countdown, navigate]);
+  }, [isStatusChecked, countdown, navigate]); 
+
+  const handleRefund = async () => {
+    try {
+      // Assuming the payment intent ID is stored correctly in paymentintent state
+      const response = await axios.post('http://localhost:5011/refund', {
+        paymentIntentId: paymentintent,
+      });
+      console.log('Refund successful:', response.data);
+      // Handle refund success (update UI, show message, etc.)
+    } catch (error) {
+      console.error('Refund error:', error.response ? error.response.data : error.message);
+      // Handle refund error (update UI, show error message, etc.)
+    }
+  };
 
   return (
     <div id="return">
@@ -58,6 +74,7 @@ const Return = () => {
             Payment was successful! Please check your profile for your ticket.
             If you have any questions, please contact support.
           </p>
+          <button onClick={handleRefund}>Refund</button>  {/* Add a button to trigger refund */}
           <p>Redirecting in {countdown} seconds...</p>
         </div>
       ) : (

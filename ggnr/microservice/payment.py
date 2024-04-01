@@ -48,7 +48,29 @@ def create_checkout_session():
 @app.route('/session-status', methods=['GET'])
 def session_status():
     session = stripe.checkout.Session.retrieve(request.args.get('session_id'))
-    return jsonify(status=session.payment_status)
+    return jsonify(status=session.payment_status, payment_intent=session.payment_intent)
+
+@app.route('/refund', methods=['POST'])
+def process_refund():
+    data = request.json
+    try:
+        # Retrieve the payment intent ID or charge ID from the request body
+        payment_intent_id = data.get('paymentIntentId')
+        
+        # Check if the payment intent ID is provided
+        if not payment_intent_id:
+            return jsonify({'error': 'Payment intent ID is required'}), 400
+        
+        # Create a refund
+        refund = stripe.Refund.create(
+            payment_intent=payment_intent_id,
+            # Optionally, you can specify the amount to refund, in cents
+            # amount=1000, # Refund $10.00, for example
+        )
+        return jsonify(refund), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5011, debug=True)
