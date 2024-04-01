@@ -65,7 +65,7 @@ def schedule_message_sending(contact, message_body, send_time_str):
         
         # If the scheduled time is in the past, add a day
         if send_time < now:
-            send_time += timedelta(days=1)
+            send_time = now + timedelta(minutes=1)
         
         scheduler.add_job(send_sms, 'date', run_date=send_time, args=[contact, message_body])
         print(f"Scheduled message to {contact} at {send_time}")
