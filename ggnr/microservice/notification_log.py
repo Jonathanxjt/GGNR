@@ -51,22 +51,25 @@ def callback(channel, method, properties, body): # required signature for the ca
     processOrderLog(json.loads(body))
     print()
 
-def schedule_message_sending(contact, message_body, send_time):
+def schedule_message_sending(contact, message_body, send_time_str):
     """Schedule a message to be sent at the specified time."""
     try:
-        # Assume send_time is a string in 'HHMM' format
-        hour = int(send_time[:2])
-        minute = int(send_time[2:])
-        # You might need to adjust the day if the scheduled time is past
-        now = datetime.now()
-        send_datetime = datetime(now.year, now.month, now.day, hour, minute)
+        send_time = datetime.strptime(send_time_str, '%Y-%d-%m %H:%M:%S')
+
+        # set timezone to SG time
+        singapore_zone = pytz.timezone('Asia/Singapore')
+        send_time = singapore_zone.localize(send_time)
+
+        # adjust the day if the scheduled time is past
+        now = datetime.now(singapore_zone)
         
         # If the scheduled time is in the past, add a day
         if send_datetime < now:
-            send_datetime = send_datetime + timedelta(days=1)
+            send_datetime += timedelta(days=1)
         
         scheduler.add_job(send_sms, 'date', run_date=send_datetime, args=[contact, message_body])
         print(f"Scheduled message to {contact} at {send_datetime}")
+        
     except Exception as e:
         print(f"Failed to schedule message to {contact}: {e}")
 
