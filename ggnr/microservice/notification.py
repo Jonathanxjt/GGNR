@@ -25,7 +25,7 @@ def send_notification():
     
     if request.is_json:
         response = request.get_json()
-
+        print(response)
         if response["code"] not in range(200,300):
             print("\n\n-----Publishing the (notification error) message with routing_key=*.error-----")
             message = json.dumps(response)

@@ -80,19 +80,23 @@ def getUIDbyEID(notification):
             "EID": eid,
             "notification": notification["notification"],
             "attendee_list":  attendee_result["data"]["attendee_list"],
-            "time": notification["time"]
+            "time": notification["time"],
+            "code": 201
         }
 
         invoke_user_microservice_result = get_contact_number(organised)
 
-        invoke_http(notification_URL, method="POST", json=invoke_user_microservice_result)
 
     overall_result = {
         "EID": eid,
-        "notification": invoke_user_microservice_result["notification"],
-        "time": invoke_user_microservice_result["time"],
-        "users": invoke_user_microservice_result["data"]
+        "notification": organised["notification"],
+        "time": organised["time"],
+        "users": {"data": invoke_user_microservice_result["users"]},
+        "code": 201
     }
+    print("overall results", overall_result)
+    invoke_http(notification_URL, method="POST", json=overall_result)
+
 
     return {
         "code": 201,
@@ -103,7 +107,7 @@ def getUIDbyEID(notification):
 
 def get_contact_number(organised):
     user_results = invoke_http(user_URL, method="GET", json={"attendee_list": organised["attendee_list"]})
-
+    print("user_results" ,user_results)
     code = user_results['code']
     if code not in range(200,300):
 
@@ -118,7 +122,8 @@ def get_contact_number(organised):
         }
     
     output = organised
-    output["users"] = user_results["data"]
+    print("data", user_results.get('data'))
+    output["users"] = user_results.get('data')
 
     return output
     
