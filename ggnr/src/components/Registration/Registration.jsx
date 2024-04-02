@@ -51,7 +51,7 @@ function Registration() {
         });
       // Check if the user already has a ticket for the event
       axios
-        .post("http://localhost:5008/check_event", { EID, UID: user.UID })
+        .post("http://localhost:8000/check_event", { EID, UID: user.UID })
         .then((response) => {
           if (response.data.code === 200) {
             setHasTicket(true); // User has a ticket
