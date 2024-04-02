@@ -19,7 +19,7 @@ function Registration() {
 		const EID = new URLSearchParams(location.search).get("eid");
 		if (EID) {
 			axios
-				.get(`http://localhost:5000/event/${EID}`)
+				.get(`http://localhost:8000/event/${EID}`)
 				.then((response) => {
 					// Assuming the response contains the event data directly
 					const event = response.data.data;
@@ -58,7 +58,7 @@ function Registration() {
 			};
 			if (selectedPriceId === "null" || selectedPriceId === null) {
 				try {
-					await axios.post("http://localhost:5006/register", registrationData);
+					await axios.post("http://localhost:8000/api/v1/register", registrationData);
 					// Registration successful, redirect to checkout
 					toast.success("Ticket issued to your account!", {
 						position: "top-center",

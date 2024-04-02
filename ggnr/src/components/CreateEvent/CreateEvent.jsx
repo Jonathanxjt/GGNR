@@ -41,7 +41,7 @@ const CreateEvent = () => {
 			event.preventDefault();
 			setIsLoading(true);
 			try {
-				const response = await axios.post("http://localhost:5100/search", {
+				const response = await axios.post("http://localhost:8000/api/v1/search", {
 					game_name: gameName,
 				});
 				setGameResults(response.data);
@@ -127,7 +127,7 @@ const CreateEvent = () => {
 
 		try {
 			const response = await axios.post(
-				"http://localhost:5100/create",
+				"http://localhost:8000/api/v1/create",
 				eventData //send the event data to the backend via post
 			);
 			// Handle success (e.g., redirect to another page or show a success message)

@@ -44,7 +44,7 @@ const Login = () => {
     if (isLogin) {
       try {
         const response = await axios.get(
-          `http://localhost:5005/user/check-password/${email}/password/${password}`
+          `http://localhost:8000/user/check-password/${email}/password/${password}`
         );
         if (
           response.data.code === 200 &&
@@ -100,7 +100,7 @@ const Login = () => {
     } else {
       // Handle registration
       try {
-        const response = await axios.post("http://localhost:5005/user/create_user", {
+        const response = await axios.post("http://localhost:8000/user/create_user", {
           username,
           password,
           preferences,
