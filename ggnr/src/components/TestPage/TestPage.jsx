@@ -1,6 +1,8 @@
 import React from "react";
 import placeholder from "../../assets/placeholder.jpg";
 import  CheckboxCustom  from "../CheckboxCustom/CheckboxCustom";
+import { MyNavbar } from "../MyNavbar/MyNavbar";
+import MyFooter from "../MyFooter/MyFooter";
 
 const TestPage = () => {
   return (
@@ -14,6 +16,8 @@ const TestPage = () => {
 
       </div>
       <img src={placeholder}></img>
+      <MyFooter />
+
     </div>
   );
 };

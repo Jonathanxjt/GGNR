@@ -20,6 +20,7 @@ export const MyNavbar = () => {
   // Function to handle logout
   const handleLogout = () => {
     sessionStorage.clear(); // Clear all sessionStorage
+    localStorage.setItem("toastMessage", "Logged out successfully!");
     window.location.href = "/"; // Redirect to home page
   };
 

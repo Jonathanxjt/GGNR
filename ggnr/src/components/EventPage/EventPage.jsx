@@ -16,6 +16,7 @@ import CircleButton from "../CreateEventButton/CreateEventButton";
 import "../CreateEventButton/CreateEventButton.css";
 import { RiVipFill } from "react-icons/ri";
 import { IoGameController } from "react-icons/io5";
+import MyFooter from "../MyFooter/MyFooter";
 
 function EventPage() {
   const [eventData, setEventData] = useState([]);
@@ -168,20 +169,6 @@ function EventPage() {
       </Col>
     ));
   };
-
-  // // !DEPRECATED Function to create carousel items with cards
-  // const createCarouselItems = () => {
-  //   const items = [];
-  //   for (let i = 0; i < eventData.length; i += 4) {
-  //     const eventsSlice = eventData.slice(i, i + 4);
-  //     items.push(
-  //       <Carousel.Item key={i}>
-  //         <div className="d-flex">{createCards(eventsSlice)}</div>
-  //       </Carousel.Item>
-  //     );
-  //   }
-  //   return items;
-  // };
 
   return (
     // Navbar and Carousel

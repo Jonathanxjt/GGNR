@@ -1,7 +1,7 @@
 import React from "react";
 import { MyNavbar } from "./MyNavbar/MyNavbar";
 import background from "../assets/background.mp4";
-import MyFooter from "./MyFooter/MyFooter";
+
 import Button from "react-bootstrap/Button";
 import { useHistory } from "react-router-dom";
 import CircleButton from "./CreateEventButton/CreateEventButton";
@@ -31,7 +31,6 @@ const HomePage = () => {
 					Browse Events{" "}
 				</Button>
 			</div>
-			<MyFooter />
 		</div>
 	);
 };
