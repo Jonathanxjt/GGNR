@@ -150,9 +150,10 @@ def get_all():
 
 
 # GET - Retrieve a specific event by title and its event_types
-@app.route("/get_event/<title>", methods=["GET"])
+@app.route("/get_event/<string:title>", methods=["GET"])
 def get_event(title):
-    event = Event.query.filter_by(Title=title).first()
+    event = db.session.scalars(db.select(Event).filter_by(title=title).limit(1)).first()
+
     if event:
         # Serialize the Event object
         event_data = {
@@ -365,7 +366,7 @@ def update_event(EID):
         ), 500
     
 # delete event
-@app.route("/event/<string:EID>", methods=["DELETE"])
+@app.route("/event/<int:EID>", methods=["DELETE"])
 def delete_event(EID):
     event = db.session.scalars(db.select(Event).filter_by(EID=EID).limit(1)).first()
 

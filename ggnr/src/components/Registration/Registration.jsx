@@ -17,7 +17,7 @@ function Registration() {
     const title = new URLSearchParams(location.search).get("title");
     if (title) {
       axios
-        .get(`http://localhost:5000/get_event/${title}`)
+        .get(`http://localhost:8000/event/${title}`)
         .then((response) => {
           // Assuming the response contains the event data directly
           const event = response.data.data;

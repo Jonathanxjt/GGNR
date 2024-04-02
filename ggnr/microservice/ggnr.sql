@@ -148,6 +148,7 @@ VALUES
 ('sam_jackson', 'password_hash_3', '"preference1", "preference2"', 'sam.jackson@example.com', '9876543210', 1, 'Company B'),
 ('sarah_connor', 'password_hash_4', '"preference1", "preference2"', 'sarah.connor@example.com', '0123456789', 0, NULL);
 
+
 INSERT INTO attendees (EID, UID, ticketID, transactionID)
 VALUES
 (1, 1, 1, 123),

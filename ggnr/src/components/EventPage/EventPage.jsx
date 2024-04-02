@@ -23,7 +23,7 @@ function EventPage() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/event")
+      .get("http://localhost:8000/event")
       .then((response) => {
         const formattedEvents = response.data.data.events.map((event) => {
           const now = new Date();

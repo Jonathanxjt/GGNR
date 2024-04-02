@@ -14,8 +14,12 @@ CORS(app)
 # TODO: update the delete functions and update functions 
 
 
-events_url = "http://event:5000/create_event"
-user_url = "http://user:5005/user/user_preference_gamename"
+
+events_url = "http://kong:8000/event/create_event"
+# events_url = "http://event1:5000/create_event"
+# user_url = "http://localhost:8000/user/user_preference_gamename"
+user_url = "http://kong:8000/user/user_preference_gamename"
+
 # notification_url = "http://127.0.0.1:5200/notification"
 
 

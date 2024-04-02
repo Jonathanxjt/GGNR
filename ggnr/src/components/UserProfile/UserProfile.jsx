@@ -41,7 +41,7 @@ const UserProfile = () => {
       event.preventDefault();
       setIsLoading(true); // Set loading to true
       try {
-        const response = await axios.post("http://localhost:5009/search", {
+        const response = await axios.post("http://localhost:8000/api/v1/search", {
           game_name: gameName,
         });
         setGameResults(response.data);
@@ -61,7 +61,7 @@ const UserProfile = () => {
       let preferencesString = preferences.join(',');
       console.log(preferencesString)
       axios
-        .put(`http://localhost:5005/user/edit_preference/${UID}`, {
+        .put(`http://localhost:8000/edit_preference/${UID}`, {
           preferences: preferencesString,
         })
         .then((response) => {
