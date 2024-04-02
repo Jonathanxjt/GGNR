@@ -10,12 +10,12 @@ const UserProfile = () => {
 	const [key, setKey] = useState("tickets");
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
-	const [contact, setContact] = useState(""); // Add a new state variable for contact
-	const [email, setEmail] = useState(""); // Add a new state variable for email
+	const [contact, setContact] = useState(""); 
+	const [email, setEmail] = useState(""); 
 	const [preferences, setPreferences] = useState("");
 	const [gameName, setGameName] = useState("");
 	const [showDropdown, setShowDropdown] = useState(false);
-	const [isLoading, setIsLoading] = useState(false); // New state for loading status
+	const [isLoading, setIsLoading] = useState(false); 
 	const [gameResults, setGameResults] = useState([]);
 	const [userPreferences, setUserPreferences] = useState([]);
 	const [UID, setUID] = useState(null);
@@ -24,7 +24,7 @@ const UserProfile = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 			const user = JSON.parse(sessionStorage.getItem("user"));
-			if (user) {
+			if (user) { // Check if user is logged in
 				setUID(user.UID);
 				setUsername(user.username);
 				setEmail(user.email);
@@ -106,7 +106,7 @@ const UserProfile = () => {
 			setIsLoading(true); // Set loading to true
 			try {
 				const response = await axios.post("http://localhost:5009/search", {
-					game_name: gameName,
+					game_name: gameName, // Send the game name to the backend 
 				});
 				setGameResults(response.data);
 				console.log(response.data);

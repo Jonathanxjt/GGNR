@@ -11,7 +11,7 @@ function Registration() {
   const [eventData, setEventData] = useState(null);
   const [selectedPriceId, setSelectedPriceId] = useState("");
   const [selectedTierId, setSelectedTierId] = useState("");
-  const [hasTicket, setHasTicket] = useState(false); // State to store if the user has a ticket
+  const [hasTicket, setHasTicket] = useState(false);
   const user = JSON.parse(sessionStorage.getItem("user"));
   const location = useLocation();
   const [toastShown, setToastShown] = useState(false);
@@ -24,11 +24,10 @@ function Registration() {
       axios
         .get(`http://localhost:5000/event/${EID}`)
         .then((response) => {
-          // Assuming the response contains the event data directly
-          const event = response.data.data;
+          const event = response.data.data; // Get the event data
 
           // Format the time
-          const formattedDateTime = new Date(event.Time).toLocaleString(
+          const formattedDateTime = new Date(event.Time).toLocaleString( //formatting the date and time
             "en-SG",
             {
               day: "numeric",
@@ -42,14 +41,13 @@ function Registration() {
           event.FormattedTime = formattedDateTime;
 
           setEventData(event);
-          console.log(event);
         })
         .catch((error) => {
           console.error("There was an error!", error);
         });
       // Check if the user already has a ticket for the event
       axios
-        .post("http://localhost:5008/check_event", { EID, UID: user.UID })
+        .post("http://localhost:5008/check_event", { EID, UID: user.UID }) //post request to check if the user has a ticket
         .then((response) => {
           if (response.data.code === 200) {
             setHasTicket(true); // User has a ticket
@@ -62,24 +60,24 @@ function Registration() {
         });
     }
   }, [location.search]); // Re-run the effect if the search part of the URL changes
-  
-    // Show the toast message only once when the user has a ticket
-    useEffect(() => {
-      if (hasTicket && !toastShown) {
-        setToastShown(true);
-        toast.info('You are already registered for this event', {
-          position: "top-center",
-          autoClose: 6000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          transition: Flip,
-        });
-      }
-    }, [hasTicket, toastShown]);
+
+  // Show the toast message only once when the user has a ticket
+  useEffect(() => {
+    if (hasTicket && !toastShown) {
+      setToastShown(true);
+      toast.info("You are already registered for this event", {
+        position: "top-center",
+        autoClose: 6000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Flip,
+      });
+    }
+  }, [hasTicket, toastShown]);
 
   const handleRegistrationSubmit = async (e) => {
     e.preventDefault();
@@ -151,7 +149,7 @@ function Registration() {
             >
               {eventData && (
                 <img
-                  src={eventData.EventLogo}
+                  src={eventData.EventLogo} 
                   alt="Event"
                   style={{ width: "100%", height: "100%" }}
                 />
@@ -168,15 +166,10 @@ function Registration() {
               }}
             >
               <Card.Header>{eventData && eventData.Title}</Card.Header>
-              {/* Description */}
               {eventData && <p>{eventData.Description}</p>}
-              {/* Organiser */}
               {eventData && <p>Organiser: {eventData.organiser_company}</p>}
-              {/* Location */}
               {eventData && <p>{eventData.Location}</p>}
-              {/* Date/Time */}
               {eventData && <p>{eventData.FormattedTime}</p>}
-              {/* Capacity */}
               {eventData &&
                 eventData.event_types &&
                 eventData.event_types.map((eventType, index) => (
@@ -216,15 +209,13 @@ function Registration() {
                           {eventType.Capacity === 0
                             ? `${eventType.Category} Ticket - Sold Out` // Show "Sold Out" if capacity is zero
                             : eventType.Price === 0
-                            ? `${eventType.Category} Ticket - Free Entry`
-                            : `${
-                                eventType.Category
+                              ? `${eventType.Category} Ticket - Free Entry`
+                              : `${eventType.Category
                               } Ticket - ${eventType.Price.toFixed(2)} SGD`}
                         </option>
                       ))}
                   </Form.Select>
                 </Form.Group>
-                {/* Add more form fields here */}
                 <Button
                   variant="primary"
                   type="submit"
