@@ -6,7 +6,7 @@ import './MyFooter.css';
 function MyFooter() {
   return (
     <footer className="text-center text-lg-start custom-footer">
-      <div className="container d-flex justify-content-center py-3">
+      <div className="container d-flex justify-content-center">
       <ul>
       <li>
         <a href="#">
