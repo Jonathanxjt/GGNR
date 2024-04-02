@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Form, Button, Col, Row, Card } from "react-bootstrap";
+import { Form, Button,Card, Table } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
 import { toast, ToastContainer, Flip } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -127,73 +127,81 @@ function Registration() {
   };
 
   return (
-    <div>
-      <MyNavbar />
-      <ToastContainer />
-      <div className="container mt-5">
-        <Row>
-          <Col md={1}></Col>
-          <Col
-            md={4}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <div
-              style={{
-                textAlign: "center",
-                justifyContent: "center",
-                display: "flex",
-                width: "1000px",
-                height: "300px",
-                backgroundColor: "#f0f0f0",
-              }}
-            >
-              {eventData && (
-                <img
-                  src={eventData.EventLogo}
-                  alt="Event"
-                  style={{ width: "100%", height: "100%" }}
-                />
-              )}
-            </div>
-          </Col>
-          <Col md={7}>
-            <Card
-              style={{
-                background: "#003049",
-                color: "white",
-                padding: "0 20px",
-                paddingBottom: "20px",
-              }}
-            >
-              <Card.Header>{eventData && eventData.Title}</Card.Header>
-              {/* Description */}
-              {eventData && <p>{eventData.Description}</p>}
-              {/* Organiser */}
-              {eventData && <p>Organiser: {eventData.organiser_company}</p>}
-              {/* Location */}
-              {eventData && <p>{eventData.Location}</p>}
-              {/* Date/Time */}
-              {eventData && <p>{eventData.FormattedTime}</p>}
-              {/* Capacity */}
-              {eventData &&
-                eventData.event_types &&
-                eventData.event_types.map((eventType, index) => (
-                  <div key={index}>
-                    <p>
-                      {eventType.Category} -{" "}
-                      {eventType.Capacity === 0
-                        ? "Sold Out"
-                        : `Slots left: ${eventType.Capacity}`}
-                    </p>
-                  </div>
-                ))}
-
-              {/* Price */}
-              {eventData && <p>{eventData.Price}</p>}
+	<div>
+	<MyNavbar />
+	<ToastContainer />
+	<div className="container mt-5">
+		<Card
+			style={{
+				background: "#003049",
+				color: "white",
+				padding: "0 20px",
+				paddingBottom: "20px",
+				alignSelf: "center",
+			}}
+		>
+			<Card.Header
+				style={{
+					textAlign: "center",
+					fontSize: 45,
+					marginBottom: 10,
+				}}
+			>
+				{eventData && eventData.Title}
+			</Card.Header>
+			{eventData && (
+				<img
+					src={eventData.EventLogo}
+					alt="Event"
+					style={{ width: "100%", height: "100%" }}
+				/>
+			)}
+			<br></br>
+			<Table hover border responsive variant="dark">
+				<tbody style={{ margin: 5 }}>
+					{eventData && (
+						<thead>
+							<tr>
+								<th style={{ padding: "10px", minWidth:300 }}>Description</th>
+								<td style={{ padding: "10px", minWidth:1000 }}>{eventData.Description}</td>
+							</tr>
+							<tr>
+								<th style={{ padding: "10px" }}>Organiser</th>
+								<td style={{ padding: "10px" }}>
+									{eventData.organiser_company}
+								</td>
+							</tr>
+							<tr>
+								<th style={{ padding: "10px" }}>Location</th>
+								<td style={{ padding: "10px" }}>{eventData.Location}</td>
+							</tr>
+							<tr>
+								<th style={{ padding: "10px" }}>Time</th>
+								<td style={{ padding: "10px" }}>
+									{eventData.FormattedTime}
+								</td>
+							</tr>
+							{eventData.event_types &&
+								eventData.event_types.map((eventType, index) => (
+									<tr key={index}>
+										<th
+											style={{ padding: "10px" }}
+											className="bg-secondary"
+										>
+											{eventType.Category}
+										</th>
+										<td
+											style={{ padding: "10px" }}
+											className="bg-secondary"
+										>
+											Slots left: {eventType.Capacity}
+										</td>
+									</tr>
+								))}
+						</thead>
+					)}
+				</tbody>
+			</Table>
 
               <Form>
                 <Form.Group className="mb-3">
@@ -236,9 +244,7 @@ function Registration() {
                 </Button>
               </Form>
             </Card>
-          </Col>
-        </Row>
-      </div>
+			</div>
       <MyFooter />
     </div>
   );

@@ -343,57 +343,6 @@ const UserProfile = () => {
               </Card>
             </div>
           </Tab>
-          <Tab eventKey="username" title="Username">
-            <div className="user-card-container">
-              <Card>
-                <Card.Body className="user-card-body">
-                  <Form>
-                    <Form.Group className="mb-3">
-                      <Form.Label>Username</Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder="Enter new username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                      />
-                    </Form.Group>
-                    <Button
-                      variant="primary"
-                      onClick={() => handleSave("Username")}
-                    >
-                      Save Username
-                    </Button>
-                  </Form>
-                </Card.Body>
-              </Card>
-            </div>
-          </Tab>
-          <Tab eventKey="password" title="Password">
-            <div className="user-card-container">
-              <Card>
-                <Card.Body className="user-card-body">
-                  <Form>
-                    <Form.Group className="mb-3">
-                      <Form.Label>Password</Form.Label>
-                      <Form.Control
-                        type="password"
-                        placeholder="Enter new password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                      />
-                    </Form.Group>
-                    <Button
-                      className="mt-3"
-                      variant="primary"
-                      onClick={() => handleSave("Password")}
-                    >
-											Save Password
-										</Button>
-									</Form>
-								</Card.Body>
-							</Card>
-						</div>
-					</Tab>
 				</Tabs>
 			</div>
       <MyFooter />
