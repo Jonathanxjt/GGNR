@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { MyNavbar } from "../MyNavbar/MyNavbar";
 import axios from "axios";
 import "./UserProfile.css";
+import MyFooter from "../MyFooter/MyFooter";
 
 const UserProfile = () => {
 	const [key, setKey] = useState("tickets");
@@ -395,6 +396,7 @@ const UserProfile = () => {
 					</Tab>
 				</Tabs>
 			</div>
+      <MyFooter />
 		</div>
 	);
 };

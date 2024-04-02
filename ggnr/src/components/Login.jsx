@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { MyNavbar } from "./MyNavbar/MyNavbar";
 import logo from "../assets/logo.png";
 import { useNavigate } from "react-router-dom";
+import MyFooter from "./MyFooter/MyFooter";
 
 
 const Login = () => {
@@ -247,6 +248,7 @@ const Login = () => {
     </div>
   </div>
 </div>
+<MyFooter/> 
 </div>
   );
 };

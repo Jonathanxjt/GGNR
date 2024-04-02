@@ -14,6 +14,7 @@ import "./EventPage.css";
 import axios from "axios";
 import CircleButton from "../CreateEventButton/CreateEventButton";
 import "../CreateEventButton/CreateEventButton.css";
+import MyFooter from "../MyFooter/MyFooter";
 
 function EventPage() {
 	const [eventData, setEventData] = useState([]);
@@ -202,6 +203,7 @@ function EventPage() {
 			<div>
 				<CircleButton url="http://localhost:3000/create_event" />
 			</div>
+			<MyFooter />
 		</div>
 	);
 }

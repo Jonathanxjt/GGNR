@@ -81,6 +81,51 @@ const CreateEvent = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Construct the EventTypes array based on the selected tiers and their capacities
+
+    if (!gameName || !gameLogo) {
+      toast.error("Please select a game name and logo.", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Flip,
+      });
+      return;
+    }
+
+    const hasSelectedTier = selectedTiers.some((tier) => {
+      switch (tier) {
+        case "Free Entry":
+          return freeEntryCapacity;
+        case "VIP":
+          return vipCapacity;
+        case "Competitor":
+          return competitorCapacity;
+        default:
+          return false;
+      }
+    });
+
+    if (!hasSelectedTier) {
+      toast.error("Please select at least one ticket tier and enter its capacity.", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Flip,
+      });
+      return;
+    }
+      
+
     const eventTypes = [];
     if (selectedTiers.includes("Free Entry")) {
       eventTypes.push({
