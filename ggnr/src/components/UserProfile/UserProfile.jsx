@@ -75,6 +75,11 @@ const UserProfile = () => {
           console.error("Error fetching user tickets or event details:", error);
         }
       }
+      else
+      {
+        localStorage.setItem('toastErrorMessage', 'Please Login first!');
+        window.location.href = "/login";
+      }
     };
 
     fetchData();

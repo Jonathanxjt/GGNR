@@ -1,8 +1,13 @@
 # GGNR
 
-GGNR is a React-based platform designed for organisers to host various events such as esports tournaments or gatherings. Interested parties can make use of GGNR to sign up and pay for events as spectators or competitors. 
+GGNR is a React-based platform designed for organizers to host various events such as esports tournaments or gatherings. Interested parties can use GGNR to sign up and pay for events as spectators or competitors.
 
 ## Features
+
+- Event creation and management for organizers.
+- Different roles and capacities can be set for each event.
+- Users can browse available events and register based on their preferred role (audience, VIP, competitor).
+- Payment processing for event tickets using Stripe.
 
 ## Getting Started
 
@@ -16,7 +21,7 @@ GGNR is a React-based platform designed for organisers to host various events su
 1. Clone the repository:
 
    ```sh
-   git clone https://github.com/your_username_/GGNR.git
+   git clone https://github.com/Jonathanxjt/GGNR.git
    ```
 
 2. Navigate to the project directory:
@@ -39,38 +44,48 @@ GGNR is a React-based platform designed for organisers to host various events su
    npm start
    ```
 
-2. To run the microservices, use Docker Compose:
+2. Open a new terminal window and navigate to the microservices directory:
 
    ```sh
    cd ggnr/microservice
-   docker-compose up --build
    ```
+
+3. Run the microservices using Docker Compose:
 
    This will start all the required microservices for the application to function correctly.
 
-## External APIs used
+   ```sh
+   docker-compose up --build
+   ```
+
+   
+
+   To stop the microservices, press `Ctrl+C` twice to exit, then run:
+
+   ```sh
+   docker-compose down
+   ```
+
+
+## External APIs Used
 
 - **Internet Games Database (IGDB)**
-   - [Link to documentation](https://api-docs.igdb.com/#getting-started)
-   - This API was used to query games for the events on GGNR. 
+  - [Link to documentation](https://api-docs.igdb.com/#getting-started)
+  - This API was used to query games for the events on GGNR.
 
 - **Stripe Payment**
-   - [Link to documentation](https://docs.stripe.com/)
-   - Stripe was used to handle payment for the event tickets. 
+  - [Link to documentation](https://stripe.com/docs)
+  - Stripe was used to handle payment for the event tickets.
 
 ## Usage
 
 - **For Organizers:**
   - Create and manage events.
-  - Set different roles and capacities for each event.
 
 - **For Users:**
   - Browse available events.
-  - Register for events based on the preferred role (audience, VIP, competitor).
-
-
+  - Register for events based on the preferred catagories (Audience, VIP, Competitor).
 
 ## Contact
 
-Project Link: [https://github.com/Jonathanxjt/GGNR] (https://github.com/Jonathanxjt/GGNR)
-
+Project Link: [https://github.com/Jonathanxjt/GGNR](https://github.com/Jonathanxjt/GGNR)
