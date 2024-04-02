@@ -126,8 +126,8 @@ function Registration() {
 							{eventData && (
 								<thead>
 									<tr>
-										<th style={{ padding: "10px" }}>Description</th>
-										<td style={{ padding: "10px" }}>{eventData.Description}</td>
+										<th style={{ padding: "10px", minWidth:300 }}>Description</th>
+										<td style={{ padding: "10px", minWidth:1000 }}>{eventData.Description}</td>
 									</tr>
 									<tr>
 										<th style={{ padding: "10px" }}>Organiser</th>
