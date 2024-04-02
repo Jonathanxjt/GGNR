@@ -15,8 +15,8 @@ function Registration() {
   const user = JSON.parse(sessionStorage.getItem("user"));
   const location = useLocation();
   const [toastShown, setToastShown] = useState(false);
-    // Check if the user is an organizer
-	const isOrganiser = user && user.organiser;
+  // Check if the user is an organizer
+  const isOrganiser = user && user.organiser;
 
   useEffect(() => {
     // Extract the title from the URL
@@ -199,7 +199,7 @@ function Registration() {
                 <Form.Group className="mb-3">
                   <Form.Label>Select Ticket Tier</Form.Label>
                   <Form.Select
-                    disabled={hasTicket} 
+                    disabled={hasTicket}
                     onChange={(e) => {
                       const [tierId, priceId] = e.target.value.split("-");
                       setSelectedTierId(tierId);
@@ -229,7 +229,7 @@ function Registration() {
                 <Button
                   variant="primary"
                   type="submit"
-                  disabled={hasTicket || isOrganiser} 
+                  disabled={hasTicket || isOrganiser}
                   onClick={handleRegistrationSubmit}
                 >
                   Register
