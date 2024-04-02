@@ -478,8 +478,8 @@ def check_event():
     event_list = db.session.scalars(
         db.select(Event).where(
             and_(
-                Event.Time >= sg_now + timedelta(minutes=55),
-                Event.Time <= sg_now + timedelta(minutes=65),
+                Event.Time >= sg_now + timedelta(minutes=57),
+                Event.Time <= sg_now + timedelta(minutes=62),
             )
         )
     ).all()

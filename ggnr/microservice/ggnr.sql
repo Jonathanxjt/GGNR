@@ -143,9 +143,9 @@ From classic characters like Ryu and Chun-Li to newcomers like Seth and C. Viper
 INSERT INTO users (username, password_hash, preferences, email, contact, organiser, organiser_company)
 VALUES
 ('og1', '$2b$12$L9krV1IEeHr9BoX1lyscbOlE9ySzN4Atod3I02NKVx6FQupWwhUT.', '', 'og1@gmail.com', '99999999', 1, 'SMU'),
-('user1', '$2b$12$L9krV1IEeHr9BoX1lyscbOlE9ySzN4Atod3I02NKVx6FQupWwhUT.', 'Dota 2', 'user1@gmail.com', '90473775', 0, NULL),
-('user2', '$2b$12$L9krV1IEeHr9BoX1lyscbOlE9ySzN4Atod3I02NKVx6FQupWwhUT.', 'Tekken 8', 'user2@gmail.com', '90473775', 0, NUll),
-('user3', '$2b$12$L9krV1IEeHr9BoX1lyscbOlE9ySzN4Atod3I02NKVx6FQupWwhUT.', 'Counter-Strike 2', 'user3@gmail.com', '90473775', 0, NULL);
+('user1', '$2b$12$L9krV1IEeHr9BoX1lyscbOlE9ySzN4Atod3I02NKVx6FQupWwhUT.', 'Dota 2', 'user1@gmail.com', '+6590473775', 0, NULL),
+('user2', '$2b$12$L9krV1IEeHr9BoX1lyscbOlE9ySzN4Atod3I02NKVx6FQupWwhUT.', 'Tekken 8', 'user2@gmail.com', '+6590473775', 0, NUll),
+('user3', '$2b$12$L9krV1IEeHr9BoX1lyscbOlE9ySzN4Atod3I02NKVx6FQupWwhUT.', 'Counter-Strike 2', 'user3@gmail.com', '+6590473775', 0, NULL);
 
 -- INSERT INTO attendees (EID, UID, ticketID)
 -- VALUES
