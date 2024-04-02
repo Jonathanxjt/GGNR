@@ -9,12 +9,9 @@ from datetime import datetime, timedelta
 app = Flask(__name__)
 CORS(app)
 
-# URLs of other microservices
+# URLs of other microservicesE
 # always follow service names in YAML, e.g. http://event:5000 for event microservice
 #* http://<service_name>:<port_number>/<endpoint>   FOLLOW THIS!!!
-# TODO: Update the URLs as needed
-# TODO: update the delete functions and update functions 
-
 
 events_url = "http://event:5000/create_event"
 user_url = "http://user:5005/user/user_preference_gamename"
@@ -60,14 +57,13 @@ def create_event():
 
                 message = f"Hello gamers! We are excited to announce a brand-new event: {event_title}, organized by {game_company}! The event will be focused on {game_name} and will be held at {event_location}, {time_am_pm}. This is a good opportunity you won't want to miss. Sign up now on GGNR!"
                 current_time_plus_3min = datetime.now() + timedelta(minutes=2)
-                current_time_plus_3min_str = current_time_plus_3min.strftime("%H%M")
+                current_time_plus_3min_str = current_time_plus_3min.strftime("%Y-%m-%dT%H:%M:%S")
                 organised = {
                     "notification": message,
                     "users": user_response,
                     "time": current_time_plus_3min_str,
                     "code": 201
                 }
-                
                 # send message to the notification queue
                 result = invoke_http(notification_url, method="POST", json=organised)
                 return jsonify({"code": 201, "message": "Event created successfully, notifications sent.", "data": result}), 201
@@ -78,7 +74,7 @@ def create_event():
             ex_str = str(e) + " at " + str(exc_type) + ": " + fname + ": line " + str(exc_tb.tb_lineno)
             print(ex_str)
             return jsonify({"code": 500, "message": "Internal server error"}), 500
-
+        
     # if reached here, not a JSON request.
     return jsonify({
         "code": 400,

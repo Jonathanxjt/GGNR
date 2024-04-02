@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: send-request-cronjob
+spec:
+  schedule: "*/10 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: send_request
+            # If you need to pass environment variables to your script, do it here
+            env_file:
+              - ggnr.env
+          restartPolicy: OnFailure

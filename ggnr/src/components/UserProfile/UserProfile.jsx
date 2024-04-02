@@ -71,15 +71,21 @@ const UserProfile = () => {
 						};
 					});
 
-					const ticketsWithEventDetails = await Promise.all(
-						eventDetailsPromises
-					);
-					setUserTickets(ticketsWithEventDetails);
-				} catch (error) {
-					console.error("Error fetching user tickets or event details:", error);
-				}
-			}
-		};
+          const ticketsWithEventDetails = await Promise.all(
+            eventDetailsPromises
+          );
+          setUserTickets(ticketsWithEventDetails);
+          console.log(ticketsWithEventDetails);
+        } catch (error) {
+          console.error("Error fetching user tickets or event details:", error);
+        }
+      }
+      else
+      {
+        localStorage.setItem('toastErrorMessage', 'Please Login first!');
+        window.location.href = "/login";
+      }
+    };
 
 		fetchData();
 	}, []);
