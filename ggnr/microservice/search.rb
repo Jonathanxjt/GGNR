@@ -31,11 +31,14 @@ def fetch_cover_urls(game_data)
     'client_secret' => ENV['CLIENT_SECRET'],
     'grant_type' => 'client_credentials'
   }
+  # Get access token to call IGDB API
   access_response = Net::HTTP.post_form(access_url, access_params)
   access_token = JSON.parse(access_response.body)["access_token"]
 
   cover_urls = []
   cover_url = URI("https://api.igdb.com/v4/covers")
+
+
   # Get cover image for each game
   game_data.each do |game|
     game_id = game['id']

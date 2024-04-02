@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy import and_
 from datetime import datetime
@@ -13,11 +12,10 @@ import pytz
 
 from datetime import datetime, timedelta, timezone
 
-import json
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = ( 
-    environ.get("dbURL") or "mysql+mysqlconnector://root@localhost:3306/ggnr_database" 
+app.config["SQLALCHEMY_DATABASE_URI"] = (
+    environ.get("dbURL") or "mysql+mysqlconnector://root@localhost:3306/ggnr_database"
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
@@ -25,9 +23,10 @@ db = SQLAlchemy(app)
 
 CORS(app)
 
+
 # * ORM Classes
 class Event(db.Model):
-    __tablename__ = 'events'
+    __tablename__ = "events"
 
     EID = db.Column(db.Integer, primary_key=True)
     Title = db.Column(db.String(255))
@@ -40,9 +39,19 @@ class Event(db.Model):
     organiser_company = db.Column(db.String(255))
 
     # Relationships
-    event_types = relationship('Event_type', back_populates='event')
+    event_types = relationship("Event_type", back_populates="event")
 
-    def __init__(self, Title, Description, EventLogo, GameName, GameLogo, Location, Time, organiser_company):
+    def __init__(
+        self,
+        Title,
+        Description,
+        EventLogo,
+        GameName,
+        GameLogo,
+        Location,
+        Time,
+        organiser_company,
+    ):
         self.Title = Title
         self.Description = Description
         self.EventLogo = EventLogo
@@ -58,17 +67,20 @@ class Event(db.Model):
             "Title": self.Title,
             "Description": self.Description,
             "EventLogo": self.EventLogo,
-            "GameName": self.GameName,  
+            "GameName": self.GameName,
             "GameLogo": self.GameLogo,
             "Location": self.Location,
-            "Time": self.Time.isoformat() if self.Time else None,  # ISO formatting for dateTime
+            "Time": (
+                self.Time.isoformat() if self.Time else None
+            ),  # ISO formatting for dateTime
             "organiser_company": self.organiser_company,
         }
 
-class Event_type(db.Model):
-    __tablename__ = 'events_type'
 
-    EID = db.Column(db.Integer, db.ForeignKey('events.EID'), primary_key=True)
+class Event_type(db.Model):
+    __tablename__ = "events_type"
+
+    EID = db.Column(db.Integer, db.ForeignKey("events.EID"), primary_key=True)
     TierID = db.Column(db.SmallInteger, primary_key=True)
     Category = db.Column(db.String(255))
     Capacity = db.Column(db.Integer)
@@ -76,7 +88,7 @@ class Event_type(db.Model):
     PriceID = db.Column(db.String(255))
 
     # Relationships
-    event = relationship('Event', back_populates='event_types')
+    event = relationship("Event", back_populates="event_types")
 
     def __init__(self, TierID, Category, Price, Capacity, PriceID):
         self.TierID = TierID
@@ -92,7 +104,6 @@ class Event_type(db.Model):
             "Capacity": self.Capacity,
             "PriceID": self.PriceID,
             "Price": self.Price,
-
         }
 
 
@@ -101,7 +112,7 @@ class Event_type(db.Model):
 def get_all():
     # Get all events and their related types using joined loading
     eventlist = db.session.query(Event).options(db.joinedload(Event.event_types)).all()
-    
+
     # Check if the event list is not empty
     if eventlist:
         events_data = []
@@ -117,40 +128,30 @@ def get_all():
                 "Location": event.Location,
                 "Time": event.Time.isoformat() if event.Time else None,
                 "organiser_company": event.organiser_company,
-                "event_types": []
+                "event_types": [],
             }
 
             # Serialize associated Event_type objects
             for etype in event.event_types:
-                event_data['event_types'].append({
-                    "EID": etype.EID,
-                    "TierID": etype.TierID,
-                    "Category": etype.Category,
-                    "Capacity": etype.Capacity,
-                    "Price": etype.Price,
-                    "PriceID": etype.PriceID
-                })
-            
+                event_data["event_types"].append(
+                    {
+                        "EID": etype.EID,
+                        "TierID": etype.TierID,
+                        "Category": etype.Category,
+                        "Capacity": etype.Capacity,
+                        "Price": etype.Price,
+                        "PriceID": etype.PriceID,
+                    }
+                )
+
             # Add the serialized Event with its types to the events_data list
             events_data.append(event_data)
-        
+
         # Return the JSON response with all events and their types
-        return jsonify(
-            {
-                "code": 200,
-                "data": {
-                    "events": events_data
-                }
-            }
-        )
-    
+        return jsonify({"code": 200, "data": {"events": events_data}})
+
     # If no events were found, return a 404 response
-    return jsonify(
-        {
-            "code": 404,
-            "message": "There are no events."
-        }
-    ), 404
+    return jsonify({"code": 404, "message": "There are no events."}), 404
 
 
 # ! DEPRECATED GET - Retrieve a specific event by title and its event_types
@@ -169,23 +170,26 @@ def get_event(title):
             "Location": event.Location,
             "Time": event.Time.isoformat() if event.Time else None,
             "organiser_company": event.organiser_company,
-            "event_types": []
+            "event_types": [],
         }
 
         # Serialize associated Event_type objects
         for etype in event.event_types:
-            event_data['event_types'].append({
-                "EID": etype.EID,
-                "TierID": etype.TierID,
-                "Category": etype.Category,
-                "Capacity": etype.Capacity,
-                "Price": etype.Price,
-                "PriceID": etype.PriceID
-            })
+            event_data["event_types"].append(
+                {
+                    "EID": etype.EID,
+                    "TierID": etype.TierID,
+                    "Category": etype.Category,
+                    "Capacity": etype.Capacity,
+                    "Price": etype.Price,
+                    "PriceID": etype.PriceID,
+                }
+            )
 
         return jsonify({"code": 200, "data": event_data}), 200
     else:
         return jsonify({"code": 404, "message": "Event not found"}), 404
+
 
 # GET Event by EID
 @app.route("/event/<string:EID>")
@@ -203,44 +207,36 @@ def find_by_event_id(EID):
             "Location": event.Location,
             "Time": event.Time.isoformat() if event.Time else None,
             "organiser_company": event.organiser_company,
-            "event_types": []
+            "event_types": [],
         }
 
         # Serialize associated Event_type objects
         for etype in event.event_types:
-            event_data['event_types'].append({
-                "EID": etype.EID,
-                "TierID": etype.TierID,
-                "Category": etype.Category,
-                "Capacity": etype.Capacity,
-                "Price": etype.Price,
-                "PriceID": etype.PriceID
-            })
+            event_data["event_types"].append(
+                {
+                    "EID": etype.EID,
+                    "TierID": etype.TierID,
+                    "Category": etype.Category,
+                    "Capacity": etype.Capacity,
+                    "Price": etype.Price,
+                    "PriceID": etype.PriceID,
+                }
+            )
 
         return jsonify({"code": 200, "data": event_data}), 200
     else:
         return jsonify({"code": 404, "message": "Event not found"}), 404
 
 
-# GET - Retrieve events by GameName 
+# GET - Retrieve events by GameName
 @app.route("/event/gamename/<string:gamename>")
 def find_by_gamename(gamename):
     event_list = db.session.scalars(db.select(Event).filter_by(GameName=gamename)).all()
     if len(event_list):
         return jsonify(
-            {
-                "code": 200,
-                "data": {
-                    "events": [event.json() for event in event_list]
-                }
-            }
+            {"code": 200, "data": {"events": [event.json() for event in event_list]}}
         )
-    return jsonify(
-        {
-            "code": 404,
-            "message": "There are no events."
-        }   
-    ), 404
+    return jsonify({"code": 404, "message": "There are no events."}), 404
 
 
 # POST - Creates an event
@@ -307,35 +303,31 @@ def create_event():
         )
         print(ex_str)
 
-        return jsonify(
-            {
-                "code": 500,
-                "message": "An error occurred while creating the event. " + str(e)
-            }
-        ), 500
+        return (
+            jsonify(
+                {
+                    "code": 500,
+                    "message": "An error occurred while creating the event. " + str(e),
+                }
+            ),
+            500,
+        )
 
-    return jsonify(
-        {
-            "code": 201,
-            "data": event.json()
-        }
-    ), 201
+    return jsonify({"code": 201, "data": event.json()}), 201
+
 
 # PUT - edit event's Time or Location
-@app.route("/event/<string:EID>", methods=['PUT'])
+@app.route("/event/<string:EID>", methods=["PUT"])
 def update_event(EID):
     try:
         event = db.session.scalars(db.select(Event).filter_by(EID=EID).limit(1)).first()
         if not event:
-            return jsonify(
-                {
-                    "code": 404,
-                    "data": {
-                        "EID": EID
-                    },
-                    "message": "event not found."
-                }
-            ), 404
+            return (
+                jsonify(
+                    {"code": 404, "data": {"EID": EID}, "message": "event not found."}
+                ),
+                404,
+            )
 
         # update Time or Price or Location
         # data = request.get_json()
@@ -344,28 +336,33 @@ def update_event(EID):
 
         if time != None:
             event.Time = time
-        
+
         if location != None:
             event.Location = location
 
         db.session.commit()
-        return jsonify(
-            {
-                "code": 200,
-                "data": event.json(),
-                "Message": "Event updated successfully."
-            }
-        ), 200
+        return (
+            jsonify(
+                {
+                    "code": 200,
+                    "data": event.json(),
+                    "Message": "Event updated successfully.",
+                }
+            ),
+            200,
+        )
     except Exception as e:
-        return jsonify(
-            {
-                "code": 500,
-                "data": {
-                    "EID": EID
-                },
-                "message": "An error occurred while updating the event. " + str(e)
-            }
-        ), 500
+        return (
+            jsonify(
+                {
+                    "code": 500,
+                    "data": {"EID": EID},
+                    "message": "An error occurred while updating the event. " + str(e),
+                }
+            ),
+            500,
+        )
+
 
 # Delete event
 # @app.route("/event/<string:EID>", methods=["DELETE"])
@@ -382,17 +379,17 @@ def update_event(EID):
 #                 "message": "Event not found."
 #             }
 #         ), 404
-    
+
 #     try:
 #         # Delete related event_types
 #         event_types = db.session.scalars(db.select(Event_type).filter_by(EID=EID)).all()
 #         for event_type in event_types:
 #             db.session.delete(event_type)
-        
+
 #         # Delete the event
 #         db.session.delete(event)
 #         db.session.commit()
-    
+
 #     except Exception as e:
 #         exc_type, exc_obj, exc_tb = sys.exc_info()
 #         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
@@ -414,62 +411,61 @@ def update_event(EID):
 #                 "message": "An unexpected error occurred deleting the event. " + ex_str,
 #             }
 #         ), 500
-    
+
 #     return jsonify({"code": 200, "message": f"Event with EID {EID} and its related event types have been successfully deleted."}), 200
 
+
 # PUT - Reduce the capacity of an event type / capacity by 1
-@app.route("/event_type", methods=['PUT'])
+@app.route("/event_type", methods=["PUT"])
 def update_event_type():
     EID = request.get_json().get("EID")
-    TierID = request.get_json().get("TierID")  
+    TierID = request.get_json().get("TierID")
 
     try:
-        event_type = db.session.scalars(db.select(Event_type).filter_by(EID=EID, TierID=TierID).limit(1)).first()
+        event_type = db.session.scalars(
+            db.select(Event_type).filter_by(EID=EID, TierID=TierID).limit(1)
+        ).first()
         if not event_type:
-            return jsonify(
-                {
-                    "code": 404,
-                    "data": {
-                        "EID": EID,
-                        "TierID": TierID
-                    },
-                    "message": "event_type not found."
-                }
-            ), 404
+            return (
+                jsonify(
+                    {
+                        "code": 404,
+                        "data": {"EID": EID, "TierID": TierID},
+                        "message": "event_type not found.",
+                    }
+                ),
+                404,
+            )
 
         # Decrement the capacity by 1
         if event_type.Capacity > 0:
             event_type.Capacity -= 1
         else:
-            return jsonify(
-                {
-                    "code": 400,
-                    "data": {
-                        "EID": EID,
-                        "TierID": TierID
-                    },
-                    "message": "No more capacity left for this event type."
-                }
-            ), 400
+            return (
+                jsonify(
+                    {
+                        "code": 400,
+                        "data": {"EID": EID, "TierID": TierID},
+                        "message": "No more capacity left for this event type.",
+                    }
+                ),
+                400,
+            )
 
         db.session.commit()
-        return jsonify(
-            {
-                "code": 200,
-                "data": event_type.json()
-            }
-        ), 200
+        return jsonify({"code": 200, "data": event_type.json()}), 200
     except Exception as e:
-        return jsonify(
-            {
-                "code": 500,
-                "data": {
-                    "EID": EID,
-                    "TierID": TierID
-                },
-                "message": "An error occurred while updating the event. " + str(e)
-            }
-        ), 500
+        return (
+            jsonify(
+                {
+                    "code": 500,
+                    "data": {"EID": EID, "TierID": TierID},
+                    "message": "An error occurred while updating the event. " + str(e),
+                }
+            ),
+            500,
+        )
+
 
 # GET - check for events that is happening in 1 hour
 @app.route("/check_events_in_the_next_hour")
@@ -477,35 +473,29 @@ def check_event():
     # Get the current UTC time
     utc_now = datetime.now(timezone.utc)
     # set timezone to SG time
-    sg_timezone = pytz.timezone('Asia/Singapore')
+    sg_timezone = pytz.timezone("Asia/Singapore")
     sg_now = utc_now.astimezone(sg_timezone)
     event_list = db.session.scalars(
         db.select(Event).where(
             and_(
                 Event.Time >= sg_now + timedelta(minutes=55),
-                Event.Time <= sg_now + timedelta(minutes=65)
+                Event.Time <= sg_now + timedelta(minutes=65),
             )
         )
-    ).all()    
+    ).all()
     print(datetime.now())
     # Assuming Event is a class with attributes that you want to return,
     # convert each event object into a dictionary.
     if len(event_list) != 0:
-        return jsonify({
-            "code": 201,
-            "data": {
-                "events": [event.json() for event in event_list]
-            }
-        })
+        return jsonify(
+            {"code": 201, "data": {"events": [event.json() for event in event_list]}}
+        )
 
     # Use jsonify to convert the list of dictionaries into a JSON response
-    return jsonify({
-        "code": 404,
-        "message": "There are no events within 1 hour."
-    }), 404
+    return jsonify({"code": 404, "message": "There are no events within 1 hour."}), 404
 
 
 # may change port number
-if __name__ == '__main__':
+if __name__ == "__main__":
     print("This is flask for " + os.path.basename(__file__) + ": manage event ...")
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
