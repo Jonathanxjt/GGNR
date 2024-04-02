@@ -9,10 +9,10 @@ app = Flask(__name__)
 CORS(app)
 
 
-events_url = "http://event:5000/create_event"
-user_url = "http://user:5005/user/user_preference_gamename"
-search_url = "http://search:5009/search"
-notification_url = "http://notification:5010/send-notification"
+events_url = "http://kong:8000/event/create_event"
+user_url = "http://kong:8000/user/user_preference_gamename"
+search_url = "http://kong:8000/api/v1/search"
+notification_url = "http://kong:8000/api/v1/create_notification"
 
 
 # Search for games:

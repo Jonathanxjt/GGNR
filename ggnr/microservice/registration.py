@@ -7,11 +7,10 @@ from invokes import invoke_http
 app = Flask(__name__)
 CORS(app)
 
-
-event_URL = "http://event:5000/event"
-ticket_URL = "http://ticket:5008/ticket"
-attendees_list_URL = "http://attendee:5003/attendee"
-update_event_capacity_URL = "http://event:5000/event_type"
+event_URL = "http://event1:5000/event"
+ticket_URL = "http://kong:8000/api/v1/ticket"
+attendees_list_URL = "http://kong:8000/api/v1/attendee"
+update_event_capacity_URL = "http://kong:8000/api/v1/event_type" 
 
 
 @app.route("/register", methods=["POST"])

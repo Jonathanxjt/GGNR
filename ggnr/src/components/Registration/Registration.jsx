@@ -18,16 +18,16 @@ function Registration() {
   // Check if the user is an organizer
   const isOrganiser = user && user.organiser;
 
-  useEffect(() => {
-    // Extract the title from the URL
-    const title = new URLSearchParams(location.search).get("title");
-    const EID = new URLSearchParams(location.search).get("eid");
-    if (EID) {
-      axios
-        .get(`http://localhost:5000/event/${EID}`)
-        .then((response) => {
-          // Assuming the response contains the event data directly
-          const event = response.data.data;
+	useEffect(() => {
+		// Extract the title from the URL
+		const title = new URLSearchParams(location.search).get("title");
+		const EID = new URLSearchParams(location.search).get("eid");
+		if (EID) {
+			axios
+				.get(`http://localhost:8000/event/${EID}`)
+				.then((response) => {
+					// Assuming the response contains the event data directly
+					const event = response.data.data;
 
           // Format the time
           const formattedDateTime = new Date(event.Time).toLocaleString(
@@ -83,48 +83,48 @@ function Registration() {
     }
   }, [hasTicket, toastShown]);
 
-  const handleRegistrationSubmit = async (e) => {
-    e.preventDefault();
-    if (selectedTierId) {
-      const registrationData = {
-        EID: eventData.EID,
-        TierID: selectedTierId,
-        PriceID: selectedPriceId,
-        UID: user.UID,
-      };
-      if (selectedPriceId === "null" || selectedPriceId === null) {
-        try {
-          await axios.post("http://localhost:5006/register", registrationData);
-          // Registration successful, redirect to checkout
-          toast.success("Ticket issued to your account!", {
-            position: "top-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-            transition: Flip,
-          });
-        } catch (error) {
-          // Handle registration error
-          console.error("Registration error:", error);
-          alert("Registration failed.");
-        }
-      } else {
-        sessionStorage.setItem(
-          "registrationData",
-          JSON.stringify(registrationData)
-        );
-        window.location.href = `/checkout?priceId=${encodeURIComponent(
-          selectedPriceId
-        )}`;
-      }
-    } else {
-      alert("Please select a ticket tier.");
-    }
-  };
+	const handleRegistrationSubmit = async (e) => {
+		e.preventDefault();
+		if (selectedTierId) {
+			const registrationData = {
+				EID: eventData.EID,
+				TierID: selectedTierId,
+				PriceID: selectedPriceId,
+				UID: user.UID,
+			};
+			if (selectedPriceId === "null" || selectedPriceId === null) {
+				try {
+					await axios.post("http://localhost:8000/api/v1/register", registrationData);
+					// Registration successful, redirect to checkout
+					toast.success("Ticket issued to your account!", {
+						position: "top-center",
+						autoClose: 2000,
+						hideProgressBar: false,
+						closeOnClick: true,
+						pauseOnHover: true,
+						draggable: true,
+						progress: undefined,
+						theme: "dark",
+						transition: Flip,
+					});
+				} catch (error) {
+					// Handle registration error
+					console.error("Registration error:", error);
+					alert("Registration failed.");
+				}
+			} else {
+				sessionStorage.setItem(
+					"registrationData",
+					JSON.stringify(registrationData)
+				);
+				window.location.href = `/checkout?priceId=${encodeURIComponent(
+					selectedPriceId
+				)}`;
+			}
+		} else {
+			alert("Please select a ticket tier.");
+		}
+	};
 
   return (
 	<div>

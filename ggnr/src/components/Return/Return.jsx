@@ -28,7 +28,7 @@ const Return = () => {
 
 			try {
 				const response = await axios.get(
-					`http://localhost:5011/session-status?session_id=${sessionId}`
+					`http://localhost:8000/api/v1/session-status?session_id=${sessionId}`
 				);
 				setStatus(response.data.status);
 				setPaymentIntent(response.data.payment_intent);
@@ -48,7 +48,7 @@ const Return = () => {
 				setRegistrationAttempted(true); // Set to true to prevent multiple attempts
 				try {
 					await axios.post(
-						"http://localhost:5006/register",
+						"http://localhost:8000/api/v1/register",
 						storedRegistrationData
 					);
 					// Registration successful, proceed with your logic
@@ -113,7 +113,7 @@ const Return = () => {
 	// Function to refund a payment for ticket sold out scenario.
 	const refundPayment = async (paymentIntentId) => {
 		try {
-			const response = await axios.post("http://localhost:5011/refund", {
+			const response = await axios.post("http://localhost:8000/api/v1/refund", {
 				paymentIntentId: paymentIntentId,
 			});
 			console.log("Refund successful:", response.data);

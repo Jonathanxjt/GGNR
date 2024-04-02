@@ -242,7 +242,7 @@ def create_user():
     ), 201
 
 # PUT - edit user's preference
-@app.route("/user/edit_preference/<string:UID>", methods=["PUT"])
+@app.route("/user/edit_preference/<int:UID>", methods=["PUT"])
 def edit_user_preference(UID):
     try:
         user = db.session.scalars(db.select(User).filter_by(UID=UID).limit(1)).first()

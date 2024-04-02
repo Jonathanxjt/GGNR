@@ -13,7 +13,7 @@ const CheckoutForm = () => {
   useEffect(() => {
     if (priceId) {
       // Fetch the client secret from the backend
-      fetch("http://localhost:5011/create-checkout-session", {
+      fetch("http://localhost:8000/create-checkout-session", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -12,12 +12,10 @@ from datetime import datetime, timedelta
 app = Flask(__name__)
 CORS(app)
 
-event_URL = (
-    "http://event:5000/check_events_in_the_next_hour"  # TODO may need to edit the url
-)
-attendee_URL = "http://attendee:5003/attendee/EID/{EID}"
-user_URL = "http://user:5005/user/contact-information"
-notification_URL = "http://notification:5010/send-notification"
+event_URL = "http://kong:8000/check_events_in_the_next_hour" # may need to edit the url
+attendee_URL = "http://kong:8000/attendee/{EID}"
+user_URL = "http://kong:8000/user/contact-information"
+notification_URL = "http://kong:8000/api/v1/create_notification"
 
 
 @app.route("/custom_notification", methods=["POST"])

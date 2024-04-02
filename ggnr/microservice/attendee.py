@@ -238,7 +238,7 @@ def get_all():
 
 
 # Get by EID
-@app.route("/attendee/EID/<string:EID>")
+@app.route("/attendee/<int:EID>")
 def get_attendee_by_EID(EID):
     # get all attendees by EID
     attendee_list = db.session.scalars(db.select(Attendee).filter_by(EID=EID)).all()

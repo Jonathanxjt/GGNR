@@ -21,7 +21,7 @@ function EventPage() {
 
 	useEffect(() => {
 		axios
-			.get("http://localhost:5000/event") // Fetch events from the backend
+			.get("http://localhost:8000/event") // Fetch events from the backend
 			.then((response) => {
 				const formattedEvents = response.data.data.events.map((event) => {
 					// Map through the events

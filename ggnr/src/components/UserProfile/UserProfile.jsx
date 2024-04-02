@@ -36,13 +36,13 @@ const UserProfile = () => {
 				}
 				try {
 					const response = await axios.get(
-						`http://localhost:5008/ticket/${user.UID}`
+						`http://localhost:8000/ticket/${user.UID}`
 					);
 					const tickets = response.data.data;
 
 					const eventDetailsPromises = tickets.map(async (ticket) => {
 						const eventResponse = await axios.get(
-							`http://localhost:5000/event/${ticket.EID}`
+							`http://localhost:8000/event/${ticket.EID}`
 						);
 						// Format the date and time
 						const formattedDateTime = new Date(
@@ -106,7 +106,7 @@ const UserProfile = () => {
 			event.preventDefault();
 			setIsLoading(true); // Set loading to true
 			try {
-				const response = await axios.post("http://localhost:5009/search", {
+				const response = await axios.post("http://localhost:8000/api/v1/search", {
 					game_name: gameName, // Send the game name to the backend 
 				});
 				setGameResults(response.data);
