@@ -482,8 +482,8 @@ def check_event():
     event_list = db.session.scalars(
         db.select(Event).where(
             and_(
-                Event.Time >= sg_now,
-                Event.Time <= sg_now + timedelta(hours=1)
+                Event.Time >= sg_now + timedelta(minutes=55),
+                Event.Time <= sg_now + timedelta(minutes=65)
             )
         )
     ).all()    
@@ -501,7 +501,7 @@ def check_event():
     # Use jsonify to convert the list of dictionaries into a JSON response
     return jsonify({
         "code": 404,
-        "message": "There is no events within 1 hour."
+        "message": "There are no events within 1 hour."
     }), 404
 
 

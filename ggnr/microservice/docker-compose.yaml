@@ -191,6 +191,24 @@ services:
       - notification
     networks:
       - ggnr_network
+
+
+  send_request:
+    build:
+      context: .
+      dockerfile: dockerfile_send_request
+    restart: always
+    env_file:
+      - ggnr.env
+    depends_on:
+      - notification
+      - notification_log
+      - notification_error
+      - event
+      - attendee
+      - user
+    networks:
+      - ggnr_network 
       
 
 networks:
