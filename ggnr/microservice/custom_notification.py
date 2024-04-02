@@ -150,6 +150,8 @@ def schedule_notification():
 
     event_list = event_results["data"]["events"]
 
+    all_events_without_attendees = True # flag to check if all events have no attendees
+
     for event in event_list:
 
         # invoke attendee microservice
@@ -157,56 +159,66 @@ def schedule_notification():
         eid = event["EID"]
         get_attendeeURL = attendee_URL.format(EID=eid)
         attendee_results = invoke_http(get_attendeeURL, method="GET", json={})
-        print("attendee_result:", attendee_results)
-
-        if attendee_results["code"] not in range(200,300):
-            return {
-                "code": 500,
-                "data": {
-                    "attendee_results": attendee_results
-                }
-            }
-        
-        # invoke users microservice
-        print("\n-----Invoking Users microservice-----")
-        user_results = invoke_http(user_URL, method="GET", json={"attendee_list": attendee_results["data"]["attendee_list"]})
-        print("user_results" ,user_results)
-        code = user_results['code']
-        if code not in range(200,300):
-            return {
-                "code": 500,
-                "data": {
-                    "user_results": user_results
-                },
-                "message": "Get users information failure sent for error handling."
-            }
-        
-        # invoke notification microserivce - send notification
-        print("\n-----Invoking Notification microservice-----")
-        event_title = event.get("Title", "")
-        game_company = event.get("GameCompany", "")
-        event_location = event.get("Location", "")
-        event_time = event.get("Time", "")
-        time_obj = datetime.strptime(event_time, "%Y-%m-%dT%H:%M:%S")
-        time_am_pm = time_obj.strftime("%I:%M %p")
-        
-        thrity_mins_before = time_obj - timedelta(minutes=30)
-        event_time_format = thrity_mins_before.strftime("%Y-%m-%dT%H:%M:%S")
-
-
-
-        message = f"Hello gamers! Thank you for signing up for {event_title} organised by {game_company}. The event will start in about 30 minutes at {time_am_pm} and will take place at {event_location}. Do not be late and see you there!"
-
-        organised = {
-            "code": 201,
-            "users": user_results,
-            "time": event_time_format,
-            "notification": message
-        }
-
-        result = invoke_http(notification_URL, method="POST", json=organised)
+        if attendee_results["data"]["attendee_list"]:
+            all_events_without_attendees = False
     
-    return jsonify({"code": 201, "message": "Notifications have been sent to the users.", "data": result}), 201
+        if all_events_without_attendees:
+            return {
+                "code": 404,
+                "message": "There are no attendees in any of the events."
+            }
+        else:
+
+            print("attendee_result:", attendee_results)
+                
+            if attendee_results["code"] not in range(200,300):
+                return {
+                    "code": 500,
+                    "data": {
+                        "attendee_results": attendee_results
+                    }
+                }
+            
+            # invoke users microservice
+            print("\n-----Invoking Users microservice-----")
+            user_results = invoke_http(user_URL, method="GET", json={"attendee_list": attendee_results["data"]["attendee_list"]})
+            print("user_results" ,user_results)
+            code = user_results['code']
+            if code not in range(200,300):
+                return {
+                    "code": 500,
+                    "data": {
+                        "user_results": user_results
+                    },
+                    "message": "Get users information failure sent for error handling."
+                }
+            
+            # invoke notification microserivce - send notification
+            print("\n-----Invoking Notification microservice-----")
+            event_title = event.get("Title", "")
+            game_company = event.get("GameCompany", "")
+            event_location = event.get("Location", "")
+            event_time = event.get("Time", "")
+            time_obj = datetime.strptime(event_time, "%Y-%m-%dT%H:%M:%S")
+            time_am_pm = time_obj.strftime("%I:%M %p")
+            
+            thrity_mins_before = time_obj - timedelta(minutes=30)
+            event_time_format = thrity_mins_before.strftime("%Y-%m-%dT%H:%M:%S")
+
+
+
+            message = f"Hello gamers! Thank you for signing up for {event_title} organised by {game_company}. The event will start in about 30 minutes at {time_am_pm} and will take place at {event_location}. Do not be late and see you there!"
+
+            organised = {
+                "code": 201,
+                "users": user_results,
+                "time": event_time_format,
+                "notification": message
+            }
+
+            result = invoke_http(notification_URL, method="POST", json=organised)
+        
+        return jsonify({"code": 201, "message": "Notifications have been sent to the users.", "data": result}), 201
 
 
     
