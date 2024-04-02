@@ -165,227 +165,227 @@ const UserProfile = () => {
 		}
 	};
 
-	return (
-		<div>
-			<MyNavbar />
-			<div className="container user-profile py-3">
-				<Card>
-					<Card.Body className="user-profile-card">
+  return (
+    <div>
+      <MyNavbar />
+      <div className="container user-profile py-3">
+        <Card>
+          <Card.Body className="user-profile-card">
             <h2>Welcome {username}!</h2>
-						<Table variant="light" bordered>
-							<tbody>
-								<tr>
-									<th>Username</th>
-									<td>{username}</td>
-								</tr>
-								<tr>
-									<th>Email</th>
-									<td>{email}</td>
-								</tr>
-								<tr>
-									<th>Contact</th>
-									<td>{contact}</td>
-								</tr>
-							</tbody>
-						</Table>
-					</Card.Body>
-				</Card>
-				<Tabs activeKey={key} onSelect={(k) => setKey(k)} className="mb-3">
-					<Tab eventKey="tickets" title="My Tickets">
-						<div className="user-card-container">
-							<Card>
-								<Card.Body className="user-card-body">
-									{userTickets.length > 0 ? (
-										<Table striped bordered hover responsive>
-											<thead>
-												<tr>
-													<th>Event Logo</th>
-													<th>Event Title</th>
-													<th>Date/Time</th>
-													<th>Category</th>
-													<th>Ticket ID</th>
-													<th>Event ID</th>
-												</tr>
-											</thead>
-											<tbody>
-												{userTickets.map((ticket, index) => (
-													<tr key={index}>
-														<td>
-															<img
-																src={ticket.eventLogo}
-																alt="Event Logo"
-																style={{ width: "150px", height: "100px" }}
-															/>
-														</td>
-														<td>{ticket.eventName}</td>
-														<td>{ticket.eventDateTime}</td>
-														<td>{ticket.category}</td>
-														<td>{ticket.TicketID}</td>
-														<td>{ticket.EID}</td>
-													</tr>
-												))}
-											</tbody>
-										</Table>
-									) : (
-										<p>You do not have any tickets.</p>
-									)}
-								</Card.Body>
-							</Card>
-						</div>
-					</Tab>
-					<Tab eventKey="preferences" title="Preferences">
-						<div className="user-card-container">
-							<Card>
-								<Card.Body className="user-card-body">
-									<Form>
-										{userPreferences.map((preference, index) => (
-											<Form.Check
-												key={index}
-												type="checkbox"
-												label={preference}
-												checked={preferences.includes(preference)}
-												onChange={() => handlePreferenceChange(preference)}
-											/>
-										))}
+            <Table variant="light" bordered responsive>
+              <tbody>
+                <tr>
+                  <th>Username</th>
+                  <td>{username}</td>
+                </tr>
+                <tr>
+                  <th>Email</th>
+                  <td>{email}</td>
+                </tr>
+                <tr>
+                  <th>Contact</th>
+                  <td>{contact}</td>
+                </tr>
+              </tbody>
+            </Table>
+          </Card.Body>
+        </Card>
+        <Tabs activeKey={key} onSelect={(k) => setKey(k)} className="mb-3">
+          <Tab eventKey="tickets" title="My Tickets">
+            <div className="user-card-container">
+              <Card>
+                <Card.Body className="user-card-body">
+                  {userTickets.length > 0 ? (
+                    <Table striped bordered hover responsive>
+                      <thead>
+                        <tr>
+                          <th>Event Logo</th>
+                          <th>Event Title</th>
+                          <th>Date/Time</th>
+                          <th>Category</th>
+                          <th>Ticket ID</th>
+                          <th>Event ID</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {userTickets.map((ticket, index) => (
+                          <tr key={index}>
+                            <td>
+                              <img
+                                src={ticket.eventLogo}
+                                alt="Event Logo"
+                                style={{ width: "150px", height: "100px" }}
+                              />
+                            </td>
+                            <td>{ticket.eventName}</td>
+                            <td>{ticket.eventDateTime}</td>
+                            <td>{ticket.category}</td>
+                            <td>{ticket.TicketID}</td>
+                            <td>{ticket.EID}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </Table>
+                  ) : (
+                    <p>You do not have any tickets.</p>
+                  )}
+                </Card.Body>
+              </Card>
+            </div>
+          </Tab>
+          <Tab eventKey="preferences" title="Preferences">
+            <div className="user-card-container">
+              <Card>
+                <Card.Body className="user-card-body">
+                  <Form>
+                    {userPreferences.map((preference, index) => (
+                      <Form.Check
+                        key={index}
+                        type="checkbox"
+                        label={preference}
+                        checked={preferences.includes(preference)}
+                        onChange={() => handlePreferenceChange(preference)}
+                      />
+                    ))}
 
-										<Form.Group className="mb-3">
-											<Form.Label>Preferences</Form.Label>
-											<Form.Control
-												type="text"
-												placeholder="Enter your preferences"
-												value={preferences}
-												onChange={(e) => setPreferences(e.target.value)}
-												disabled
-											/>
-										</Form.Group>
+                    <Form.Group className="mb-3">
+                      <Form.Label>Preferences</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Enter your preferences"
+                        value={preferences}
+                        onChange={(e) => setPreferences(e.target.value)}
+                        disabled
+                      />
+                    </Form.Group>
 
-										<Form.Group controlId="gameName" className="mt-2">
-											<Form.Label>Game Name</Form.Label>
-											<Form.Control
-												type="text"
-												placeholder={
-													userPreferences.length >= 6
-														? "You can only have a maximum of 6 preferences"
-														: "Enter game name"
-												}
-												value={gameName}
-												onChange={(e) => setGameName(e.target.value)}
-												onKeyDown={handleKeyDown}
-												disabled={preferences.length >= 6}
-												className={
-													userPreferences.length >= 6 ? "red-placeholder" : ""
-												}
-											/>
-											{isLoading && (
-												<div style={{ height: "50px", width: "100%" }}></div>
-											)}
-											{isLoading && <div className="user-custom-loader"></div>}
+                    <Form.Group controlId="gameName" className="mt-2">
+                      <Form.Label>Game Name</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder={
+                          userPreferences.length >= 6
+                            ? "You can only have a maximum of 6 preferences"
+                            : "Enter game name"
+                        }
+                        value={gameName}
+                        onChange={(e) => setGameName(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        disabled={preferences.length >= 6}
+                        className={
+                          userPreferences.length >= 6 ? "red-placeholder" : ""
+                        }
+                      />
+                      {isLoading && (
+                        <div style={{ height: "50px", width: "100%" }}></div>
+                      )}
+                      {isLoading && <div className="user-custom-loader"></div>}
 
-											{isLoading && (
-												<div style={{ height: "750px", width: "100%" }}></div>
-											)}
+                      {isLoading && (
+                        <div style={{ height: "750px", width: "100%" }}></div>
+                      )}
 
-											{showDropdown && gameResults.length > 0 && (
-												<ul
-													style={{
-														listStyleType: "none",
-														padding: "10px 0",
-														margin: 0,
-													}}
-												>
-													{gameResults.map((game) => (
-														<li
-															key={game.id}
-															style={{ cursor: "pointer", padding: "5px" }}
-															onClick={() => {
-																// Add the selected game name to the user preferences array
-																setUserPreferences((prevPrefs) => {
-																	if (!prevPrefs.includes(game.name)) {
-																		return [...prevPrefs, game.name];
-																	}
-																	return prevPrefs;
-																});
-																setPreferences((prevPrefs) => {
-																	if (!prevPrefs.includes(game.name)) {
-																		return [...prevPrefs, game.name];
-																	}
-																	return prevPrefs;
-																});
-																setGameName(""); // Reset the gameName state to blank
-																setShowDropdown(false); // Hide the dropdown
-															}}
-														>
-															<img
-																src={game.cover_url}
-																alt={game.name}
-																style={{
-																	width: "150px",
-																	height: "150px",
-																	marginRight: "10px",
-																}}
-															/>
-															{game.name}
-														</li>
-													))}
-												</ul>
-											)}
-										</Form.Group>
-										<Button
-											className="mt-3"
-											variant="primary"
-											onClick={() => handleSave("Preferences")}
-										>
-											Save Preferences
-										</Button>
-									</Form>
-								</Card.Body>
-							</Card>
-						</div>
-					</Tab>
-					<Tab eventKey="username" title="Username">
-						<div className="user-card-container">
-							<Card>
-								<Card.Body className="user-card-body">
-									<Form>
-										<Form.Group className="mb-3">
-											<Form.Label>Username</Form.Label>
-											<Form.Control
-												type="text"
-												placeholder="Enter new username"
-												value={username}
-												onChange={(e) => setUsername(e.target.value)}
-											/>
-										</Form.Group>
-										<Button
-											variant="primary"
-											onClick={() => handleSave("Username")}
-										>
-											Save Username
-										</Button>
-									</Form>
-								</Card.Body>
-							</Card>
-						</div>
-					</Tab>
-					<Tab eventKey="password" title="Password">
-						<div className="user-card-container">
-							<Card>
-								<Card.Body className="user-card-body">
-									<Form>
-										<Form.Group className="mb-3">
-											<Form.Label>Password</Form.Label>
-											<Form.Control
-												type="password"
-												placeholder="Enter new password"
-												value={password}
-												onChange={(e) => setPassword(e.target.value)}
-											/>
-										</Form.Group>
-										<Button
-											className="mt-3"
-											variant="primary"
-											onClick={() => handleSave("Password")}
-										>
+                      {showDropdown && gameResults.length > 0 && (
+                        <ul
+                          style={{
+                            listStyleType: "none",
+                            padding: "10px 0",
+                            margin: 0,
+                          }}
+                        >
+                          {gameResults.map((game) => (
+                            <li
+                              key={game.id}
+                              style={{ cursor: "pointer", padding: "5px" }}
+                              onClick={() => {
+                                // Add the selected game name to the user preferences array
+                                setUserPreferences((prevPrefs) => {
+                                  if (!prevPrefs.includes(game.name)) {
+                                    return [...prevPrefs, game.name];
+                                  }
+                                  return prevPrefs;
+                                });
+                                setPreferences((prevPrefs) => {
+                                  if (!prevPrefs.includes(game.name)) {
+                                    return [...prevPrefs, game.name];
+                                  }
+                                  return prevPrefs;
+                                });
+                                setGameName(""); // Reset the gameName state to blank
+                                setShowDropdown(false); // Hide the dropdown
+                              }}
+                            >
+                              <img
+                                src={game.cover_url}
+                                alt={game.name}
+                                style={{
+                                  width: "150px",
+                                  height: "150px",
+                                  marginRight: "10px",
+                                }}
+                              />
+                              {game.name}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </Form.Group>
+                    <Button
+                      className="mt-3"
+                      variant="primary"
+                      onClick={() => handleSave("Preferences")}
+                    >
+                      Save Preferences
+                    </Button>
+                  </Form>
+                </Card.Body>
+              </Card>
+            </div>
+          </Tab>
+          <Tab eventKey="username" title="Username">
+            <div className="user-card-container">
+              <Card>
+                <Card.Body className="user-card-body">
+                  <Form>
+                    <Form.Group className="mb-3">
+                      <Form.Label>Username</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Enter new username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                      />
+                    </Form.Group>
+                    <Button
+                      variant="primary"
+                      onClick={() => handleSave("Username")}
+                    >
+                      Save Username
+                    </Button>
+                  </Form>
+                </Card.Body>
+              </Card>
+            </div>
+          </Tab>
+          <Tab eventKey="password" title="Password">
+            <div className="user-card-container">
+              <Card>
+                <Card.Body className="user-card-body">
+                  <Form>
+                    <Form.Group className="mb-3">
+                      <Form.Label>Password</Form.Label>
+                      <Form.Control
+                        type="password"
+                        placeholder="Enter new password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                      />
+                    </Form.Group>
+                    <Button
+                      className="mt-3"
+                      variant="primary"
+                      onClick={() => handleSave("Password")}
+                    >
 											Save Password
 										</Button>
 									</Form>
