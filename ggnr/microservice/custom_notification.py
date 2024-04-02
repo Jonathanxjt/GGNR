@@ -188,10 +188,10 @@ def schedule_notification():
                 time_obj = datetime.strptime(event_time, "%Y-%m-%dT%H:%M:%S")
                 time_am_pm = time_obj.strftime("%I:%M %p")
 
-                thrity_mins_before = time_obj - timedelta(minutes=30)
+                thrity_mins_before = time_obj - timedelta(minutes=58)
                 event_time_format = thrity_mins_before.strftime("%Y-%m-%dT%H:%M:%S")
 
-                message = f"Hello gamers! Thank you for signing up for {event_title} organised by {game_company}. The event will start in about 30 minutes at {time_am_pm} and will take place at {event_location}. Do not be late and see you there!"
+                message = f"Hello gamers! Thank you for signing up for {event_title} organised by {game_company}. The event will start in about 1 hour at {time_am_pm} and will take place at {event_location}. Do not be late and see you there!"
 
                 organised = {
                     "code": 201,

@@ -222,7 +222,6 @@ const CreateEvent = () => {
               type="file"
               accept="image/*"
               onChange={handleImageChange}
-              required
             />
             {previewImage && (
               <img
