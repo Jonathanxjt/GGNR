@@ -113,7 +113,7 @@ const Return = () => {
 	// Function to refund a payment for ticket sold out scenario.
 	const refundPayment = async (paymentIntentId) => {
 		try {
-			const response = await axios.post("http://localhost:5011/refund", {
+			const response = await axios.post("http://localhost:8000/api/v1/refund", {
 				paymentIntentId: paymentIntentId,
 			});
 			console.log("Refund successful:", response.data);
