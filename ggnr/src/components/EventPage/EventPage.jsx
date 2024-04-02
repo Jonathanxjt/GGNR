@@ -168,6 +168,7 @@ function EventPage() {
 		));
 	};
 
+<<<<<<< HEAD
 	return (
 		// Navbar and Carousel
 		<div>
@@ -204,6 +205,47 @@ function EventPage() {
 			</div>
 		</div>
 	);
+=======
+  return (
+    // Navbar and Carousel
+    <div>
+      <MyNavbar />
+      <Carousel>
+        <Carousel.Item>
+          <img src={image1} alt="First slide" width="100%" height="600" />
+          <Carousel.Caption>
+            <h3></h3>
+            <p></p>
+          </Carousel.Caption>
+        </Carousel.Item>
+        <Carousel.Item>
+          <img src={image2} alt="Second slide" width="100%" height="600" />
+          <Carousel.Caption>
+            <h3></h3>
+            <p></p>
+          </Carousel.Caption>
+        </Carousel.Item>
+        <Carousel.Item>
+          <img src={image3} alt="Third slide" width="100%" height="600" />
+          <Carousel.Caption>
+            <h3></h3>
+            <p></p>
+          </Carousel.Caption>
+        </Carousel.Item>
+      </Carousel>
+      {/* Events carousel */}
+      <div className="container">
+        <Row className="py-2">{createCards(eventData)}</Row>
+      </div>
+      <div>
+        <CircleButton url="http://localhost:3000/create_event" />
+      </div>
+    <MyFooter/>
+    </div>
+
+    // Cards
+  );
+>>>>>>> c073f794a0d1d0a93051c660fc13668d51bae78f
 }
 
 export default EventPage;

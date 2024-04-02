@@ -273,6 +273,31 @@ def get_user_tickets(uid):
 
     return jsonify({"code": 200, "data": tickets}), 200
 
+# CHECK IF USER ALREADY HAS A TICKET FOR THIS EVENT
+@app.route("/check_event", methods=["POST"])
+def check_event():
+    eid = request.get_json().get("EID")
+    uid = request.get_json().get("UID")
+
+    # Check if the user already has a ticket for this event
+    existing_ticket = UserTicket.query.join(Ticket).filter(Ticket.EID == eid, UserTicket.UID == uid).first()
+    if existing_ticket:
+        return jsonify(
+            {
+                "code": 200,
+                "message": "User already has a ticket for this event.",
+                "data": {
+                    "ticket": existing_ticket.json()
+                }
+            }
+        ), 200
+    else:
+        return jsonify(
+            {
+                "code": 404,
+                "message": "User does not have a ticket for this event."
+            }
+        ), 404
 
 # POST - create ticket
 @app.route("/ticket", methods=["POST"])
@@ -282,6 +307,17 @@ def create_ticket():
     tier = request.get_json().get("TierID")
     price_id = request.get_json().get("PriceID")
     uid = request.get_json().get("UID")
+    
+
+    # Check if the user already has a ticket for this event
+    existing_ticket = UserTicket.query.join(Ticket).filter(Ticket.EID == eid, UserTicket.UID == uid).first()
+    if existing_ticket:
+        return jsonify(
+            {
+                "code": 400,
+                "message": "User already has a ticket for this event."
+            }
+        ), 400
 
     # Create a new Ticket
     ticket = Ticket(EID=eid, TierID=tier, PriceID=price_id)
