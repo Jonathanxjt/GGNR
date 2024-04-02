@@ -1,19 +1,37 @@
 
 .user-profile {
-  background-color: #f4f4f4; /* Light grey background */
-  padding: 20px; /* Adds padding inside the div */
-  border-radius: 8px; /* Optional: adds rounded corners */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: adds a subtle shadow */
+  background-color: #f4f4f4; 
+  padding: 20px; 
+  border-radius: 8px; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
 .user-profile h2 {
-  text-align: center; /* Centers the heading text */
-  color: #333; /* Sets the text color */
-  margin-bottom: 20px; /* Adds space below the heading */
+  text-align: center; 
+  color: #333; 
+  margin-bottom: 20px; 
 }
 
-.card-container {
-  display: flex; /* Displays the cards in a row */
-  flex-wrap: wrap; /* Allows the cards to wrap to the next line */
-  justify-content: center; /* Centers the cards */
+.user-card-container {
+  display: flex; 
+  flex-wrap: wrap; 
+  justify-content: center; 
+}
+
+.user-card-body{
+  min-width: 750px; 
+}
+
+.user-custom-loader {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  left: 45%;
+  background:
+      radial-gradient(farthest-side, #766DF4 94%, #0000) top/10px 10px no-repeat,
+      conic-gradient(#0000 30%, #766DF4);
+  -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 10px), #000 0);
+  animation: s3 0.7s infinite linear;
 }
