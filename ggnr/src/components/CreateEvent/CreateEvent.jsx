@@ -4,7 +4,9 @@ import "./CreateEvent.css";
 import { toast, ToastContainer, Flip } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { MyNavbar } from "../MyNavbar/MyNavbar";
+import MyFooter from "../MyFooter/MyFooter";
 import axios from "axios";
+
 
 const CreateEvent = () => {
 
@@ -106,6 +108,8 @@ const CreateEvent = () => {
         PriceID: "price_1OxkUn2LfOffQtXeGLBwfvyu",
       });
     }
+    
+    const formattedDateTime = `${date} ${time}:00`; // Add seconds to the time
 
     const eventData = {
       Title: title,
@@ -114,7 +118,7 @@ const CreateEvent = () => {
       GameName: gameName,
       GameLogo: gameLogo, 
       Location: location,
-      Time: `${date} ${time}`,
+      Time: formattedDateTime,
       organiser_company: organiser_company,
       EventTypes: eventTypes
     };
@@ -132,6 +136,7 @@ const CreateEvent = () => {
       window.location.href = "/events";
 
     } catch (error) {
+      console.log("Error creating event:", eventData);
       console.error("Error creating event:", error);
       console.error("Event creation error:", error.response.data.message);
       toast.error("Event Creation Failed!", {
@@ -162,6 +167,7 @@ const CreateEvent = () => {
               placeholder="Enter title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              required
             />
           </Form.Group>
 
@@ -173,6 +179,7 @@ const CreateEvent = () => {
               placeholder="Enter description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              required
             />
           </Form.Group>
           <Row className="g-2">
@@ -184,6 +191,7 @@ const CreateEvent = () => {
                   placeholder="Enter date"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
+                  required
                 />
               </Form.Group>
             </Col>
@@ -195,6 +203,7 @@ const CreateEvent = () => {
                   placeholder="Select time"
                   value={time}
                   onChange={(e) => setTime(e.target.value)}
+                  required
                 />
               </Form.Group>
             </Col>
@@ -207,6 +216,7 @@ const CreateEvent = () => {
               placeholder="Enter location"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
+              required
             />
           </Form.Group>
 
@@ -216,6 +226,7 @@ const CreateEvent = () => {
               type="file"
               accept="image/*"
               onChange={handleImageChange}
+              required
             />
             {previewImage && (
               <img
@@ -288,6 +299,7 @@ const CreateEvent = () => {
               value={gameName}
               onChange={(e) => setGameName(e.target.value)}
               onKeyDown={handleKeyDown}
+              required
             />
             {isLoading && <div style={{ height: "50px", width: "100%" }}></div>}
             {isLoading && <div className="custom-loader"></div>}
@@ -332,6 +344,7 @@ const CreateEvent = () => {
           </Button>
         </Form>
       </div>
+      <MyFooter />
     </div>
   );
 };

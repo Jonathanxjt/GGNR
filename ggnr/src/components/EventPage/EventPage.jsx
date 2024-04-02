@@ -204,6 +204,7 @@ function EventPage() {
       <div>
         <CircleButton url="http://localhost:3000/create_event" />
       </div>
+    <MyFooter/>
     </div>
 
     // Cards

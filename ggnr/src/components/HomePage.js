@@ -7,6 +7,7 @@ import { useHistory } from "react-router-dom";
 import CircleButton from "./CreateEventButton/CreateEventButton";
 import Typewriter from "typewriter-effect";
 import "./Home.css";
+import MyFooter from "./MyFooter/MyFooter";
 
 const HomePage = () => {
 	return (
@@ -31,6 +32,7 @@ const HomePage = () => {
 					Browse Events{" "}
 				</Button>
 			</div>
+			<MyFooter />
 		</div>
 	);
 };
