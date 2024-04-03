@@ -303,6 +303,23 @@ services:
     networks:
       - kong-net
 
+  send_request:
+    build:
+      context: .
+      dockerfile: dockerfile_send_request
+    restart: always
+    env_file:
+      - ggnr.env
+    depends_on:
+      - notification1
+      - notification_log
+      - notification_error
+      - event1
+      - attendee1
+      - user1
+    networks:
+      - kong-net
+
   kong-database:
     image: postgres:15 # tested 20231101; Ref: https://docs.konghq.com/gateway/latest/support/third-party/
     platform: linux/amd64  # <- required for Mac M1 chip. Otherwise, can remove
