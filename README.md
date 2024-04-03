@@ -87,6 +87,33 @@ GGNR is a React-based platform designed for organizers to host various events su
   - [Link to documentation](https://stripe.com/docs)
   - Stripe was used to handle payment for the event tickets.
 
+- **Twilio**
+   -[Link to documentation](https://www.twilio.com/docs)
+   - Twilio was used to send notifications to users.
+
+## API keys (FOR IS213 instructors)
+
+   Attached in the project submission will be two .env files which contain our Stripe, Igdb and Twilio API keys. 
+ 
+   microservice/.env should be placed in the following folder in the repo. 
+
+   ```sh
+   |-- ggnr
+   |  |--microservice
+   |  |  |-- .env
+   |  |  |-- amqp_connection.py
+         #etc
+   ```
+
+   react/.env should be placed in the root folder of the repo.
+
+   ```sh
+   |--ggnr
+   |  |--.env
+   |  |--package.json
+      # etc
+   ```
+
 ## Usage
 
 - **For Organizers:**
