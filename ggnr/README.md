@@ -32,6 +32,16 @@ Users can register for these events in different capacities such as audience, VI
    npm install
    ```
 
+4. Import kong_config.yml to overwrite configuration in Kong container:
+
+   ```sh
+   docker compose up --build
+   docker cp kong_config.yml microservice-kong-1:/tmp/kong_config.yml
+   docker exec microservice-kong-1 kong config db_import /tmp/kong_config.yml
+   docker compose down
+   docker compose up --build
+   ```
+
 ### Running the Application
 
 1. Start the React application:
