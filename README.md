@@ -76,6 +76,36 @@ GGNR is a React-based platform designed for organizers to host various events su
    docker-compose down
    ```
 
+## Initialising the database
+
+   To initialise the database, run ggnr.sql in your mySQLWorkbench or equivalent
+
+   ```sh
+   |-- ggnr
+   |  |-- microservice
+   |  |  |-- ggnr.sql  
+   ```
+   The following user data can be used for testing
+
+   ```sql
+   INSERT INTO users (username, password_hash, preferences, email, contact, organiser, organiser_company)
+   VALUES
+   --all user passwords are 'password'
+   --user og1 is an organiser 
+   --users user1 to user3 are participants
+   ('og1', '$2b$12$L9krV1IEeHr9BoX1lyscbOlE9ySzN4Atod3I02NKVx6FQupWwhUT.', '', 'og1@gmail.com', '99999999', 1, 'SMU'), 
+   ('user1', '$2b$12$L9krV1IEeHr9BoX1lyscbOlE9ySzN4Atod3I02NKVx6FQupWwhUT.', 'Dota 2', 'user1@gmail.com', '+6590473775', 0, NULL),
+   ('user2', '$2b$12$L9krV1IEeHr9BoX1lyscbOlE9ySzN4Atod3I02NKVx6FQupWwhUT.', 'Tekken 8', 'user2@gmail.com', '+6590473775', 0, NUll),
+   ('user3', '$2b$12$L9krV1IEeHr9BoX1lyscbOlE9ySzN4Atod3I02NKVx6FQupWwhUT.', 'Counter-Strike 2', 'user3@gmail.com', '+6590473775', 0, NULL);
+   ```
+
+   Change the dbURL variable within the ggnr.env file to your own root user
+
+   ```sh
+      |-- ggnr
+   |  |-- microservice
+   |  |  |-- ggnr.env  
+   ```
 
 ## External APIs Used
 
@@ -99,7 +129,7 @@ GGNR is a React-based platform designed for organizers to host various events su
 
    ```sh
    |-- ggnr
-   |  |--microservice
+   |  |-- microservice
    |  |  |-- .env
    |  |  |-- amqp_connection.py
          #etc
@@ -108,9 +138,9 @@ GGNR is a React-based platform designed for organizers to host various events su
    react/.env should be placed in the root folder of the repo.
 
    ```sh
-   |--ggnr
-   |  |--.env
-   |  |--package.json
+   |-- ggnr
+   |  |-- .env
+   |  |-- package.json
       # etc
    ```
 
