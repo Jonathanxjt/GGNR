@@ -488,7 +488,7 @@ def check_event():
     # convert each event object into a dictionary.
     if len(event_list) != 0:
         return jsonify(
-            {"code": 201, "data": {"events": [event.json() for event in event_list]}}
+            {"code": 200, "data": {"events": [event.json() for event in event_list]}}
         )
 
     # Use jsonify to convert the list of dictionaries into a JSON response

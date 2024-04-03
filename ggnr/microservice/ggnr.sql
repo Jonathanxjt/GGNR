@@ -61,7 +61,7 @@ CREATE TABLE user_tickets (
     FOREIGN KEY (UID) REFERENCES users(UID),
     FOREIGN KEY (TicketID) REFERENCES tickets(TicketID)
 );
--- ! Delete price ID and Tier ID, remove capacity
+
 INSERT INTO events (EID, Title, Description, EventLogo, GameName, GameLogo, Location, Time, organiser_company)
 VALUES
 
