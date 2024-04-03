@@ -22,6 +22,12 @@ function Registration() {
 		// Extract the title from the URL
 		const title = new URLSearchParams(location.search).get("title");
 		const EID = new URLSearchParams(location.search).get("eid");
+		if(!user)
+		{
+			localStorage.setItem("toastErrorMessage", "Please login to register for the event.");
+			return window.location.href = "/login";
+			
+		}
 		if (EID) {
 			axios
 				.get(`http://localhost:8000/event/${EID}`)

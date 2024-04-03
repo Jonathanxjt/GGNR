@@ -11,7 +11,7 @@ CORS(app)
 
 events_url = "http://kong:8000/event/create_event"
 user_url = "http://kong:8000/user/user_preference_gamename"
-search_url = "http://kong:8000/api/v1/search"
+search_url = "http://kong:8000/search"
 notification_url = "http://kong:8000/api/v1/create_notification"
 
 
