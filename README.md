@@ -102,7 +102,7 @@ GGNR is a React-based platform designed for organizers to host various events su
    Change the dbURL variable within the ggnr.env file to your own root user
 
    ```sh
-      |-- ggnr
+   |-- ggnr
    |  |-- microservice
    |  |  |-- ggnr.env  
    ```
