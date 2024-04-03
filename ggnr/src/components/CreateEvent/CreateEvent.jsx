@@ -41,7 +41,7 @@ const CreateEvent = () => {
 			event.preventDefault();
 			setIsLoading(true);
 			try {
-				const response = await axios.post("http://localhost:8000/api/v1/search", {
+				const response = await axios.post("http://localhost:8000/search", {
 					game_name: gameName,
 				});
 				setGameResults(response.data);

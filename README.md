@@ -36,6 +36,16 @@ GGNR is a React-based platform designed for organizers to host various events su
    npm install
    ```
 
+4. Import kong_config.yml to overwrite configuration in Kong container:
+
+   ```sh
+   docker compose up --build
+   docker cp kong_config.yml microservice-kong-1:/tmp/kong_config.yml
+   docker exec microservice-kong-1 kong config db_import /tmp/kong_config.yml
+   docker compose down
+   docker compose up --build
+   ```
+
 ### Running the Application
 
 1. Start the React application:
@@ -66,6 +76,36 @@ GGNR is a React-based platform designed for organizers to host various events su
    docker-compose down
    ```
 
+## Initialising the database
+
+   To initialise the database, run ggnr.sql in your mySQLWorkbench or equivalent
+
+   ```sh
+   |-- ggnr
+   |  |-- microservice
+   |  |  |-- ggnr.sql  
+   ```
+   The following user data can be used for testing
+
+   ```sql
+   INSERT INTO users (username, password_hash, preferences, email, contact, organiser, organiser_company)
+   VALUES
+   --all user passwords are 'password'
+   --user og1 is an organiser 
+   --users user1 to user3 are participants
+   ('og1', '$2b$12$L9krV1IEeHr9BoX1lyscbOlE9ySzN4Atod3I02NKVx6FQupWwhUT.', '', 'og1@gmail.com', '99999999', 1, 'SMU'), 
+   ('user1', '$2b$12$L9krV1IEeHr9BoX1lyscbOlE9ySzN4Atod3I02NKVx6FQupWwhUT.', 'Dota 2', 'user1@gmail.com', '+6590473775', 0, NULL),
+   ('user2', '$2b$12$L9krV1IEeHr9BoX1lyscbOlE9ySzN4Atod3I02NKVx6FQupWwhUT.', 'Tekken 8', 'user2@gmail.com', '+6590473775', 0, NUll),
+   ('user3', '$2b$12$L9krV1IEeHr9BoX1lyscbOlE9ySzN4Atod3I02NKVx6FQupWwhUT.', 'Counter-Strike 2', 'user3@gmail.com', '+6590473775', 0, NULL);
+   ```
+
+   Change the dbURL variable within the ggnr.env file to your own root user
+
+   ```sh
+   |-- ggnr
+   |  |-- microservice
+   |  |  |-- ggnr.env  
+   ```
 
 ## External APIs Used
 
@@ -76,6 +116,33 @@ GGNR is a React-based platform designed for organizers to host various events su
 - **Stripe Payment**
   - [Link to documentation](https://stripe.com/docs)
   - Stripe was used to handle payment for the event tickets.
+
+- **Twilio**
+   -[Link to documentation](https://www.twilio.com/docs)
+   - Twilio was used to send notifications to users.
+
+## API keys (FOR IS213 instructors)
+
+   Attached in the project submission will be two .env files which contain our Stripe, Igdb and Twilio API keys. 
+ 
+   microservice/.env should be placed in the following folder in the repo. 
+
+   ```sh
+   |-- ggnr
+   |  |-- microservice
+   |  |  |-- .env
+   |  |  |-- amqp_connection.py
+         #etc
+   ```
+
+   react/.env should be placed in the root folder of the repo.
+
+   ```sh
+   |-- ggnr
+   |  |-- .env
+   |  |-- package.json
+      # etc
+   ```
 
 ## Usage
 

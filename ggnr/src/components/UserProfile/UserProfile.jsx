@@ -106,7 +106,7 @@ const UserProfile = () => {
 			event.preventDefault();
 			setIsLoading(true); // Set loading to true
 			try {
-				const response = await axios.post("http://localhost:8000/api/v1/search", {
+				const response = await axios.post("http://localhost:8000/search", {
 					game_name: gameName, // Send the game name to the backend 
 				});
 				setGameResults(response.data);
