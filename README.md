@@ -87,16 +87,11 @@ GGNR is a React-based platform designed for organizers to host various events su
    ```
    The following user data can be used for testing
 
-   ```sql
-   INSERT INTO users (username, password_hash, preferences, email, contact, organiser, organiser_company)
-   VALUES
-   --all user passwords are 'password'
-   --user og1 is an organiser 
-   --users user1 to user3 are participants
-   ('og1', '$2b$12$L9krV1IEeHr9BoX1lyscbOlE9ySzN4Atod3I02NKVx6FQupWwhUT.', '', 'og1@gmail.com', '99999999', 1, 'SMU'), 
-   ('user1', '$2b$12$L9krV1IEeHr9BoX1lyscbOlE9ySzN4Atod3I02NKVx6FQupWwhUT.', 'Dota 2', 'user1@gmail.com', '+6590473775', 0, NULL),
-   ('user2', '$2b$12$L9krV1IEeHr9BoX1lyscbOlE9ySzN4Atod3I02NKVx6FQupWwhUT.', 'Tekken 8', 'user2@gmail.com', '+6590473775', 0, NUll),
-   ('user3', '$2b$12$L9krV1IEeHr9BoX1lyscbOlE9ySzN4Atod3I02NKVx6FQupWwhUT.', 'Counter-Strike 2', 'user3@gmail.com', '+6590473775', 0, NULL);
+   ```sh
+   og1@gmail.com, password #organiser account
+   user1@gmail.com, password
+   user2@gmail.com, password
+   user3@gmail.com, password
    ```
 
    Change the dbURL variable within the ggnr.env file to your own root user
@@ -118,7 +113,7 @@ GGNR is a React-based platform designed for organizers to host various events su
   - Stripe was used to handle payment for the event tickets.
 
 - **Twilio**
-   -[Link to documentation](https://www.twilio.com/docs)
+   - [Link to documentation](https://www.twilio.com/docs)
    - Twilio was used to send notifications to users.
 
 ## API keys (FOR IS213 instructors)
