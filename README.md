@@ -113,7 +113,7 @@ GGNR is a React-based platform designed for organizers to host various events su
   - Stripe was used to handle payment for the event tickets.
 
 - **Twilio**
-   -[Link to documentation](https://www.twilio.com/docs)
+   - [Link to documentation](https://www.twilio.com/docs)
    - Twilio was used to send notifications to users.
 
 ## API keys (FOR IS213 instructors)
